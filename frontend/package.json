@@ -1,0 +1,26 @@
+{
+  "name": "satpolpp-sulsel-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Frontend Remake Portal Satpol PP Sulsel & SIAP TERTIB menggunakan SvelteKit & TailwindCSS",
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev --port 3000 --host",
+    "build": "vite build",
+    "preview": "vite preview --port 3000 --host"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-auto": "^3.0.0",
+    "@sveltejs/kit": "^2.5.0",
+    "@sveltejs/vite-plugin-svelte": "^3.0.0",
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.38",
+    "svelte": "^4.2.12",
+    "tailwindcss": "^3.4.3",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.0"
+  },
+  "dependencies": {
+    "lucide-svelte": "^0.368.0"
+  }
+}
