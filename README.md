@@ -58,49 +58,7 @@ Web_Remake/
 
 ---
 
-## 2. Cara Konfigurasi Git dengan Identitas / Alias Berbeda
-
-Jika Anda ingin menyimpan repositori ini ke GitHub Private menggunakan alias atau persona yang berbeda dari akun default komputer:
-
-### Langkah A (Otomatis):
-Jalankan skrip pembantu yang telah disediakan:
-```bash
-scripts\setup_git_alias.bat
-```
-
-### Langkah B (Manual melalui Terminal):
-1. Buka terminal di folder root `Web_Remake`:
-   ```bash
-   cd C:\Users\HP\Downloads\Remake_Website\Web_Remake
-   git init
-   git branch -M main
-   ```
-2. **Kunci Identitas Alias Lokal (Hanya berlaku untuk repo ini, tidak merubah Git global komputer):**
-   ```bash
-   git config user.name "Nama Alias Anda"
-   git config user.email "alias.email@domain.com"
-   ```
-3. Hubungkan ke repositori GitHub private yang sudah dibuat:
-   - **Jika menggunakan HTTPS:**
-     ```bash
-     git remote add origin https://github.com/USERNAME-ALIAS/NAMA-REPO-PRIVATE.git
-     ```
-   - **Jika menggunakan SSH:**
-     ```bash
-     git remote add origin git@github.com:USERNAME-ALIAS/NAMA-REPO-PRIVATE.git
-     ```
-4. Lakukan commit dan push perdana:
-   ```bash
-   git add .
-   git commit -m "feat: initial monorepo release portal satpol pp sulsel & siaptertib"
-   git push -u origin main
-   ```
-
-*Catatan: Seluruh riwayat commit yang terunggah ke GitHub akan tertulis atas nama alias dan email yang Anda tentukan di langkah 2.*
-
----
-
-## 3. Menjalankan di Lingkungan Lokal (Development)
+## 2. Menjalankan di Lingkungan Lokal (Development)
 
 - **Frontend SvelteKit:** Port `3000` (`http://localhost:3000`)
 - **Backend Golang API:** Port `8080` (`http://localhost:8080`)
@@ -120,7 +78,7 @@ cd frontend && npm run dev -- --open
 
 ---
 
-## 4. Akun Default Pengujian Dashboard (Demo)
+## 3. Akun Default Pengujian Dashboard (Demo)
 
 | Role | Username | Password | Deskripsi |
 |---|---|---|---|
