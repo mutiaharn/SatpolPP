@@ -1,0 +1,22 @@
+# Multi-stage Dockerfile for Golang Backend API
+FROM golang:1.24-alpine AS builder
+
+WORKDIR /app
+RUN apk add --no-cache git gcc musl-dev
+
+COPY go.mod ./
+RUN go mod download || true
+
+COPY . .
+RUN CGO_ENABLED=1 GOOS=linux go build -ldflags="-s -w" -o /app/api ./cmd/api/main.go
+
+# Minimal Runtime Stage
+FROM alpine:3.19
+WORKDIR /app
+RUN apk add --no-cache ca-certificates tzdata
+ENV TZ=Asia/Makassar
+
+COPY --from=builder /app/api /app/api
+EXPOSE 8080
+
+CMD ["/app/api"]
