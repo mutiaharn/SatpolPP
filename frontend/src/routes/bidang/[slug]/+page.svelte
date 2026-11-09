@@ -112,7 +112,7 @@
   <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
     <!-- Sidebar Navigation -->
     <div class="lg:col-span-1 space-y-4">
-      <div class="bg-white border border-[#eee9db] shadow-sm p-4">
+      <div class="bg-white border border-[#eee9db] shadow-xs p-4 rounded-2xl">
         <h3 class="text-xs font-bold text-[#101116] uppercase tracking-wider border-b border-gray-100 pb-2 mb-3">
           Bidang Kerja
         </h3>
@@ -120,7 +120,7 @@
           {#each bidangMenu as b}
             <a 
               href={`/bidang/${b.slug}`}
-              class={`block px-3 py-2 text-xs font-bold transition ${slug === b.slug ? 'bg-[#F08300] text-white' : 'text-[#2b2f3f] hover:bg-gray-100'}`}
+              class={`block px-3.5 py-2.5 text-xs font-bold transition rounded-xl ${slug === b.slug ? 'bg-[#F08300] text-white shadow-xs' : 'text-[#2b2f3f] hover:bg-gray-100'}`}
             >
               {b.label}
             </a>
@@ -129,7 +129,7 @@
       </div>
 
       <!-- Quick Action Card -->
-      <div class="bg-[#3d261a] text-white p-5 rounded-xl border-t-4 border-[#F08300]">
+      <div class="bg-[#3d261a] text-white p-5 rounded-2xl border-t-4 border-[#F08300] shadow-xs">
         <div class="text-[10px] text-[#F08300] font-bold uppercase tracking-wider mb-1">SIAP TERTIB</div>
         <div class="font-bold text-xs">Aduan Pelanggaran Wilayah</div>
         <p class="text-[11px] text-gray-300 mt-2 leading-relaxed">
@@ -137,7 +137,7 @@
         </p>
         <a 
           href="/lapor" 
-          class="mt-3 block text-center bg-[#F08300] text-white font-bold text-xs uppercase py-2 hover:bg-[#d97400] transition"
+          class="mt-3 block text-center bg-[#F08300] text-white font-bold text-xs uppercase py-2.5 rounded-xl hover:bg-[#d97400] transition shadow-xs"
         >
           Kirim Laporan
         </a>
@@ -145,7 +145,7 @@
     </div>
 
     <!-- Main Content Column -->
-    <div class="lg:col-span-3 bg-white border border-[#eee9db] shadow-sm p-6 md:p-8 space-y-6">
+    <div class="lg:col-span-3 bg-white border border-[#eee9db] shadow-xs p-6 md:p-8 space-y-6 rounded-2xl">
       <div class="border-b border-gray-100 pb-4">
         <div class="text-[#F08300] font-bold text-xs uppercase tracking-widest">Unit Kerja Satpol PP Sulsel</div>
         <h1 class="text-2xl md:text-3xl font-extrabold text-[#101116] tracking-tight mt-1">{current.title}</h1>
@@ -170,7 +170,7 @@
         <h3 class="text-xs font-bold uppercase tracking-wider text-[#101116]">Seksi &amp; Sub-Bagian di Bawah Bidang:</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           {#each current.sections as sec}
-            <div class="border border-gray-200 p-4 bg-gray-50/50">
+            <div class="border border-gray-200 p-4 bg-gray-50/50 rounded-xl">
               <div class="font-bold text-xs text-[#101116] uppercase">{sec.name}</div>
               <p class="text-[11px] text-[#6f7775] mt-1 leading-relaxed">{sec.desc}</p>
             </div>

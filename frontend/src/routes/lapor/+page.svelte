@@ -22,7 +22,7 @@
 
 <div class="py-10 px-4 max-w-4xl mx-auto space-y-8">
   <!-- SOP Flow Banner -->
-  <div class="bg-white border border-[#eee9db] p-5 shadow-sm">
+  <div class="bg-white border border-[#eee9db] p-5 shadow-xs rounded-2xl">
     <div class="text-xs font-bold text-[#101116] uppercase tracking-wider mb-3">Alur &amp; Prosedur Penanganan Laporan:</div>
     <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
       <div class="border-l-2 border-[#F08300] pl-3 py-1 bg-gray-50/50">

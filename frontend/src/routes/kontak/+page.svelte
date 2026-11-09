@@ -45,7 +45,7 @@
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
     <!-- Contact Info Cards -->
     <div class="space-y-4">
-      <div class="bg-white border border-[#eee9db] p-6 shadow-sm space-y-3">
+      <div class="bg-white border border-[#eee9db] p-6 shadow-xs space-y-3 rounded-2xl">
         <div class="text-[#F08300] font-bold text-xs uppercase tracking-wider">Markas Komando</div>
         <h3 class="text-base font-extrabold text-[#101116]">Kantor Satpol PP Prov. Sulsel</h3>
         <p class="text-xs text-[#6f7775] leading-relaxed">
@@ -53,7 +53,7 @@
         </p>
       </div>
 
-      <div class="bg-white border border-[#eee9db] p-6 shadow-sm space-y-3">
+      <div class="bg-white border border-[#eee9db] p-6 shadow-xs space-y-3 rounded-2xl">
         <div class="text-[#F08300] font-bold text-xs uppercase tracking-wider">Telepon &amp; Surel</div>
         <div class="space-y-2 text-xs text-[#2b2f3f]">
           <div>
@@ -71,7 +71,7 @@
         </div>
       </div>
 
-      <div class="bg-[#3d261a] text-white p-6 rounded-xl shadow-sm border-l-4 border-[#F08300] space-y-3">
+      <div class="bg-[#3d261a] text-white p-6 rounded-2xl shadow-xs border-l-4 border-[#F08300] space-y-3">
         <div class="text-[#F08300] font-bold text-xs uppercase tracking-wider">Jam Operasional Pelayanan</div>
         <div class="space-y-2 text-xs text-gray-300">
           <div>
@@ -88,7 +88,7 @@
 
     <!-- Contact Form & Map Column -->
     <div class="lg:col-span-2 space-y-6">
-      <div class="bg-white border border-[#eee9db] p-6 md:p-8 shadow-sm space-y-6">
+      <div class="bg-white border border-[#eee9db] p-6 md:p-8 shadow-xs space-y-6 rounded-2xl">
         <div>
           <div class="text-[#F08300] font-bold text-xs uppercase tracking-wider">Aspirasi &amp; Pertanyaan</div>
           <h2 class="text-lg font-bold text-[#101116] tracking-tight mt-1">Formulir Kirim Pesan / Koordinasi Dinas</h2>
@@ -98,7 +98,7 @@
         </div>
 
         {#if sentSuccess}
-          <div class="bg-emerald-50 border border-emerald-300 text-emerald-800 text-xs p-4 font-semibold">
+          <div class="bg-emerald-50 border border-emerald-300 text-emerald-800 text-xs p-4 font-semibold rounded-xl">
             Pesan Anda telah berhasil dikirimkan ke sekretariat Satpol PP Prov. Sulsel. Petugas kami akan membalas melalui email resmi.
           </div>
         {/if}
@@ -107,35 +107,35 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label for="contact-name" class="block text-xs font-bold uppercase text-[#101116] mb-1">Nama Lengkap</label>
-              <input id="contact-name" type="text" bind:value={senderName} required class="w-full border border-gray-300 p-2.5 text-xs text-[#101116] focus:border-[#F08300] focus:outline-none" />
+              <input id="contact-name" type="text" bind:value={senderName} required class="w-full border border-gray-300 p-2.5 text-xs text-[#101116] focus:border-[#F08300] focus:outline-none rounded-xl" />
             </div>
             <div>
               <label for="contact-email" class="block text-xs font-bold uppercase text-[#101116] mb-1">Email Anda</label>
-              <input id="contact-email" type="email" bind:value={senderEmail} required class="w-full border border-gray-300 p-2.5 text-xs text-[#101116] focus:border-[#F08300] focus:outline-none" />
+              <input id="contact-email" type="email" bind:value={senderEmail} required class="w-full border border-gray-300 p-2.5 text-xs text-[#101116] focus:border-[#F08300] focus:outline-none rounded-xl" />
             </div>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label for="contact-phone" class="block text-xs font-bold uppercase text-[#101116] mb-1">Nomor Telepon / WhatsApp</label>
-              <input id="contact-phone" type="tel" bind:value={senderPhone} class="w-full border border-gray-300 p-2.5 text-xs text-[#101116] focus:border-[#F08300] focus:outline-none" />
+              <input id="contact-phone" type="tel" bind:value={senderPhone} class="w-full border border-gray-300 p-2.5 text-xs text-[#101116] focus:border-[#F08300] focus:outline-none rounded-xl" />
             </div>
             <div>
               <label for="contact-subject" class="block text-xs font-bold uppercase text-[#101116] mb-1">Perihal Pesan</label>
-              <input id="contact-subject" type="text" bind:value={subject} placeholder="Contoh: Koordinasi Penertiban Wilayah" class="w-full border border-gray-300 p-2.5 text-xs text-[#101116] focus:border-[#F08300] focus:outline-none" />
+              <input id="contact-subject" type="text" bind:value={subject} placeholder="Contoh: Koordinasi Penertiban Wilayah" class="w-full border border-gray-300 p-2.5 text-xs text-[#101116] focus:border-[#F08300] focus:outline-none rounded-xl" />
             </div>
           </div>
 
           <div>
             <label for="contact-message" class="block text-xs font-bold uppercase text-[#101116] mb-1">Isi Pesan / Keterangan Lengkap</label>
-            <textarea id="contact-message" bind:value={message} rows="4" required class="w-full border border-gray-300 p-2.5 text-xs text-[#101116] focus:border-[#F08300] focus:outline-none"></textarea>
+            <textarea id="contact-message" bind:value={message} rows="4" required class="w-full border border-gray-300 p-2.5 text-xs text-[#101116] focus:border-[#F08300] focus:outline-none rounded-xl"></textarea>
           </div>
 
           <div class="flex justify-end pt-2">
             <button
               type="submit"
               disabled={isSending}
-              class="bg-[#F08300] hover:bg-[#d97400] text-white font-bold text-xs uppercase px-6 py-2.5 transition disabled:opacity-50"
+              class="bg-[#F08300] hover:bg-[#d97400] text-white font-bold text-xs uppercase px-6 py-2.5 rounded-xl transition shadow-xs disabled:opacity-50"
             >
               {#if isSending}Mengirimkan...{:else}Kirim Pesan Resmi{/if}
             </button>
@@ -144,7 +144,7 @@
       </div>
 
       <!-- Map Embed Card -->
-      <div class="bg-white border border-[#eee9db] shadow-sm overflow-hidden">
+      <div class="bg-white border border-[#eee9db] shadow-xs overflow-hidden rounded-2xl">
         <div class="p-4 border-b border-gray-100 flex justify-between items-center text-xs">
           <span class="font-bold text-[#101116] uppercase">Lokasi Markas Komando (Peta Koordinat)</span>
           <span class="text-[#6f7775] font-mono text-[11px]">-5.1432&deg; S, 119.4521&deg; E</span>
