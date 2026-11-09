@@ -460,7 +460,7 @@
                   type="file" 
                   accept="image/jpeg,image/png,image/webp" 
                   on:change={handleImageChange}
-                  class="text-xs text-gray-600 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#2b2f3f] file:text-white hover:file:bg-[#101116] cursor-pointer"
+                  class="text-xs text-gray-600 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-[#3d261a] file:text-white hover:file:bg-[#271810] cursor-pointer"
                 />
                 <div class="text-[11px] text-[#6f7775]">
                   Catatan: Hanya menerima berkas foto/gambar. Maksimal ukuran 5 MB.

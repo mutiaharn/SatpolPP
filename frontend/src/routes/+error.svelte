@@ -38,7 +38,7 @@
     </a>
     <a 
       href="/berita" 
-      class="bg-[#2b2f3f] hover:bg-[#101116] text-white text-xs font-bold uppercase px-6 py-2.5 transition"
+      class="bg-[#3d261a] hover:bg-[#271810] text-white text-xs font-bold uppercase px-6 py-2.5 rounded-lg transition"
     >
       Warta Berita
     </a>

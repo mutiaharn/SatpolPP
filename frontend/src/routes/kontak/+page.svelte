@@ -71,7 +71,7 @@
         </div>
       </div>
 
-      <div class="bg-[#2b2f3f] text-white p-6 shadow-sm border-l-4 border-[#F08300] space-y-3">
+      <div class="bg-[#3d261a] text-white p-6 rounded-xl shadow-sm border-l-4 border-[#F08300] space-y-3">
         <div class="text-[#F08300] font-bold text-xs uppercase tracking-wider">Jam Operasional Pelayanan</div>
         <div class="space-y-2 text-xs text-gray-300">
           <div>

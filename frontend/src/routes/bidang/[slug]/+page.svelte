@@ -129,7 +129,7 @@
       </div>
 
       <!-- Quick Action Card -->
-      <div class="bg-[#2b2f3f] text-white p-5 border-t-4 border-[#F08300]">
+      <div class="bg-[#3d261a] text-white p-5 rounded-xl border-t-4 border-[#F08300]">
         <div class="text-[10px] text-[#F08300] font-bold uppercase tracking-wider mb-1">SIAP TERTIB</div>
         <div class="font-bold text-xs">Aduan Pelanggaran Wilayah</div>
         <p class="text-[11px] text-gray-300 mt-2 leading-relaxed">

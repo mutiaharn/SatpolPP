@@ -110,7 +110,7 @@
         <span class="text-[#6f7775]">Satuan Polisi Pamong Praja Provinsi Sulawesi Selatan</span>
         <button 
           on:click={() => activePreview = null}
-          class="bg-[#2b2f3f] text-white px-4 py-1.5 font-bold uppercase text-xs rounded-lg hover:bg-[#101116] transition"
+          class="bg-[#3d261a] text-white px-4 py-1.5 font-bold uppercase text-xs rounded-lg hover:bg-[#271810] transition"
         >
           Tutup
         </button>

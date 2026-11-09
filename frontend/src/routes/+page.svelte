@@ -35,45 +35,75 @@
     }, 6000);
     return () => clearInterval(timer);
   });
+
+  // Smooth scroll dengan offset tepat di bawah sticky navbar
+  function scrollToTarget(id: string) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const navOffset = 95; // Kompensasi tinggi sticky navbar agar judul tidak tertutup
+    const elPos = el.getBoundingClientRect().top + window.pageYOffset;
+    window.scrollTo({
+      top: elPos - navOffset,
+      behavior: 'smooth'
+    });
+  }
 </script>
 
-<!-- 1. Hero Banner Slider (Matching Main Slider Satpol PP) -->
-<section class="relative bg-[#101116] text-white min-h-[480px] md:min-h-[560px] flex items-center overflow-hidden">
+<!-- 1. Hero Banner Slider (Poin 6: Dibuat Full 1 Layar Penuh / 100vh saat dibuka) -->
+<section class="relative bg-[#1a120c] text-white min-h-[calc(100vh-106px)] flex items-center overflow-hidden">
   <!-- Slide Images -->
   {#each slides as slide, idx}
     <div 
       class={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ${currentSlide === idx ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
-      style={`background-image: linear-gradient(rgba(16, 17, 22, 0.72), rgba(16, 17, 22, 0.78)), url('${slide.image}')`}
+      style={`background-image: linear-gradient(rgba(26, 18, 12, 0.74), rgba(26, 18, 12, 0.86)), url('${slide.image}')`}
     ></div>
   {/each}
 
-  <div class="max-w-7xl mx-auto px-4 py-16 relative z-20 w-full">
-    <div class="max-w-2xl space-y-4">
-      <div class="text-[#F08300] font-bold text-xs uppercase tracking-widest">
+  <div class="max-w-7xl mx-auto px-4 py-16 md:py-24 relative z-20 w-full">
+    <div class="max-w-3xl space-y-5">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#F08300]/20 text-[#F08300] font-bold text-xs uppercase tracking-widest border border-[#F08300]/30 backdrop-blur-xs">
+        <span class="w-2 h-2 rounded-full bg-[#F08300] animate-pulse"></span>
         {slides[currentSlide].tag}
       </div>
-      <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight leading-tight">
+      <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.15]">
         {slides[currentSlide].title}
       </h1>
-      <p class="text-sm md:text-base text-[#e5e7eb] leading-relaxed">
+      <p class="text-sm md:text-base lg:text-lg text-stone-200 leading-relaxed max-w-2xl">
         {slides[currentSlide].desc}
       </p>
-      <div class="pt-4 flex flex-wrap gap-3">
-        <a href="#layanan-siaptertib" class="bg-[#F08300] hover:bg-[#d97400] text-white font-bold text-xs uppercase px-6 py-3.5 rounded transition shadow-sm">
+      <div class="pt-3 flex flex-wrap gap-4">
+        <a 
+          href="#layanan-siaptertib" 
+          on:click={(e) => { e.preventDefault(); scrollToTarget('layanan-siaptertib'); }}
+          class="bg-[#F08300] hover:bg-[#d97400] text-white font-bold text-xs uppercase px-7 py-4 rounded-xl transition shadow-lg hover:shadow-xl hover:-translate-y-0.5 transform cursor-pointer"
+        >
           Lapor SIAP TERTIB
         </a>
-        <a href="/dokumen" class="bg-transparent hover:bg-white/10 text-white font-bold text-xs uppercase px-6 py-3.5 rounded border border-white/30 transition">
+        <a href="/dokumen" class="bg-white/10 hover:bg-white/20 text-white font-bold text-xs uppercase px-7 py-4 rounded-xl border border-white/25 transition backdrop-blur-md">
           Dokumen Publik
         </a>
       </div>
     </div>
   </div>
 
+  <!-- Scroll Down Indicator (Penunjuk Gulir ke Bawah dengan Scroll Presisi) -->
+  <a 
+    href="#berita-terbaru" 
+    on:click={(e) => { e.preventDefault(); scrollToTarget('berita-terbaru'); }}
+    class="hidden md:flex absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex-col items-center gap-1.5 text-stone-300 hover:text-[#F08300] transition group focus:outline-none cursor-pointer"
+    aria-label="Gulir ke konten berita"
+  >
+    <span class="text-[10px] font-bold uppercase tracking-widest text-[#F08300]">Jelajahi Portal</span>
+    <svg class="w-5 h-5 animate-bounce text-[#F08300]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+    </svg>
+  </a>
+
   <!-- Slide Navigation Indicators -->
-  <div class="absolute bottom-6 right-6 z-30 flex items-center gap-2">
+  <div class="absolute bottom-8 right-8 z-30 flex items-center gap-2">
     {#each slides as _, i}
       <button 
-        class={`h-2.5 transition-all rounded-full ${currentSlide === i ? 'w-8 bg-[#F08300]' : 'w-2.5 bg-white/40'}`}
+        class={`h-2.5 transition-all rounded-full ${currentSlide === i ? 'w-8 bg-[#F08300]' : 'w-2.5 bg-white/40 hover:bg-white/70'}`}
         on:click={() => currentSlide = i}
         aria-label={`Slide ${i + 1}`}
       ></button>
@@ -81,102 +111,123 @@
   </div>
 </section>
 
-<!-- 2. Berita Terbaru (Matching news-one) -->
-<section class="py-16 px-4 max-w-7xl mx-auto">
+<!-- 2. Berita Terbaru (Poin 20: Card Berita Fixed & Balanced dengan scroll-mt-28) -->
+<section id="berita-terbaru" class="scroll-mt-28 py-16 px-4 max-w-7xl mx-auto">
   <div class="text-center max-w-xl mx-auto mb-12">
     <div class="text-[#F08300] font-bold text-xs uppercase tracking-widest">Publikasi Resmi</div>
     <h2 class="text-2xl md:text-3xl font-extrabold text-[#101116] tracking-tight mt-1">Berita Terbaru</h2>
-    <div class="w-12 h-1 bg-[#F08300] mx-auto mt-3"></div>
+    <div class="w-12 h-1 bg-[#F08300] mx-auto mt-3 rounded-full"></div>
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
     {#each $articlesStore.slice(0, 3) as item}
-      <article class="bg-white border border-[#eee9db] rounded-2xl overflow-hidden flex flex-col hover:shadow-lg transition">
-        <div class="relative h-48 bg-gray-100 overflow-hidden">
-          <img 
-            src={item.thumbnail} 
-            alt={item.title} 
-            class="w-full h-full object-cover hover:scale-105 transition duration-500" 
-            onerror="this.src='/uploads/foto_berita/1768182343WhatsApp Image 2026-01-12 at 08.08.43.jpeg'"
-          />
-          <div class="absolute top-0 right-0 bg-[#F08300] text-white text-[11px] font-bold px-3 py-1.5 uppercase rounded-bl-xl">
-            {new Date(item.published_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}
+      <article class="bg-white border border-[#eee9db] rounded-xl overflow-hidden flex flex-col justify-between h-full hover:shadow-lg transition">
+        <div>
+          <div class="relative h-52 bg-gray-100 overflow-hidden">
+            <img 
+              src={item.thumbnail} 
+              alt={item.title} 
+              class="w-full h-full object-cover hover:scale-105 transition duration-500" 
+              onerror="this.src='/uploads/foto_berita/1768182343WhatsApp Image 2026-01-12 at 08.08.43.jpeg'"
+            />
+            <div class="absolute top-0 right-0 bg-[#F08300] text-white text-[11px] font-bold px-3 py-1.5 uppercase rounded-bl-lg shadow-xs">
+              {new Date(item.published_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}
+            </div>
           </div>
-        </div>
-        <div class="p-6 flex-1 flex flex-col justify-between space-y-3">
-          <div>
+          <div class="p-6 space-y-3">
             <div class="text-[11px] font-bold uppercase tracking-wider text-[#F08300]">
               {item.category}
             </div>
-            <h3 class="font-bold text-base text-[#101116] leading-snug mt-1 hover:text-[#F08300] transition">
+            <h3 class="font-bold text-base text-[#101116] leading-snug line-clamp-2 min-h-[2.8rem] hover:text-[#F08300] transition">
               <a href={`/berita/${item.slug}`}>{item.title}</a>
             </h3>
-            <p class="text-xs text-[#6f7775] leading-relaxed mt-2 line-clamp-3">
+            <p class="text-xs text-stone-500 leading-relaxed line-clamp-3 min-h-[3.2rem]">
               {item.summary}
             </p>
           </div>
-          <div class="pt-4 border-t border-[#eee9db]">
-            <a href={`/berita/${item.slug}`} class="text-xs font-bold text-[#F08300] uppercase tracking-wider hover:underline">
-              Selengkapnya &rarr;
-            </a>
-          </div>
+        </div>
+        <div class="px-6 pb-6 pt-3 border-t border-gray-100 mt-auto">
+          <a href={`/berita/${item.slug}`} class="text-xs font-bold text-[#F08300] uppercase tracking-wider hover:underline flex items-center gap-1.5">
+            <span>Selengkapnya</span>
+            <span>&rarr;</span>
+          </a>
         </div>
       </article>
     {/each}
   </div>
 </section>
 
-<!-- 3. Profil Pimpinan Satpol PP Sulsel (Matching about-one) -->
-<section class="py-16 px-4 bg-[#f9f4e8] border-t border-b border-[#eee9db]">
-  <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-    <!-- Left: Portrait Photo with Border -->
-    <div class="lg:col-span-5 flex justify-center">
-      <div class="relative border-4 border-white shadow-xl max-w-sm">
-        <img 
-          src="/uploads/foto_pimpinan/1703147058Untitled.png" 
-          alt="Andi Arwin Azis S.STP., M.M" 
-          class="w-full h-auto object-cover" 
-        />
-        <div class="bg-[#101116] text-white p-4 text-center">
-          <div class="font-bold text-sm tracking-tight">ANDI ARWIN AZIS S.STP., M.M</div>
-          <div class="text-[10px] text-[#F08300] font-semibold uppercase tracking-wider mt-0.5">Kepala Satuan Polisi Pamong Praja Prov. Sulsel</div>
+<!-- 3. Profil Pimpinan Satpol PP Sulsel (Life-size 3D Cutout Pimpinan Berdiri Langsung) -->
+<section class="pt-12 pb-16 px-4 bg-[#f9f4e8] border-t border-b border-[#eee9db] overflow-hidden">
+  <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-end">
+    <!-- Left: Foto Pimpinan 3D Life-size (Sangat Besar Seolah Berdiri Langsung) -->
+    <div class="lg:col-span-5 flex justify-center items-end relative">
+      <div class="relative flex flex-col items-center group w-full max-w-md">
+        <!-- Grand 3D Portal Arch Backdrop -->
+        <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[300px] sm:w-[360px] md:w-[400px] h-[480px] sm:h-[560px] md:h-[620px] rounded-t-full bg-gradient-to-b from-amber-500/20 via-white/50 to-transparent border-t-2 border-x-2 border-amber-500/30 -z-10 shadow-inner"></div>
+        <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full bg-amber-500/15 blur-3xl -z-20"></div>
+
+        <!-- Ground Contact Shadow (Bayangan Berdiri Nyata di Lantai) -->
+        <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4/5 h-8 bg-black/30 rounded-[100%] blur-md -z-10"></div>
+
+        <!-- 3D Cutout HD Image (Tinggi Hingga 680px - Life-size Impact) -->
+        <div class="relative z-10 transition-transform duration-500 ease-out group-hover:-translate-y-3 group-hover:scale-[1.02]">
+          <img 
+            src="/uploads/foto_pimpinan/pimpinan_cutout_hd.png" 
+            alt="Andi Arwin Azis S.STP., M.M" 
+            class="w-auto h-[480px] sm:h-[560px] md:h-[620px] lg:h-[680px] object-contain drop-shadow-[0_25px_35px_rgba(42,29,23,0.40)] drop-shadow-[0_10px_15px_rgba(42,29,23,0.22)] select-none pointer-events-none" 
+          />
+
+          <!-- Floating 3D Podium Badge -->
+          <div class="absolute bottom-4 left-1/2 -translate-x-1/2 w-[94%] sm:w-max max-w-md bg-[#1a120c]/95 backdrop-blur-md text-white px-6 py-3 rounded-xl border border-amber-500/40 shadow-[0_16px_32px_rgba(26,18,12,0.50)] text-center transform transition-transform duration-300 group-hover:scale-105">
+            <div class="font-black text-xs sm:text-sm md:text-base tracking-wide text-white uppercase whitespace-nowrap">
+              ANDI ARWIN AZIS S.STP., M.M
+            </div>
+            <div class="text-[10px] sm:text-[11px] text-[#F08300] font-bold uppercase tracking-wider mt-0.5 whitespace-nowrap">
+              Kepala Satuan Polisi Pamong Praja Prov. Sulsel
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Right: Sambutan & Tugas Pokok -->
-    <div class="lg:col-span-7 space-y-4">
-      <div class="text-[#F08300] font-bold text-xs uppercase tracking-widest">Pimpinan Instansi</div>
-      <h2 class="text-2xl md:text-3xl font-extrabold text-[#101116] tracking-tight">
+    <div class="lg:col-span-7 space-y-5 pb-4">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F08300]/15 text-[#F08300] font-bold text-xs uppercase tracking-widest border border-[#F08300]/25">
+        <span class="w-1.5 h-1.5 rounded-full bg-[#F08300]"></span>
+        Pimpinan Instansi
+      </div>
+      <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#101116] tracking-tight leading-tight">
         Menegakkan Perda Secara Humanis dan Berkeadilan
       </h2>
-      <div class="w-12 h-1 bg-[#F08300]"></div>
+      <div class="w-16 h-1.5 bg-[#F08300] rounded-full"></div>
 
-      <p class="text-xs md:text-sm text-[#2b2f3f] leading-relaxed pt-2">
+      <p class="text-sm md:text-base text-stone-700 leading-relaxed pt-1">
         Satuan Polisi Pamong Praja Provinsi Sulawesi Selatan senantiasa mengedepankan pendekatan humanis, persuasif, dan profesional dalam menegakkan Peraturan Daerah dan menjaga ketertiban umum demi kesejahteraan masyarakat Sulawesi Selatan.
       </p>
 
-      <div class="pt-2 space-y-2 text-xs text-[#2b2f3f]">
-        <div class="flex items-start gap-2">
-          <span class="text-[#F08300] font-bold">&bull;</span>
+      <div class="pt-2 space-y-2.5 text-xs sm:text-sm text-stone-700">
+        <div class="flex items-start gap-2.5">
+          <span class="text-[#F08300] font-black text-base leading-none">&bull;</span>
           <span>Penyelenggaraan ketenteraman dan ketertiban umum di seluruh wilayah Sulawesi Selatan.</span>
         </div>
-        <div class="flex items-start gap-2">
-          <span class="text-[#F08300] font-bold">&bull;</span>
+        <div class="flex items-start gap-2.5">
+          <span class="text-[#F08300] font-black text-base leading-none">&bull;</span>
           <span>Penegakan Peraturan Daerah (Perda) dan Peraturan Kepala Daerah (Perkada).</span>
         </div>
-        <div class="flex items-start gap-2">
-          <span class="text-[#F08300] font-bold">&bull;</span>
+        <div class="flex items-start gap-2.5">
+          <span class="text-[#F08300] font-black text-base leading-none">&bull;</span>
           <span>Pengawalan dan pengamanan aset milik Pemerintah Provinsi Sulawesi Selatan.</span>
         </div>
-        <div class="flex items-start gap-2">
-          <span class="text-[#F08300] font-bold">&bull;</span>
+        <div class="flex items-start gap-2.5">
+          <span class="text-[#F08300] font-black text-base leading-none">&bull;</span>
           <span>Pembinaan, bimbingan masyarakat, dan koordinasi perlindungan masyarakat (Linmas).</span>
         </div>
       </div>
 
-      <div class="pt-4">
-        <a href="/profil/pejabat" class="inline-block bg-[#2b2f3f] hover:bg-[#101116] text-white text-xs font-bold uppercase px-6 py-3 rounded transition">
+      <!-- Tombol Cokelat Praja Menggantikan Biru -->
+      <div class="pt-3">
+        <a href="/profil/pejabat" class="inline-block bg-[#3d261a] hover:bg-[#271810] text-white text-xs font-bold uppercase px-7 py-3.5 rounded-xl transition shadow-md hover:shadow-lg hover:-translate-y-0.5 transform">
           Profil Struktur Organisasi &rarr;
         </a>
       </div>
@@ -189,59 +240,71 @@
   <div class="text-center max-w-xl mx-auto mb-12">
     <div class="text-[#F08300] font-bold text-xs uppercase tracking-widest">Akuntabilitas Kinerja</div>
     <h2 class="text-2xl md:text-3xl font-extrabold text-[#101116] tracking-tight mt-1">Dokumen Publik</h2>
-    <div class="w-12 h-1 bg-[#F08300] mx-auto mt-3"></div>
+    <div class="w-12 h-1 bg-[#F08300] mx-auto mt-3 rounded-full"></div>
   </div>
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-    <div class="bg-white border border-[#eee9db] p-6 hover:border-[#F08300] transition">
-      <div class="text-[11px] font-bold text-[#F08300] uppercase tracking-wider">Perencanaan</div>
-      <h3 class="font-bold text-base text-[#101116] mt-1">Renja (Rencana Kerja)</h3>
-      <p class="text-xs text-[#6f7775] mt-2">Dokumen perencanaan tahunan program dan target kegiatan Satpol PP Prov. Sulsel.</p>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+    <div class="bg-white border border-[#eee9db] rounded-xl p-6 hover:border-[#F08300] hover:shadow-md transition flex flex-col justify-between h-full">
+      <div>
+        <div class="text-[11px] font-bold text-[#F08300] uppercase tracking-wider">Perencanaan</div>
+        <h3 class="font-bold text-base text-[#101116] mt-1">Renja (Rencana Kerja)</h3>
+        <p class="text-xs text-stone-500 mt-2 line-clamp-2">Dokumen perencanaan tahunan program dan target kegiatan Satpol PP Prov. Sulsel.</p>
+      </div>
       <div class="mt-4 pt-3 border-t border-gray-100">
         <a href="/dokumen?category=renja" class="text-xs font-bold text-[#F08300] uppercase hover:underline">Lihat Dokumen &rarr;</a>
       </div>
     </div>
 
-    <div class="bg-white border border-[#eee9db] p-6 hover:border-[#F08300] transition">
-      <div class="text-[11px] font-bold text-[#F08300] uppercase tracking-wider">Strategis</div>
-      <h3 class="font-bold text-base text-[#101116] mt-1">Renstra (Rencana Strategis)</h3>
-      <p class="text-xs text-[#6f7775] mt-2">Rencana strategis jangka menengah pencapaian visi, misi, dan sasaran instansi.</p>
+    <div class="bg-white border border-[#eee9db] rounded-xl p-6 hover:border-[#F08300] hover:shadow-md transition flex flex-col justify-between h-full">
+      <div>
+        <div class="text-[11px] font-bold text-[#F08300] uppercase tracking-wider">Strategis</div>
+        <h3 class="font-bold text-base text-[#101116] mt-1">Renstra (Rencana Strategis)</h3>
+        <p class="text-xs text-stone-500 mt-2 line-clamp-2">Rencana strategis jangka menengah pencapaian visi, misi, dan sasaran instansi.</p>
+      </div>
       <div class="mt-4 pt-3 border-t border-gray-100">
         <a href="/dokumen?category=renstra" class="text-xs font-bold text-[#F08300] uppercase hover:underline">Lihat Dokumen &rarr;</a>
       </div>
     </div>
 
-    <div class="bg-white border border-[#eee9db] p-6 hover:border-[#F08300] transition">
-      <div class="text-[11px] font-bold text-[#F08300] uppercase tracking-wider">Penganggaran</div>
-      <h3 class="font-bold text-base text-[#101116] mt-1">DPA (Pelaksanaan Anggaran)</h3>
-      <p class="text-xs text-[#6f7775] mt-2">Alokasi anggaran belanja dan rincian pembiayaan kegiatan operasional.</p>
+    <div class="bg-white border border-[#eee9db] rounded-xl p-6 hover:border-[#F08300] hover:shadow-md transition flex flex-col justify-between h-full">
+      <div>
+        <div class="text-[11px] font-bold text-[#F08300] uppercase tracking-wider">Penganggaran</div>
+        <h3 class="font-bold text-base text-[#101116] mt-1">DPA (Pelaksanaan Anggaran)</h3>
+        <p class="text-xs text-stone-500 mt-2 line-clamp-2">Alokasi anggaran belanja dan rincian pembiayaan kegiatan operasional.</p>
+      </div>
       <div class="mt-4 pt-3 border-t border-gray-100">
         <a href="/dokumen?category=dpa" class="text-xs font-bold text-[#F08300] uppercase hover:underline">Lihat Dokumen &rarr;</a>
       </div>
     </div>
 
-    <div class="bg-white border border-[#eee9db] p-6 hover:border-[#F08300] transition">
-      <div class="text-[11px] font-bold text-[#F08300] uppercase tracking-wider">Kinerja</div>
-      <h3 class="font-bold text-base text-[#101116] mt-1">LAKIP / LKjIP</h3>
-      <p class="text-xs text-[#6f7775] mt-2">Laporan akuntabilitas kinerja instansi pemerintah tahunan.</p>
+    <div class="bg-white border border-[#eee9db] rounded-xl p-6 hover:border-[#F08300] hover:shadow-md transition flex flex-col justify-between h-full">
+      <div>
+        <div class="text-[11px] font-bold text-[#F08300] uppercase tracking-wider">Kinerja</div>
+        <h3 class="font-bold text-base text-[#101116] mt-1">LAKIP / LKjIP</h3>
+        <p class="text-xs text-stone-500 mt-2 line-clamp-2">Laporan akuntabilitas kinerja instansi pemerintah tahunan.</p>
+      </div>
       <div class="mt-4 pt-3 border-t border-gray-100">
         <a href="/dokumen?category=lakip" class="text-xs font-bold text-[#F08300] uppercase hover:underline">Lihat Dokumen &rarr;</a>
       </div>
     </div>
 
-    <div class="bg-white border border-[#eee9db] p-6 hover:border-[#F08300] transition">
-      <div class="text-[11px] font-bold text-[#F08300] uppercase tracking-wider">Pertanggungjawaban</div>
-      <h3 class="font-bold text-base text-[#101116] mt-1">Laporan Keuangan</h3>
-      <p class="text-xs text-[#6f7775] mt-2">Laporan pertanggungjawaban realisasi keuangan dan aset tahunan.</p>
+    <div class="bg-white border border-[#eee9db] rounded-xl p-6 hover:border-[#F08300] hover:shadow-md transition flex flex-col justify-between h-full">
+      <div>
+        <div class="text-[11px] font-bold text-[#F08300] uppercase tracking-wider">Pertanggungjawaban</div>
+        <h3 class="font-bold text-base text-[#101116] mt-1">Laporan Keuangan</h3>
+        <p class="text-xs text-stone-500 mt-2 line-clamp-2">Laporan pertanggungjawaban realisasi keuangan dan aset tahunan.</p>
+      </div>
       <div class="mt-4 pt-3 border-t border-gray-100">
         <a href="/dokumen?category=keuangan" class="text-xs font-bold text-[#F08300] uppercase hover:underline">Lihat Dokumen &rarr;</a>
       </div>
     </div>
 
-    <div class="bg-white border border-[#eee9db] p-6 hover:border-[#F08300] transition">
-      <div class="text-[11px] font-bold text-[#F08300] uppercase tracking-wider">Regulasi</div>
-      <h3 class="font-bold text-base text-[#101116] mt-1">Perda &amp; SOP Satpol PP</h3>
-      <p class="text-xs text-[#6f7775] mt-2">Peraturan Daerah Provinsi Sulawesi Selatan dan Standar Operasional Prosedur.</p>
+    <div class="bg-white border border-[#eee9db] rounded-xl p-6 hover:border-[#F08300] hover:shadow-md transition flex flex-col justify-between h-full">
+      <div>
+        <div class="text-[11px] font-bold text-[#F08300] uppercase tracking-wider">Regulasi</div>
+        <h3 class="font-bold text-base text-[#101116] mt-1">Perda &amp; SOP Satpol PP</h3>
+        <p class="text-xs text-stone-500 mt-2 line-clamp-2">Peraturan Daerah Provinsi Sulawesi Selatan dan Standar Operasional Prosedur.</p>
+      </div>
       <div class="mt-4 pt-3 border-t border-gray-100">
         <a href="/dokumen?category=perda" class="text-xs font-bold text-[#F08300] uppercase hover:underline">Lihat Dokumen &rarr;</a>
       </div>
@@ -249,29 +312,29 @@
   </div>
 </section>
 
-<!-- 5. Layanan SIAP TERTIB & Pelacakan Aduan (Fitur Penggabungan Terpadu) -->
-<section id="layanan-siaptertib" class="py-16 px-4 bg-[#f9f4e8] border-t border-b border-[#eee9db]">
+<!-- 5. Layanan SIAP TERTIB & Pelacakan Aduan (Latar Krem #f9f4e8 Klasik) -->
+<section id="layanan-siaptertib" class="scroll-mt-28 py-16 px-4 bg-[#f9f4e8] border-t border-b border-[#eee9db]">
   <div class="max-w-4xl mx-auto">
     <div class="text-center max-w-xl mx-auto mb-8">
       <div class="text-[#F08300] font-bold text-xs uppercase tracking-widest">Layanan Pengaduan Masyarakat</div>
       <h2 class="text-2xl md:text-3xl font-extrabold text-[#101116] tracking-tight mt-1">SIAP TERTIB</h2>
-      <div class="w-12 h-1 bg-[#F08300] mx-auto mt-3"></div>
-      <p class="text-xs text-[#6f7775] mt-3">
+      <div class="w-12 h-1 bg-[#F08300] mx-auto mt-3 rounded-full"></div>
+      <p class="text-xs text-stone-500 mt-3">
         Sistem Informasi Penegakan Peraturan Daerah &amp; Ketenteraman Ketertiban Umum.
       </p>
     </div>
 
     <!-- Tab Selector -->
     <div class="flex justify-center mb-6">
-      <div class="inline-flex border border-gray-300 bg-white p-1">
+      <div class="inline-flex border border-gray-300 bg-white p-1 rounded-xl shadow-xs">
         <button 
-          class={`px-6 py-2 text-xs font-bold uppercase tracking-wider transition ${activeTab === 'lapor' ? 'bg-[#F08300] text-white' : 'text-[#101116] hover:bg-gray-100'}`}
+          class={`px-6 py-2.5 text-xs font-bold uppercase tracking-wider rounded-lg transition ${activeTab === 'lapor' ? 'bg-[#F08300] text-white shadow-xs' : 'text-[#101116] hover:bg-[#f9f4e8]'}`}
           on:click={() => activeTab = 'lapor'}
         >
           Formulir Pengaduan
         </button>
         <button 
-          class={`px-6 py-2 text-xs font-bold uppercase tracking-wider transition ${activeTab === 'lacak' ? 'bg-[#F08300] text-white' : 'text-[#101116] hover:bg-gray-100'}`}
+          class={`px-6 py-2.5 text-xs font-bold uppercase tracking-wider rounded-lg transition ${activeTab === 'lacak' ? 'bg-[#F08300] text-white shadow-xs' : 'text-[#101116] hover:bg-[#f9f4e8]'}`}
           on:click={() => activeTab = 'lacak'}
         >
           Lacak Resi Aduan
@@ -292,12 +355,12 @@
   <div class="text-center max-w-xl mx-auto mb-12">
     <div class="text-[#F08300] font-bold text-xs uppercase tracking-widest">Dokumentasi</div>
     <h2 class="text-2xl md:text-3xl font-extrabold text-[#101116] tracking-tight mt-1">Galeri Kegiatan</h2>
-    <div class="w-12 h-1 bg-[#F08300] mx-auto mt-3"></div>
+    <div class="w-12 h-1 bg-[#F08300] mx-auto mt-3 rounded-full"></div>
   </div>
 
   <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
     {#each $galleryStore.slice(0, 4) as gal}
-      <div class="h-44 bg-gray-100 overflow-hidden border border-[#eee9db] rounded-2xl shadow-xs group">
+      <div class="h-44 bg-gray-100 overflow-hidden border border-[#eee9db] rounded-xl shadow-xs group">
         <img src={gal.image_url} alt={gal.title} class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
       </div>
     {/each}

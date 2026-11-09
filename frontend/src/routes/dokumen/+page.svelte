@@ -101,7 +101,7 @@
                   target="_blank" 
                   rel="noreferrer"
                   download={doc.title}
-                  class="inline-block bg-[#2b2f3f] hover:bg-[#101116] text-white font-bold text-xs uppercase px-4 py-2 rounded-xl transition"
+                  class="inline-block bg-[#3d261a] hover:bg-[#271810] text-white font-bold text-xs uppercase px-4 py-2 rounded-lg transition"
                 >
                   Unduh ({doc.file_size || 'Berkas'})
                 </a>

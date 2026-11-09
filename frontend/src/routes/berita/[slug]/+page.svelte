@@ -103,7 +103,7 @@
       <!-- Sidebar Column -->
       <div class="space-y-6">
         <!-- SIAP TERTIB Quick CTA -->
-        <div class="bg-[#2b2f3f] text-white p-6 rounded-2xl border-t-4 border-[#F08300] shadow-sm">
+        <div class="bg-[#3d261a] text-white p-6 rounded-xl border-t-4 border-[#F08300] shadow-sm">
           <div class="text-[#F08300] font-bold text-xs uppercase tracking-wider mb-1">
             Kanal Pengaduan Warga
           </div>

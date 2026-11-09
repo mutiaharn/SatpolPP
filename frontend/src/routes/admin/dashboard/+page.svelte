@@ -674,7 +674,7 @@
               </p>
               <button 
                 on:click={() => { currentTab = 'articles'; isWritingArticle = true; }}
-                class="w-full bg-[#2b2f3f] hover:bg-[#101116] text-white font-bold text-xs uppercase py-3 rounded-xl transition"
+                class="w-full bg-[#3d261a] hover:bg-[#271810] text-white font-bold text-xs uppercase py-3 rounded-xl transition"
               >
                 Mulai Menulis Berita &rarr;
               </button>
@@ -800,7 +800,7 @@
                       <td class="p-4 text-right">
                         <button 
                           on:click={() => openComplaintDetail(comp)}
-                          class="bg-[#2b2f3f] hover:bg-[#101116] text-white font-bold text-[11px] uppercase px-3 py-1.5 rounded-lg transition"
+                          class="bg-[#3d261a] hover:bg-[#271810] text-white font-bold text-[11px] uppercase px-3 py-1.5 rounded-lg transition"
                         >
                           Tindak Lanjut &rarr;
                         </button>
@@ -907,7 +907,7 @@
                         type="file" 
                         accept="image/*" 
                         on:change={handleArticleImageUpload} 
-                        class="text-xs text-gray-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-[#2b2f3f] file:text-white hover:file:bg-[#101116]" 
+                        class="text-xs text-gray-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-[#3d261a] file:text-white hover:file:bg-[#271810]" 
                       />
                       <div class="text-[11px] text-[#6f7775]">Format JPG, PNG, atau WebP disarankan beresolusi minimal 800x500px.</div>
                     </div>
@@ -1046,7 +1046,7 @@
                       type="file" 
                       accept=".pdf,.doc,.docx,.xls,.xlsx"
                       on:change={handleDocFileUpload}
-                      class="w-full text-xs text-gray-700 border border-gray-300 rounded-lg p-2 bg-white file:mr-3 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-bold file:bg-[#2b2f3f] file:text-white"
+                      class="w-full text-xs text-gray-700 border border-gray-300 rounded-lg p-2 bg-white file:mr-3 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-bold file:bg-[#3d261a] file:text-white"
                     />
                     {#if uploadedFileName}
                       <div class="text-[11px] text-emerald-700 font-semibold mt-1">
@@ -1169,7 +1169,7 @@
                       type="file" 
                       accept="image/*"
                       on:change={handleGalleryImageUpload}
-                      class="w-full text-xs text-gray-700 border border-gray-300 rounded-lg p-2 bg-white file:mr-3 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-bold file:bg-[#2b2f3f] file:text-white"
+                      class="w-full text-xs text-gray-700 border border-gray-300 rounded-lg p-2 bg-white file:mr-3 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-bold file:bg-[#3d261a] file:text-white"
                     />
                     {#if galleryPreview}
                       <img src={galleryPreview} alt="Preview Foto" class="mt-2 w-48 h-32 object-cover rounded-xl border border-gray-300" />
