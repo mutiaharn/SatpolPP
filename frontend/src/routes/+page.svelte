@@ -354,16 +354,16 @@
 </section>
 
 <!-- 6. Galeri Kegiatan (Matching gallery-one) -->
-<section class="py-16 px-4 max-w-7xl mx-auto">
-  <div class="text-center max-w-xl mx-auto mb-12">
+<section id="galeri-kegiatan" class="pt-6 pb-6 px-4 max-w-7xl mx-auto">
+  <div class="text-center max-w-xl mx-auto mb-5">
     <div class="text-[#F08300] font-bold text-xs uppercase tracking-widest">Dokumentasi</div>
     <h2 class="text-2xl md:text-3xl font-extrabold text-[#101116] tracking-tight mt-1">Galeri Kegiatan</h2>
-    <div class="w-12 h-1 bg-[#F08300] mx-auto mt-3 rounded-full"></div>
+    <div class="w-12 h-1 bg-[#F08300] mx-auto mt-2.5 rounded-full"></div>
   </div>
 
   <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
     {#each $galleryStore.slice(0, 4) as gal}
-      <div class="h-44 bg-gray-100 overflow-hidden border border-[#eee9db] rounded-xl shadow-xs group">
+      <div class="h-32 sm:h-36 bg-gray-100 overflow-hidden border border-[#eee9db] rounded-xl shadow-xs group">
         <img src={gal.image_url} alt={gal.title} class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
       </div>
     {/each}
