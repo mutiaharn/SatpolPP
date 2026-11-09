@@ -84,9 +84,6 @@
         {/if}
       </div>
 
-      <a href="/berita" class="hover:text-[#F08300] transition">Berita</a>
-      <a href="/dokumen" class="hover:text-[#F08300] transition">Dokumen</a>
-      <a href="/galeri" class="hover:text-[#F08300] transition">Galeri</a>
       <a href="/lacak" class="hover:text-[#F08300] transition">Lacak Aduan</a>
       <a href="/kontak" class="hover:text-[#F08300] transition">Kontak</a>
     </nav>
@@ -180,9 +177,6 @@
 
         <!-- Menu Lainnya -->
         <div class="border-t border-white/10 pt-4 space-y-3 text-base font-semibold">
-          <a href="/berita" class="block hover:text-[#F08300]" on:click={() => mobileMenuOpen = false}>Berita &amp; Informasi</a>
-          <a href="/dokumen" class="block hover:text-[#F08300]" on:click={() => mobileMenuOpen = false}>Dokumen Publik</a>
-          <a href="/galeri" class="block hover:text-[#F08300]" on:click={() => mobileMenuOpen = false}>Galeri Foto</a>
           <a href="/lacak" class="block hover:text-[#F08300]" on:click={() => mobileMenuOpen = false}>Lacak Tiket Aduan</a>
           <a href="/kontak" class="block hover:text-[#F08300]" on:click={() => mobileMenuOpen = false}>Kontak Resmi</a>
         </div>
