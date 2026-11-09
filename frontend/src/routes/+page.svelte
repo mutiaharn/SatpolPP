@@ -236,78 +236,80 @@
   </div>
 </section>
 
-<!-- 4. Dokumen Publik (Matching events-one) -->
-<section class="py-16 px-4 max-w-7xl mx-auto">
-  <div class="text-center max-w-xl mx-auto mb-12">
-    <div class="text-[#F08300] font-bold text-xs uppercase tracking-widest">Akuntabilitas Kinerja</div>
-    <h2 class="text-2xl md:text-3xl font-extrabold text-[#101116] tracking-tight mt-1">Dokumen Publik</h2>
-    <div class="w-12 h-1 bg-[#F08300] mx-auto mt-3 rounded-full"></div>
-  </div>
-
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
-    <div class="bg-white border border-[#eee9db] rounded-xl p-6 hover:border-[#F08300] hover:shadow-md transition flex flex-col justify-between h-full">
-      <div>
-        <div class="text-[11px] font-bold text-[#F08300] uppercase tracking-wider">Perencanaan</div>
-        <h3 class="font-bold text-base text-[#101116] mt-1">Renja (Rencana Kerja)</h3>
-        <p class="text-xs text-stone-500 mt-2 line-clamp-2">Dokumen perencanaan tahunan program dan target kegiatan Satpol PP Prov. Sulsel.</p>
-      </div>
-      <div class="mt-4 pt-3 border-t border-gray-100">
-        <a href="/dokumen?category=renja" class="text-xs font-bold text-[#F08300] uppercase hover:underline">Lihat Dokumen &rarr;</a>
-      </div>
+<!-- 4. Dokumen Publik (Full Screen Putih Bersih: Bagian Kuning di Bawah Hanya Terlihat Saat Di-scroll) -->
+<section id="dokumen-publik" class="bg-white min-h-[calc(100vh-106px)] flex flex-col justify-center py-12 md:py-16 px-4">
+  <div class="max-w-7xl mx-auto w-full">
+    <div class="text-center max-w-xl mx-auto mb-10 md:mb-12">
+      <div class="text-[#F08300] font-bold text-xs uppercase tracking-widest">Akuntabilitas Kinerja</div>
+      <h2 class="text-2xl md:text-3xl font-extrabold text-[#101116] tracking-tight mt-1">Dokumen Publik</h2>
+      <div class="w-12 h-1 bg-[#F08300] mx-auto mt-3 rounded-full"></div>
     </div>
 
-    <div class="bg-white border border-[#eee9db] rounded-xl p-6 hover:border-[#F08300] hover:shadow-md transition flex flex-col justify-between h-full">
-      <div>
-        <div class="text-[11px] font-bold text-[#F08300] uppercase tracking-wider">Strategis</div>
-        <h3 class="font-bold text-base text-[#101116] mt-1">Renstra (Rencana Strategis)</h3>
-        <p class="text-xs text-stone-500 mt-2 line-clamp-2">Rencana strategis jangka menengah pencapaian visi, misi, dan sasaran instansi.</p>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+      <div class="bg-white border border-[#eee9db] rounded-xl p-6 hover:border-[#F08300] hover:shadow-md transition flex flex-col justify-between h-full">
+        <div>
+          <div class="text-[11px] font-bold text-[#F08300] uppercase tracking-wider">Perencanaan</div>
+          <h3 class="font-bold text-base text-[#101116] mt-1">Renja (Rencana Kerja)</h3>
+          <p class="text-xs text-stone-500 mt-2 line-clamp-2">Dokumen perencanaan tahunan program dan target kegiatan Satpol PP Prov. Sulsel.</p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-gray-100">
+          <a href="/dokumen?category=renja" class="text-xs font-bold text-[#F08300] uppercase hover:underline">Lihat Dokumen &rarr;</a>
+        </div>
       </div>
-      <div class="mt-4 pt-3 border-t border-gray-100">
-        <a href="/dokumen?category=renstra" class="text-xs font-bold text-[#F08300] uppercase hover:underline">Lihat Dokumen &rarr;</a>
-      </div>
-    </div>
 
-    <div class="bg-white border border-[#eee9db] rounded-xl p-6 hover:border-[#F08300] hover:shadow-md transition flex flex-col justify-between h-full">
-      <div>
-        <div class="text-[11px] font-bold text-[#F08300] uppercase tracking-wider">Penganggaran</div>
-        <h3 class="font-bold text-base text-[#101116] mt-1">DPA (Pelaksanaan Anggaran)</h3>
-        <p class="text-xs text-stone-500 mt-2 line-clamp-2">Alokasi anggaran belanja dan rincian pembiayaan kegiatan operasional.</p>
+      <div class="bg-white border border-[#eee9db] rounded-xl p-6 hover:border-[#F08300] hover:shadow-md transition flex flex-col justify-between h-full">
+        <div>
+          <div class="text-[11px] font-bold text-[#F08300] uppercase tracking-wider">Strategis</div>
+          <h3 class="font-bold text-base text-[#101116] mt-1">Renstra (Rencana Strategis)</h3>
+          <p class="text-xs text-stone-500 mt-2 line-clamp-2">Rencana strategis jangka menengah pencapaian visi, misi, dan sasaran instansi.</p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-gray-100">
+          <a href="/dokumen?category=renstra" class="text-xs font-bold text-[#F08300] uppercase hover:underline">Lihat Dokumen &rarr;</a>
+        </div>
       </div>
-      <div class="mt-4 pt-3 border-t border-gray-100">
-        <a href="/dokumen?category=dpa" class="text-xs font-bold text-[#F08300] uppercase hover:underline">Lihat Dokumen &rarr;</a>
-      </div>
-    </div>
 
-    <div class="bg-white border border-[#eee9db] rounded-xl p-6 hover:border-[#F08300] hover:shadow-md transition flex flex-col justify-between h-full">
-      <div>
-        <div class="text-[11px] font-bold text-[#F08300] uppercase tracking-wider">Kinerja</div>
-        <h3 class="font-bold text-base text-[#101116] mt-1">LAKIP / LKjIP</h3>
-        <p class="text-xs text-stone-500 mt-2 line-clamp-2">Laporan akuntabilitas kinerja instansi pemerintah tahunan.</p>
+      <div class="bg-white border border-[#eee9db] rounded-xl p-6 hover:border-[#F08300] hover:shadow-md transition flex flex-col justify-between h-full">
+        <div>
+          <div class="text-[11px] font-bold text-[#F08300] uppercase tracking-wider">Penganggaran</div>
+          <h3 class="font-bold text-base text-[#101116] mt-1">DPA (Pelaksanaan Anggaran)</h3>
+          <p class="text-xs text-stone-500 mt-2 line-clamp-2">Alokasi anggaran belanja dan rincian pembiayaan kegiatan operasional.</p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-gray-100">
+          <a href="/dokumen?category=dpa" class="text-xs font-bold text-[#F08300] uppercase hover:underline">Lihat Dokumen &rarr;</a>
+        </div>
       </div>
-      <div class="mt-4 pt-3 border-t border-gray-100">
-        <a href="/dokumen?category=lakip" class="text-xs font-bold text-[#F08300] uppercase hover:underline">Lihat Dokumen &rarr;</a>
-      </div>
-    </div>
 
-    <div class="bg-white border border-[#eee9db] rounded-xl p-6 hover:border-[#F08300] hover:shadow-md transition flex flex-col justify-between h-full">
-      <div>
-        <div class="text-[11px] font-bold text-[#F08300] uppercase tracking-wider">Pertanggungjawaban</div>
-        <h3 class="font-bold text-base text-[#101116] mt-1">Laporan Keuangan</h3>
-        <p class="text-xs text-stone-500 mt-2 line-clamp-2">Laporan pertanggungjawaban realisasi keuangan dan aset tahunan.</p>
+      <div class="bg-white border border-[#eee9db] rounded-xl p-6 hover:border-[#F08300] hover:shadow-md transition flex flex-col justify-between h-full">
+        <div>
+          <div class="text-[11px] font-bold text-[#F08300] uppercase tracking-wider">Kinerja</div>
+          <h3 class="font-bold text-base text-[#101116] mt-1">LAKIP / LKjIP</h3>
+          <p class="text-xs text-stone-500 mt-2 line-clamp-2">Laporan akuntabilitas kinerja instansi pemerintah tahunan.</p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-gray-100">
+          <a href="/dokumen?category=lakip" class="text-xs font-bold text-[#F08300] uppercase hover:underline">Lihat Dokumen &rarr;</a>
+        </div>
       </div>
-      <div class="mt-4 pt-3 border-t border-gray-100">
-        <a href="/dokumen?category=keuangan" class="text-xs font-bold text-[#F08300] uppercase hover:underline">Lihat Dokumen &rarr;</a>
-      </div>
-    </div>
 
-    <div class="bg-white border border-[#eee9db] rounded-xl p-6 hover:border-[#F08300] hover:shadow-md transition flex flex-col justify-between h-full">
-      <div>
-        <div class="text-[11px] font-bold text-[#F08300] uppercase tracking-wider">Regulasi</div>
-        <h3 class="font-bold text-base text-[#101116] mt-1">Perda &amp; SOP Satpol PP</h3>
-        <p class="text-xs text-stone-500 mt-2 line-clamp-2">Peraturan Daerah Provinsi Sulawesi Selatan dan Standar Operasional Prosedur.</p>
+      <div class="bg-white border border-[#eee9db] rounded-xl p-6 hover:border-[#F08300] hover:shadow-md transition flex flex-col justify-between h-full">
+        <div>
+          <div class="text-[11px] font-bold text-[#F08300] uppercase tracking-wider">Pertanggungjawaban</div>
+          <h3 class="font-bold text-base text-[#101116] mt-1">Laporan Keuangan</h3>
+          <p class="text-xs text-stone-500 mt-2 line-clamp-2">Laporan pertanggungjawaban realisasi keuangan dan aset tahunan.</p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-gray-100">
+          <a href="/dokumen?category=keuangan" class="text-xs font-bold text-[#F08300] uppercase hover:underline">Lihat Dokumen &rarr;</a>
+        </div>
       </div>
-      <div class="mt-4 pt-3 border-t border-gray-100">
-        <a href="/dokumen?category=perda" class="text-xs font-bold text-[#F08300] uppercase hover:underline">Lihat Dokumen &rarr;</a>
+
+      <div class="bg-white border border-[#eee9db] rounded-xl p-6 hover:border-[#F08300] hover:shadow-md transition flex flex-col justify-between h-full">
+        <div>
+          <div class="text-[11px] font-bold text-[#F08300] uppercase tracking-wider">Regulasi</div>
+          <h3 class="font-bold text-base text-[#101116] mt-1">Perda &amp; SOP Satpol PP</h3>
+          <p class="text-xs text-stone-500 mt-2 line-clamp-2">Peraturan Daerah Provinsi Sulawesi Selatan dan Standar Operasional Prosedur.</p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-gray-100">
+          <a href="/dokumen?category=perda" class="text-xs font-bold text-[#F08300] uppercase hover:underline">Lihat Dokumen &rarr;</a>
+        </div>
       </div>
     </div>
   </div>
