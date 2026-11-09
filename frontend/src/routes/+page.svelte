@@ -36,14 +36,16 @@
     return () => clearInterval(timer);
   });
 
-  // Smooth scroll dengan offset tepat di bawah sticky navbar
+  // Smooth scroll dengan offset presisi dinamis di bawah sticky navbar
   function scrollToTarget(id: string) {
     const el = document.getElementById(id);
     if (!el) return;
-    const navOffset = 95; // Kompensasi tinggi sticky navbar agar judul tidak tertutup
+    const header = document.querySelector('header');
+    const headerHeight = header ? header.getBoundingClientRect().height : 106;
+    const navOffset = headerHeight + 24; // Kompensasi dinamis tinggi navbar + 24px ruang lega agar judul tampil sempurna
     const elPos = el.getBoundingClientRect().top + window.pageYOffset;
     window.scrollTo({
-      top: elPos - navOffset,
+      top: Math.max(0, elPos - navOffset),
       behavior: 'smooth'
     });
   }
@@ -111,8 +113,8 @@
   </div>
 </section>
 
-<!-- 2. Berita Terbaru (Poin 20: Card Berita Fixed & Balanced dengan scroll-mt-28) -->
-<section id="berita-terbaru" class="scroll-mt-28 py-16 px-4 max-w-7xl mx-auto">
+<!-- 2. Berita Terbaru (Poin 20: Card Berita Fixed & Balanced dengan scroll-mt-36) -->
+<section id="berita-terbaru" class="scroll-mt-36 py-16 px-4 max-w-7xl mx-auto">
   <div class="text-center max-w-xl mx-auto mb-12">
     <div class="text-[#F08300] font-bold text-xs uppercase tracking-widest">Publikasi Resmi</div>
     <h2 class="text-2xl md:text-3xl font-extrabold text-[#101116] tracking-tight mt-1">Berita Terbaru</h2>
@@ -313,7 +315,7 @@
 </section>
 
 <!-- 5. Layanan SIAP TERTIB & Pelacakan Aduan (Latar Krem #f9f4e8 Klasik) -->
-<section id="layanan-siaptertib" class="scroll-mt-28 py-16 px-4 bg-[#f9f4e8] border-t border-b border-[#eee9db]">
+<section id="layanan-siaptertib" class="scroll-mt-36 py-16 px-4 bg-[#f9f4e8] border-t border-b border-[#eee9db]">
   <div class="max-w-4xl mx-auto">
     <div class="text-center max-w-xl mx-auto mb-8">
       <div class="text-[#F08300] font-bold text-xs uppercase tracking-widest">Layanan Pengaduan Masyarakat</div>

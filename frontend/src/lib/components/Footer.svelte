@@ -56,8 +56,8 @@
     </div>
   </div>
 
-  <!-- Bottom Bar: Padding Bawah Luas (pb-10) Agar Teks Tidak Pernah Terpotong Layar -->
-  <div class="bg-[#0e0805] border-t border-[#3d261a] py-6 pb-12 px-4 text-center">
+  <!-- Bottom Bar: Padding Bawah Luas (pb-16) Agar Teks Tidak Pernah Terpotong Layar -->
+  <div class="bg-[#0e0805] border-t border-[#3d261a] py-8 pb-16 px-4 text-center">
     <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-stone-300 font-medium">
       <p>
         &copy; 2026 Satuan Polisi Pamong Praja Provinsi Sulawesi Selatan. Hak Cipta Dilindungi Undang-Undang.
