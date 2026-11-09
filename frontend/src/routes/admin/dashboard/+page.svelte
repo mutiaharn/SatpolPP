@@ -10,6 +10,9 @@
   } from '$lib/stores/appState';
   import type { Complaint, Article, PublicDocument, GalleryItem } from '$lib/types';
   import RichTextEditor from '$lib/components/RichTextEditor.svelte';
+  import DataTable from '$lib/components/ui/DataTable.svelte';
+  import FileUploader from '$lib/components/ui/FileUploader.svelte';
+  import Modal from '$lib/components/ui/Modal.svelte';
 
   // Navigation tab state
   type AdminTab = 'overview' | 'complaints' | 'articles' | 'documents' | 'gallery';
@@ -443,7 +446,7 @@
   <title>Panel Operasional Satpol PP &amp; CMS Terpadu</title>
 </svelte:head>
 
-<div class="min-h-screen bg-[#f4f5f8] flex flex-col lg:flex-row text-[#101116] font-sans antialiased">
+<div class="h-screen overflow-hidden bg-[#f4f5f8] flex flex-col lg:flex-row text-[#101116] font-sans antialiased">
 
   <!-- ============================================================== -->
   <!-- RESPONSIVE SIDEBAR (Desktop: Fixed / Mobile: Off-canvas drawer) -->
@@ -461,10 +464,10 @@
   {/if}
 
   <aside 
-    class={`fixed lg:sticky top-0 left-0 z-50 h-screen w-72 bg-[#12151e] text-white flex flex-col justify-between transition-transform duration-300 ease-in-out border-r border-[#262a38] shadow-2xl lg:shadow-none lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
+    class={`fixed lg:static inset-y-0 left-0 z-50 h-screen w-72 shrink-0 bg-[#1a120c] text-white flex flex-col justify-between transition-transform duration-300 ease-in-out border-r border-[#2d2016] shadow-2xl lg:shadow-none ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
   >
     <!-- Sidebar Header -->
-    <div class="p-6 border-b border-[#262a38]">
+    <div class="p-6 border-b border-[#2d2016]">
       <div class="flex items-center gap-3">
         <img 
           src="/uploads/foto_website/1686928245logo_white.png" 
@@ -476,7 +479,7 @@
           <div class="text-sm font-extrabold text-white tracking-tight">Panel Pengendali</div>
         </div>
       </div>
-      <div class="mt-4 pt-3 border-t border-[#262a38] text-[10px] text-[#9ca3af] uppercase tracking-widest font-semibold flex items-center justify-between">
+      <div class="mt-4 pt-3 border-t border-[#2d2016] text-[10px] text-[#9ca3af] uppercase tracking-widest font-semibold flex items-center justify-between">
         <span>SOP Terpadu &amp; CMS</span>
         <span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
       </div>
@@ -485,7 +488,7 @@
     <!-- Navigation Menu Items -->
     <nav class="p-4 space-y-1.5 flex-1 overflow-y-auto">
       <button 
-        class={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition ${currentTab === 'overview' ? 'bg-[#F08300] text-white shadow-md' : 'text-gray-300 hover:bg-[#1d2232] hover:text-white'}`}
+        class={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition ${currentTab === 'overview' ? 'bg-[#F08300] text-white shadow-md' : 'text-gray-300 hover:bg-[#2d2016] hover:text-white'}`}
         on:click={() => { currentTab = 'overview'; sidebarOpen = false; }}
       >
         <span>Ikhtisar Operasional</span>
@@ -493,7 +496,7 @@
       </button>
 
       <button 
-        class={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition ${currentTab === 'complaints' ? 'bg-[#F08300] text-white shadow-md' : 'text-gray-300 hover:bg-[#1d2232] hover:text-white'}`}
+        class={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition ${currentTab === 'complaints' ? 'bg-[#F08300] text-white shadow-md' : 'text-gray-300 hover:bg-[#2d2016] hover:text-white'}`}
         on:click={() => { currentTab = 'complaints'; sidebarOpen = false; }}
       >
         <span>Layanan SIAP TERTIB</span>
@@ -501,7 +504,7 @@
       </button>
 
       <button 
-        class={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition ${currentTab === 'articles' ? 'bg-[#F08300] text-white shadow-md' : 'text-gray-300 hover:bg-[#1d2232] hover:text-white'}`}
+        class={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition ${currentTab === 'articles' ? 'bg-[#F08300] text-white shadow-md' : 'text-gray-300 hover:bg-[#2d2016] hover:text-white'}`}
         on:click={() => { currentTab = 'articles'; sidebarOpen = false; }}
       >
         <span>CMS Berita &amp; Warta</span>
@@ -509,7 +512,7 @@
       </button>
 
       <button 
-        class={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition ${currentTab === 'documents' ? 'bg-[#F08300] text-white shadow-md' : 'text-gray-300 hover:bg-[#1d2232] hover:text-white'}`}
+        class={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition ${currentTab === 'documents' ? 'bg-[#F08300] text-white shadow-md' : 'text-gray-300 hover:bg-[#2d2016] hover:text-white'}`}
         on:click={() => { currentTab = 'documents'; sidebarOpen = false; }}
       >
         <span>CMS Dokumen Publik</span>
@@ -517,7 +520,7 @@
       </button>
 
       <button 
-        class={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition ${currentTab === 'gallery' ? 'bg-[#F08300] text-white shadow-md' : 'text-gray-300 hover:bg-[#1d2232] hover:text-white'}`}
+        class={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition ${currentTab === 'gallery' ? 'bg-[#F08300] text-white shadow-md' : 'text-gray-300 hover:bg-[#2d2016] hover:text-white'}`}
         on:click={() => { currentTab = 'gallery'; sidebarOpen = false; }}
       >
         <span>CMS Galeri Kegiatan</span>
@@ -531,7 +534,7 @@
 
       <a 
         href="/superadmin/dashboard" 
-        class="block px-4 py-2.5 rounded-xl text-xs font-bold text-gray-300 hover:bg-[#1d2232] hover:text-[#F08300] transition"
+        class="block px-4 py-2.5 rounded-xl text-xs font-bold text-gray-300 hover:bg-[#2d2016] hover:text-[#F08300] transition"
       >
         Konsol Diskominfo (Superadmin) &rarr;
       </a>
@@ -539,14 +542,14 @@
       <a 
         href="/" 
         target="_blank"
-        class="block px-4 py-2.5 rounded-xl text-xs font-bold text-gray-300 hover:bg-[#1d2232] hover:text-[#F08300] transition"
+        class="block px-4 py-2.5 rounded-xl text-xs font-bold text-gray-300 hover:bg-[#2d2016] hover:text-[#F08300] transition"
       >
         Buka Portal Publik &rarr;
       </a>
     </nav>
 
     <!-- Sidebar User Footer -->
-    <div class="p-4 bg-[#0d1017] border-t border-[#262a38]">
+    <div class="p-4 bg-[#120b07] border-t border-[#2d2016]">
       <div class="flex items-center justify-between">
         <div class="flex-1 min-w-0 pr-2">
           <div class="text-xs font-bold text-white truncate">{currentUser?.name || 'Petugas Satpol PP'}</div>
@@ -554,7 +557,7 @@
         </div>
         <a 
           href="/admin/login" 
-          class="bg-[#1f2433] hover:bg-rose-900/60 text-gray-300 hover:text-white text-[11px] font-bold px-2.5 py-1.5 rounded-lg border border-gray-700 transition"
+          class="bg-[#2d2016] hover:bg-rose-900/60 text-gray-300 hover:text-white text-[11px] font-bold px-2.5 py-1.5 rounded-lg border border-gray-700 transition"
           title="Keluar / Ganti Akun"
         >
           Logout
@@ -566,7 +569,7 @@
   <!-- ============================================================== -->
   <!-- MAIN CONTENT AREA -->
   <!-- ============================================================== -->
-  <main class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+  <main class="flex-1 h-screen overflow-y-auto flex flex-col min-w-0">
 
     <!-- Top Bar Navigation (Responsive) -->
     <header class="bg-white border-b border-gray-200/80 px-4 sm:px-8 py-4 flex items-center justify-between sticky top-0 z-30 shadow-xs">
@@ -749,73 +752,45 @@
 
           <!-- Complaints Table -->
           <div class="bg-white border border-gray-200/90 rounded-2xl shadow-xs overflow-hidden">
-            <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs">
-                <thead class="bg-gray-50 border-b border-gray-200 text-[#6f7775] uppercase text-[10px] tracking-wider">
-                  <tr>
-                    <th class="p-4">No. Tiket Resi</th>
-                    <th class="p-4">Pelapor</th>
-                    <th class="p-4">Jenis Pelanggaran</th>
-                    <th class="p-4">Wilayah &amp; Lokasi</th>
-                    <th class="p-4">Status SOP</th>
-                    <th class="p-4">Disposisi</th>
-                    <th class="p-4 text-right">Tindakan</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-100">
-                  {#each filteredComplaints as comp}
-                    {@const st = getStatusLabel(comp.status)}
-                    <tr class="hover:bg-gray-50/70 transition">
-                      <td class="p-4 font-mono font-bold text-[#101116]">
-                        {comp.ticket_code}
-                        <div class="text-[10px] text-[#6f7775] font-sans font-normal mt-0.5">
-                          {new Date(comp.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })} WITA
-                        </div>
-                      </td>
-                      <td class="p-4">
-                        <div class="font-bold text-[#101116]">
-                          {comp.is_anonymous ? (comp.masked_name || 'Pelapor Anonim') : comp.reporter_name}
-                        </div>
-                        {#if comp.is_anonymous}
-                          <span class="inline-block bg-amber-100 text-amber-900 border border-amber-300 text-[9px] font-bold px-1.5 py-0.5 rounded mt-0.5">
-                            Anonim Terlindungi
-                          </span>
-                        {:else}
-                          <div class="text-[11px] text-[#6f7775]">{comp.reporter_phone || 'Tanpa Kontak'}</div>
-                        {/if}
-                      </td>
-                      <td class="p-4 font-semibold text-[#101116] max-w-xs">{comp.violation_type}</td>
-                      <td class="p-4 text-[#6f7775]">
-                        <div class="font-semibold text-[#101116]">{comp.regency_name}</div>
-                        <div class="text-[11px] truncate max-w-[180px]">{comp.address_detail}</div>
-                      </td>
-                      <td class="p-4">
-                        <span class={`font-bold text-[10px] uppercase px-2.5 py-1 rounded-md border ${st.bg}`}>
-                          {st.text}
-                        </span>
-                      </td>
-                      <td class="p-4 text-[11px] text-[#6f7775] font-medium max-w-[150px] truncate">
-                        {comp.disposed_to || '-'}
-                      </td>
-                      <td class="p-4 text-right">
-                        <button 
-                          on:click={() => openComplaintDetail(comp)}
-                          class="bg-[#3d261a] hover:bg-[#271810] text-white font-bold text-[11px] uppercase px-3 py-1.5 rounded-lg transition"
-                        >
-                          Tindak Lanjut &rarr;
-                        </button>
-                      </td>
-                    </tr>
-                  {:else}
-                    <tr>
-                      <td colspan="7" class="p-10 text-center text-gray-400 text-xs">
-                        Tidak ditemukan aduan masyarakat dengan filter yang dipilih.
-                      </td>
-                    </tr>
-                  {/each}
-                </tbody>
-              </table>
-            </div>
+            <DataTable
+              items={$documentsStore}
+              searchFields={['title', 'doc_number', 'category', 'year']}
+              searchPlaceholder="Cari nama berkas, nomor registrasi, atau tahun..."
+              pageSize={10}
+              pageSizeOptions={[5, 10, 25]}
+              title="Daftar Dokumen Publik Resmi"
+              description="Arsip dokumen perencanaan, anggaran, regulasi Perda, dan SOP"
+              emptyMessage="Tidak ada berkas dokumen yang cocok dengan kata kunci pencarian."
+            >
+              <svelte:fragment slot="head">
+                <tr>
+                  <th class="p-3.5">Nama Dokumen</th>
+                  <th class="p-3.5">No. Registrasi</th>
+                  <th class="p-3.5">Kategori</th>
+                  <th class="p-3.5">Tahun</th>
+                  <th class="p-3.5">Ukuran</th>
+                  <th class="p-3.5 text-right">Opsi</th>
+                </tr>
+              </svelte:fragment>
+
+              <svelte:fragment slot="row" let:item>
+                <tr class="hover:bg-stone-50/70 transition">
+                  <td class="p-3.5 font-bold text-[#1a120c]">{item.title}</td>
+                  <td class="p-3.5 font-mono text-[#6f7775]">{item.doc_number || '-'}</td>
+                  <td class="p-3.5">
+                    <span class="bg-[#f5ede4] text-[#3d261a] text-[10px] font-bold uppercase px-2 py-0.5 rounded-md border border-[#e8dbc9]">
+                      {item.category}
+                    </span>
+                  </td>
+                  <td class="p-3.5 font-semibold text-[#1a120c]">{item.year}</td>
+                  <td class="p-3.5 text-[#6f7775]">{item.file_size || '1.8 MB'}</td>
+                  <td class="p-3.5 text-right space-x-2">
+                    <a href={item.file_url} target="_blank" class="text-xs font-bold text-blue-700 hover:underline">Unduh</a>
+                    <button type="button" on:click={() => handleDeleteDocument(item.id)} class="text-xs font-bold text-rose-700 hover:underline">Hapus</button>
+                  </td>
+                </tr>
+              </svelte:fragment>
+            </DataTable>
           </div>
         </div>
       {/if}
@@ -942,72 +917,77 @@
             </div>
           {:else}
             <!-- ARTICLES LIST VIEW -->
-            <div class="bg-white border border-gray-200/90 rounded-2xl p-6 shadow-xs space-y-5">
-              <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-gray-100 pb-4">
-                <div>
-                  <h3 class="text-base font-extrabold text-[#101116] uppercase tracking-wide">Daftar Warta Berita &amp; Publikasi</h3>
-                  <p class="text-xs text-[#6f7775] mt-0.5">Kelola seluruh berita yang tampil pada beranda dan indeks warta portal.</p>
-                </div>
+            <DataTable
+              items={$articlesStore}
+              searchFields={['title', 'category', 'author_name', 'summary']}
+              searchPlaceholder="Cari judul warta berita, topik, kategori, atau penulis (on-chain)..."
+              pageSize={10}
+              pageSizeOptions={[5, 10, 25, 50]}
+              title="Daftar Warta Berita & Publikasi"
+              description="Kelola seluruh rilis pers, berita patroli, dan warta kegiatan resmi Satpol PP Sulsel"
+              emptyMessage="Tidak ada warta berita yang sesuai dengan filter pencarian."
+            >
+              <svelte:fragment slot="header-actions">
                 <button 
+                  type="button"
                   on:click={() => isWritingArticle = true}
-                  class="bg-[#F08300] hover:bg-[#d97400] text-white text-xs font-bold uppercase px-5 py-2.5 rounded-xl transition shadow-xs"
+                  class="bg-[#F08300] hover:bg-[#d97400] text-white text-xs font-bold uppercase px-4 py-2 rounded-lg transition shadow-xs flex items-center gap-1.5"
                 >
-                  + Tulis Artikel Baru
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                  </svg>
+                  <span>+ Tulis Artikel Baru</span>
                 </button>
-              </div>
+              </svelte:fragment>
 
-              <div class="overflow-x-auto">
-                <table class="w-full text-left text-xs">
-                  <thead class="bg-gray-50 border-b border-gray-200 text-[#6f7775] uppercase text-[10px] tracking-wider">
-                    <tr>
-                      <th class="p-3.5">Thumbnail</th>
-                      <th class="p-3.5">Judul Berita</th>
-                      <th class="p-3.5">Kategori</th>
-                      <th class="p-3.5">Penulis</th>
-                      <th class="p-3.5">Dibaca</th>
-                      <th class="p-3.5 text-right">Opsi</th>
-                    </tr>
-                  </thead>
-                  <tbody class="divide-y divide-gray-100">
-                    {#each $articlesStore as art}
-                      <tr class="hover:bg-gray-50/70 transition">
-                        <td class="p-3.5">
-                          <img src={art.thumbnail} alt={art.title} class="w-16 h-12 object-cover rounded-lg border border-gray-200" />
-                        </td>
-                        <td class="p-3.5 font-bold text-[#101116] max-w-sm">
-                          <a href={`/berita/${art.slug}`} target="_blank" class="hover:text-[#F08300] transition">
-                            {art.title}
-                          </a>
-                          <div class="text-[10px] text-[#6f7775] font-normal mt-0.5 font-mono">/berita/{art.slug}</div>
-                        </td>
-                        <td class="p-3.5">
-                          <span class="bg-gray-100 text-[#101116] text-[10px] font-bold uppercase px-2 py-0.5 rounded border border-gray-300">
-                            {art.category}
-                          </span>
-                        </td>
-                        <td class="p-3.5 text-[#6f7775]">{art.author_name}</td>
-                        <td class="p-3.5 font-semibold text-[#101116]">{art.view_count}x</td>
-                        <td class="p-3.5 text-right space-x-2">
-                          <a 
-                            href={`/berita/${art.slug}`} 
-                            target="_blank" 
-                            class="text-xs font-bold text-blue-700 hover:underline"
-                          >
-                            Lihat
-                          </a>
-                          <button 
-                            on:click={() => handleDeleteArticle(art.id)}
-                            class="text-xs font-bold text-rose-700 hover:underline"
-                          >
-                            Hapus
-                          </button>
-                        </td>
-                      </tr>
-                    {/each}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+              <svelte:fragment slot="head">
+                <tr>
+                  <th class="p-3.5">Thumbnail</th>
+                  <th class="p-3.5">Judul Berita</th>
+                  <th class="p-3.5">Kategori</th>
+                  <th class="p-3.5">Penulis</th>
+                  <th class="p-3.5">Dibaca</th>
+                  <th class="p-3.5 text-right">Opsi</th>
+                </tr>
+              </svelte:fragment>
+
+              <svelte:fragment slot="row" let:item>
+                <tr class="hover:bg-stone-50/70 transition">
+                  <td class="p-3.5">
+                    <img src={item.thumbnail} alt={item.title} class="w-16 h-12 object-cover rounded-lg border border-stone-200" />
+                  </td>
+                  <td class="p-3.5 font-bold text-[#1a120c] max-w-sm">
+                    <a href={`/berita/${item.slug}`} target="_blank" class="hover:text-[#F08300] transition">
+                      {item.title}
+                    </a>
+                    <div class="text-[10px] text-[#6f7775] font-normal mt-0.5 font-mono">/berita/{item.slug}</div>
+                  </td>
+                  <td class="p-3.5">
+                    <span class="bg-[#f5ede4] text-[#3d261a] text-[10px] font-bold uppercase px-2 py-0.5 rounded-md border border-[#e8dbc9]">
+                      {item.category}
+                    </span>
+                  </td>
+                  <td class="p-3.5 text-[#6f7775]">{item.author_name}</td>
+                  <td class="p-3.5 font-semibold text-[#1a120c]">{item.view_count}x</td>
+                  <td class="p-3.5 text-right space-x-2">
+                    <a 
+                      href={`/berita/${item.slug}`} 
+                      target="_blank" 
+                      class="text-xs font-bold text-blue-700 hover:underline"
+                    >
+                      Lihat
+                    </a>
+                    <button 
+                      type="button"
+                      on:click={() => handleDeleteArticle(item.id)}
+                      class="text-xs font-bold text-rose-700 hover:underline"
+                    >
+                      Hapus
+                    </button>
+                  </td>
+                </tr>
+              </svelte:fragment>
+            </DataTable>
           {/if}
         </div>
       {/if}
