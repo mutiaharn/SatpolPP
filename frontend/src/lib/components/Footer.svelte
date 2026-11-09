@@ -1,8 +1,8 @@
 <footer class="bg-[#1a120c] text-stone-300 text-xs border-t border-[#3d261a] mt-auto">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-7 pb-6 grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-9 pb-8 grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-8">
     <!-- Col 1: Instansi & Logo -->
-    <div class="space-y-3">
-      <img src="/uploads/foto_website/1686928245logo_white.png" alt="Logo Satpol PP Sulsel" class="h-10 sm:h-11 w-auto object-contain" />
+    <div class="space-y-3.5">
+      <img src="/uploads/foto_website/1686928245logo_white.png" alt="Logo Satpol PP Sulsel" class="h-11 sm:h-12 w-auto object-contain" />
       <p class="leading-relaxed text-stone-300 text-[11.5px] line-clamp-3">
         Satuan Polisi Pamong Praja Provinsi Sulawesi Selatan bertugas menyelenggarakan urusan pemerintahan daerah di bidang ketenteraman, ketertiban umum, dan pelindungan masyarakat.
       </p>
@@ -13,11 +13,11 @@
     </div>
 
     <!-- Col 2: Tautan Terkait -->
-    <div class="space-y-2.5">
+    <div class="space-y-3">
       <div class="text-xs font-bold text-white uppercase tracking-wider border-b-2 border-[#F08300] pb-1 inline-block">
         Tautan
       </div>
-      <ul class="space-y-1.5 pt-0.5 text-stone-200">
+      <ul class="space-y-2 pt-0.5 text-stone-200">
         <li><a href="https://sulselprov.go.id/" target="_blank" rel="noreferrer" class="hover:text-[#F08300] transition">Pemerintah Provinsi Sulsel</a></li>
         <li><a href="/profil/sejarah" class="hover:text-[#F08300] transition">Sejarah Singkat Satpol PP</a></li>
         <li><a href="/profil/visi-misi" class="hover:text-[#F08300] transition">Visi dan Misi Instansi</a></li>
@@ -27,11 +27,11 @@
     </div>
 
     <!-- Col 3: Layanan & Regulasi -->
-    <div class="space-y-2.5">
+    <div class="space-y-3">
       <div class="text-xs font-bold text-white uppercase tracking-wider border-b-2 border-[#F08300] pb-1 inline-block">
         Layanan &amp; Regulasi
       </div>
-      <ul class="space-y-1.5 pt-0.5 text-stone-200">
+      <ul class="space-y-2 pt-0.5 text-stone-200">
         <li><a href="/lapor" class="hover:text-[#F08300] transition">Aplikasi SIAP TERTIB</a></li>
         <li><a href="/lacak" class="hover:text-[#F08300] transition">Pelacakan Tiket Aduan</a></li>
         <li><a href="https://ppidsatpolppsulsel.my.id/" target="_blank" rel="noreferrer" class="hover:text-[#F08300] transition">PPID Satpol PP Sulsel</a></li>
@@ -41,7 +41,7 @@
     </div>
 
     <!-- Col 4: Alamat & Kontak Resmi -->
-    <div class="space-y-2.5">
+    <div class="space-y-3">
       <div class="text-xs font-bold text-white uppercase tracking-wider border-b-2 border-[#F08300] pb-1 inline-block">
         Alamat Kantor
       </div>
@@ -57,7 +57,7 @@
   </div>
 
   <!-- Bottom Bar: Padding Bawah Proporsional & Rapi -->
-  <div class="bg-[#0e0805] border-t border-[#3d261a] py-3.5 px-4 text-center">
+  <div class="bg-[#0e0805] border-t border-[#3d261a] py-4 pb-5 px-4 text-center">
     <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2 text-xs text-stone-300 font-medium">
       <p>
         &copy; 2026 Satuan Polisi Pamong Praja Provinsi Sulawesi Selatan. Hak Cipta Dilindungi Undang-Undang.
