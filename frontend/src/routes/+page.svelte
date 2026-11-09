@@ -156,6 +156,19 @@
       </article>
     {/each}
   </div>
+
+  <!-- Link Menuju Halaman Berita Lengkap -->
+  <div class="mt-8 text-center">
+    <a 
+      href="/berita" 
+      class="inline-flex items-center gap-2 text-xs font-bold text-[#F08300] hover:text-[#d97400] uppercase tracking-wider py-2 px-4 rounded-lg hover:bg-[#f9f4e8] transition duration-200 group"
+    >
+      <span>Lihat Berita Lainnya</span>
+      <svg class="w-4 h-4 text-[#F08300] transform group-hover:translate-x-1.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+      </svg>
+    </a>
+  </div>
 </section>
 
 <!-- 3. Profil Pimpinan Satpol PP Sulsel (Life-size 3D Cutout Pimpinan Berdiri Langsung) -->
