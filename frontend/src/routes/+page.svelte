@@ -36,16 +36,15 @@
     return () => clearInterval(timer);
   });
 
-  // Smooth scroll dengan offset presisi dinamis di bawah sticky navbar
+  // Smooth scroll presisi: tepat memposisikan bagian di bawah sticky navbar
   function scrollToTarget(id: string) {
     const el = document.getElementById(id);
     if (!el) return;
     const header = document.querySelector('header');
-    const headerHeight = header ? header.getBoundingClientRect().height : 106;
-    const navOffset = headerHeight + 24; // Kompensasi dinamis tinggi navbar + 24px ruang lega agar judul tampil sempurna
+    const headerHeight = header ? Math.round(header.getBoundingClientRect().height) : 106;
     const elPos = el.getBoundingClientRect().top + window.pageYOffset;
     window.scrollTo({
-      top: Math.max(0, elPos - navOffset),
+      top: Math.max(0, Math.round(elPos - headerHeight)),
       behavior: 'smooth'
     });
   }
@@ -113,12 +112,12 @@
   </div>
 </section>
 
-<!-- 2. Berita Terbaru (Poin 20: Card Berita Fixed & Balanced dengan scroll-mt-36) -->
-<section id="berita-terbaru" class="scroll-mt-36 py-16 px-4 max-w-7xl mx-auto">
-  <div class="text-center max-w-xl mx-auto mb-12">
+<!-- 2. Berita Terbaru (Poin 20: Card Berita Fixed & Balanced, pas 1 layar saat scroll Jelajahi) -->
+<section id="berita-terbaru" class="scroll-mt-[106px] pt-8 md:pt-10 pb-16 px-4 max-w-7xl mx-auto">
+  <div class="text-center max-w-xl mx-auto mb-8 md:mb-10">
     <div class="text-[#F08300] font-bold text-xs uppercase tracking-widest">Publikasi Resmi</div>
     <h2 class="text-2xl md:text-3xl font-extrabold text-[#101116] tracking-tight mt-1">Berita Terbaru</h2>
-    <div class="w-12 h-1 bg-[#F08300] mx-auto mt-3 rounded-full"></div>
+    <div class="w-12 h-1 bg-[#F08300] mx-auto mt-2.5 rounded-full"></div>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
