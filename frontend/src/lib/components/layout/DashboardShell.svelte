@@ -304,20 +304,6 @@
           <Menu class="w-5 h-5" />
         </button>
 
-        <button
-          type="button"
-          on:click={() => (collapsed = !collapsed)}
-          aria-label={collapsed ? 'Perluas sidebar' : 'Kecilkan sidebar'}
-          title={collapsed ? 'Perluas sidebar' : 'Kecilkan sidebar'}
-          class="hidden lg:inline-flex p-2 rounded-xl border border-[#eee9db] bg-[#f9f4e8] text-[#3d261a] hover:bg-[#eee9db] transition shrink-0"
-        >
-          {#if collapsed}
-            <PanelLeftOpen class="w-4 h-4" />
-          {:else}
-            <PanelLeftClose class="w-4 h-4" />
-          {/if}
-        </button>
-
         <div class="min-w-0">
           <h1 class="text-sm md:text-lg font-black text-[#1a120c] truncate">{pageTitle}</h1>
           {#if pageDescription}
