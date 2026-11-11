@@ -15,6 +15,11 @@ type Config struct {
 	DBPass      string
 	DBName      string
 	StoragePath string
+	SMTPHost    string
+	SMTPPort    string
+	SMTPUser    string
+	SMTPPass    string
+	SMTPFrom    string
 }
 
 func LoadConfig() *Config {
@@ -29,6 +34,11 @@ func LoadConfig() *Config {
 		DBPass:      getEnv("DB_PASS", "postgres"),
 		DBName:      getEnv("DB_NAME", "satpolpp_sulsel_db"),
 		StoragePath: getEnv("STORAGE_PATH", "./uploads"),
+		SMTPHost:    getEnv("SMTP_HOST", ""),
+		SMTPPort:    getEnv("SMTP_PORT", "587"),
+		SMTPUser:    getEnv("SMTP_USER", ""),
+		SMTPPass:    getEnv("SMTP_PASS", ""),
+		SMTPFrom:    getEnv("SMTP_FROM", "siaptertib@sulselprov.go.id"),
 	}
 }
 

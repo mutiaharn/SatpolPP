@@ -6,6 +6,8 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+	"sort"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -19,24 +21,34 @@ import (
 
 // In-Memory Data Store with Seeder for Instant Development
 type Store struct {
-	mu          sync.RWMutex
-	Users       map[string]*domain.User
-	Articles    map[string]*domain.Article
-	Documents   map[uint]*domain.PublicDocument
-	Complaints  map[string]*domain.Complaint
-	Settings    map[string]string
-	Regencies   []domain.Regency
-	AuditLogs   []domain.AuditLog
+	mu            sync.RWMutex
+	Users         map[string]*domain.User
+	Articles      map[string]*domain.Article
+	Documents     map[uint]*domain.PublicDocument
+	Complaints    map[string]*domain.Complaint
+	Organizations map[uint]*domain.OrganizationNode
+	Settings      map[string]string
+	Regencies     []domain.Regency
+	AuditLogs     []domain.AuditLog
+	NextUserID    uint
+	NextOrgID     uint
 }
 
 var store = &Store{
-	Users:      make(map[string]*domain.User),
-	Articles:   make(map[string]*domain.Article),
-	Documents:  make(map[uint]*domain.PublicDocument),
-	Complaints: make(map[string]*domain.Complaint),
-	Settings:   make(map[string]string),
-	Regencies:  make([]domain.Regency, 0),
-	AuditLogs:  make([]domain.AuditLog, 0),
+	Users:         make(map[string]*domain.User),
+	Articles:      make(map[string]*domain.Article),
+	Documents:     make(map[uint]*domain.PublicDocument),
+	Complaints:    make(map[string]*domain.Complaint),
+	Organizations: make(map[uint]*domain.OrganizationNode),
+	Settings:      make(map[string]string),
+	Regencies:     make([]domain.Regency, 0),
+	AuditLogs:     make([]domain.AuditLog, 0),
+	NextUserID:    4,
+	NextOrgID:     6,
+}
+
+func strPtr(s string) *string {
+	return &s
 }
 
 func initSeedData() {
@@ -133,68 +145,144 @@ func initSeedData() {
 
 	// 5. Seed Public Documents
 	store.Documents[1] = &domain.PublicDocument{
-		ID:          1,
-		Title:       "Rencana Kerja (Renja) Satpol PP Prov. Sulsel Tahun 2026",
-		DocNumber:   "050/112/SATPOL/2026",
-		Category:    "renja",
-		Year:        2026,
-		FileURL:     "/docs/renja_2026.pdf",
-		FileSize:    "2.4 MB",
-		CreatedAt:   time.Now(),
+		ID:        1,
+		Title:     "Rencana Kerja (Renja) Satpol PP Prov. Sulsel Tahun 2026",
+		DocNumber: "050/112/SATPOL/2026",
+		Category:  "renja",
+		Year:      2026,
+		FileURL:   "/docs/renja_2026.pdf",
+		FileSize:  "2.4 MB",
+		CreatedAt: time.Now(),
 	}
 	store.Documents[2] = &domain.PublicDocument{
-		ID:          2,
-		Title:       "Laporan Kinerja Instansi Pemerintah (LAKIP) Tahun 2025",
-		DocNumber:   "050/450/LAKIP/2025",
-		Category:    "lakip",
-		Year:        2025,
-		FileURL:     "/docs/lakip_2025.pdf",
-		FileSize:    "4.1 MB",
-		CreatedAt:   time.Now(),
+		ID:        2,
+		Title:     "Laporan Kinerja Instansi Pemerintah (LAKIP) Tahun 2025",
+		DocNumber: "050/450/LAKIP/2025",
+		Category:  "lakip",
+		Year:      2025,
+		FileURL:   "/docs/lakip_2025.pdf",
+		FileSize:  "4.1 MB",
+		CreatedAt: time.Now(),
 	}
 	store.Documents[3] = &domain.PublicDocument{
-		ID:          3,
-		Title:       "Perda Prov. Sulsel No. 2 Tahun 2021 tentang Penyelenggaraan Trantibum",
-		DocNumber:   "Perda No. 2/2021",
-		Category:    "perda",
-		Year:        2021,
-		FileURL:     "/docs/perda_trantibum.pdf",
-		FileSize:    "1.8 MB",
-		CreatedAt:   time.Now(),
+		ID:        3,
+		Title:     "Perda Prov. Sulsel No. 2 Tahun 2021 tentang Penyelenggaraan Trantibum",
+		DocNumber: "Perda No. 2/2021",
+		Category:  "perda",
+		Year:      2021,
+		FileURL:   "/docs/perda_trantibum.pdf",
+		FileSize:  "1.8 MB",
+		CreatedAt: time.Now(),
 	}
 
 	// 6. Seed Sample Complaint (SIAP TERTIB)
 	sampleTicket := "TRB-202611-SAMPLE"
 	store.Complaints[sampleTicket] = &domain.Complaint{
-		ID:             1,
-		TicketCode:     sampleTicket,
-		IsAnonymous:    false,
-		ReporterNIK:    "7371101234567890",
-		ReporterName:   "Ahmad Fauzan",
-		ReporterPhone:  "081234567890",
-		ReporterEmail:  "ahmad.fauzan@gmail.com",
-		ViolationType:  "Pelanggaran Ketertiban Umum (PKL Liar Menutup Trotoar)",
-		RegencyID:      "7301",
-		RegencyName:    "Kota Makassar",
-		DistrictName:   "Panakkukang",
-		VillageName:    "Panaikang",
-		AddressDetail:  "Depan Halte Bus Kampus UMI, Jl. Urip Sumoharjo",
-		Latitude:       -5.1432,
-		Longitude:      119.4521,
-		Description:    "Terdapat lapak liar yang memakan seluruh badan trotoar pejalan kaki dan menyebabkan kemacetan di jam pulang kerja.",
-		IncidentDate:   time.Now().Add(-12 * time.Hour),
-		Status:         domain.StatusInProgress,
-		DisposedTo:     "Bidang Ketenteraman dan Ketertiban Umum",
-		ActionNotes:    "Tim Patroli Regu 2 Satpol PP telah meninjau lokasi dan memberikan surat peringatan pertama kepada pemilik lapak.",
-		CreatedAt:      time.Now().Add(-12 * time.Hour),
+		ID:            1,
+		TicketCode:    sampleTicket,
+		IsAnonymous:   false,
+		ReporterNIK:   "7371101234567890",
+		ReporterName:  "Ahmad Fauzan",
+		ReporterPhone: "081234567890",
+		ReporterEmail: "ahmad.fauzan@gmail.com",
+		ViolationType: "Pelanggaran Ketertiban Umum (PKL Liar Menutup Trotoar)",
+		RegencyID:     "7301",
+		RegencyName:   "Kota Makassar",
+		DistrictName:  "Panakkukang",
+		VillageName:   "Panaikang",
+		AddressDetail: "Depan Halte Bus Kampus UMI, Jl. Urip Sumoharjo",
+		Latitude:      -5.1432,
+		Longitude:     119.4521,
+		Description:   "Terdapat lapak liar yang memakan seluruh badan trotoar pejalan kaki dan menyebabkan kemacetan di jam pulang kerja.",
+		IncidentDate:  time.Now().Add(-12 * time.Hour),
+		Status:        domain.StatusInProgress,
+		DisposedTo:    "Bidang Ketenteraman dan Ketertiban Umum",
+		ActionNotes:   "Tim Patroli Regu 2 Satpol PP telah meninjau lokasi dan memberikan surat peringatan pertama kepada pemilik lapak.",
+		CreatedAt:     time.Now().Add(-12 * time.Hour),
+	}
+
+	// 7. Seed Dynamic Organization Nodes (SOTK)
+	store.Organizations[1] = &domain.OrganizationNode{
+		ID:            1,
+		OrgCode:       "ORG-KST-01",
+		ParentCode:    nil,
+		PositionTitle: "Kepala Satuan Polisi Pamong Praja",
+		OfficialName:  "Andi Arwin Azis S.STP., M.M",
+		Rank:          "Eselon IIa",
+		Description:   "Memimpin perumusan kebijakan, pengawasan operasional trantibum di 24 kabupaten/kota, serta koordinasi ketenteraman wilayah bersama Forkopimda Sulawesi Selatan.",
+		SubUnits:      []string{},
+		PhotoURL:      "/uploads/foto_pimpinan/pimpinan_cutout_hd.png",
+		Level:         1,
+		SortOrder:     1,
+	}
+	store.Organizations[2] = &domain.OrganizationNode{
+		ID:            2,
+		OrgCode:       "ORG-SEK-01",
+		ParentCode:    strPtr("ORG-KST-01"),
+		PositionTitle: "Sekretariat",
+		OfficialName:  "Sekretaris Satpol PP Sulsel",
+		Rank:          "Eselon IIIa",
+		Description:   "Mengoordinasikan urusan perencanaan program, pengelolaan keuangan anggaran, dan tata usaha kepegawaian.",
+		SubUnits:      []string{"Sub Bagian Umum, Kepegawaian dan Hukum", "Sub Bagian Program dan Pelaporan", "Sub Bagian Keuangan dan Pengelolaan Aset"},
+		Level:         2,
+		SortOrder:     1,
+	}
+	store.Organizations[3] = &domain.OrganizationNode{
+		ID:            3,
+		OrgCode:       "ORG-BID-01",
+		ParentCode:    strPtr("ORG-KST-01"),
+		PositionTitle: "Bidang Penegakan Peraturan Daerah",
+		OfficialName:  "Kabid Penegakan Perda",
+		Rank:          "Eselon IIIb",
+		Description:   "Memimpin penindakan yustisial dan non-yustisial serta penyidikan pelanggaran peraturan daerah oleh PPNS.",
+		SubUnits:      []string{"Seksi Pengawasan dan Pembinaan Penegakan Perda", "Seksi Penindakan, Penyidikan dan PPNS Daerah"},
+		Level:         2,
+		SortOrder:     2,
+	}
+	store.Organizations[4] = &domain.OrganizationNode{
+		ID:            4,
+		OrgCode:       "ORG-BID-02",
+		ParentCode:    strPtr("ORG-KST-01"),
+		PositionTitle: "Bidang Ketenteraman dan Ketertiban Umum",
+		OfficialName:  "Kabid Trantibum",
+		Rank:          "Eselon IIIb",
+		Description:   "Mengendalikan operasi patroli ketertiban umum, penertiban fasilitas publik, dan pengawalan pejabat negara.",
+		SubUnits:      []string{"Seksi Operasi dan Pengendalian Ketertiban", "Seksi Pengamanan, Pengawalan dan Patroli Wilayah"},
+		Level:         2,
+		SortOrder:     3,
+	}
+	store.Organizations[5] = &domain.OrganizationNode{
+		ID:            5,
+		OrgCode:       "ORG-BID-03",
+		ParentCode:    strPtr("ORG-KST-01"),
+		PositionTitle: "Bidang Pelindungan Masyarakat dan Damkar",
+		OfficialName:  "Kabid Linmas & Damkar",
+		Rank:          "Eselon IIIb",
+		Description:   "Menyelenggarakan pembinaan teknis anggota Satlinmas dan koordinasi penanganan kedaruratan kebakaran daerah.",
+		SubUnits:      []string{"Seksi Satuan Pelindungan Masyarakat (Satlinmas)", "Seksi Kesiapsiagaan, Kebakaran dan Bencana"},
+		Level:         2,
+		SortOrder:     4,
 	}
 }
 
-// JSON Helper
 func writeJSON(w http.ResponseWriter, status int, data any) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	json.NewEncoder(w).Encode(data)
+}
+
+func sortedOrganizations() []*domain.OrganizationNode {
+	list := make([]*domain.OrganizationNode, 0, len(store.Organizations))
+	for _, node := range store.Organizations {
+		list = append(list, node)
+	}
+	sort.Slice(list, func(i, j int) bool {
+		if list[i].Level != list[j].Level {
+			return list[i].Level < list[j].Level
+		}
+		return list[i].SortOrder < list[j].SortOrder
+	})
+	return list
 }
 
 func main() {
@@ -211,7 +299,7 @@ func main() {
 		writeJSON(w, http.StatusOK, map[string]any{
 			"status":    "healthy",
 			"app":       "Satpol PP Sulsel & SIAP TERTIB Unified API",
-			"version":   "1.0.0",
+			"version":   "1.1.0",
 			"timestamp": time.Now().Format(time.RFC3339),
 		})
 	})
@@ -228,26 +316,30 @@ func main() {
 		}
 
 		store.mu.RLock()
-		user, exists := store.Users[req.Username]
+		user, exists := store.Users[strings.ToLower(strings.TrimSpace(req.Username))]
 		store.mu.RUnlock()
 
 		if !exists || user.Password != req.Password {
 			writeJSON(w, http.StatusUnauthorized, map[string]string{"error": "Username atau kata sandi tidak valid"})
 			return
 		}
+		if !user.IsActive {
+			writeJSON(w, http.StatusForbidden, map[string]string{"error": "Akun ini sedang dinonaktifkan oleh Superadmin"})
+			return
+		}
 
-		// In production, sign JWT token with cfg.JWTSecret
 		token := fmt.Sprintf("jwt-mock-%s-%d", user.Role, user.ID)
-
 		writeJSON(w, http.StatusOK, map[string]any{
 			"message": "Login berhasil",
 			"token":   token,
 			"user": map[string]any{
-				"id":       user.ID,
-				"name":     user.Name,
-				"username": user.Username,
-				"role":     user.Role,
-				"bidang":   user.Bidang,
+				"id":        user.ID,
+				"name":      user.Name,
+				"username":  user.Username,
+				"email":     user.Email,
+				"role":      user.Role,
+				"bidang":    user.Bidang,
+				"is_active": user.IsActive,
 			},
 		})
 	})
@@ -319,7 +411,102 @@ func main() {
 		})
 	})
 
-	// 7. SIAP TERTIB: Kirim Laporan Publik
+	// 7. Dynamic Organization Structure (Public Read)
+	mux.HandleFunc("GET /api/v1/portal/organization", func(w http.ResponseWriter, r *http.Request) {
+		store.mu.RLock()
+		defer store.mu.RUnlock()
+		writeJSON(w, http.StatusOK, map[string]any{
+			"success": true,
+			"data":    sortedOrganizations(),
+		})
+	})
+
+	// 8. Admin Organization Structure CRUD
+	mux.Handle("POST /api/v1/admin/organization", middleware.RequireAuth(domain.RoleStaff, domain.RoleAdmin, domain.RoleSuperadmin)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var req domain.OrganizationNode
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "Format payload struktur tidak valid"})
+			return
+		}
+		req.OrgCode = strings.ToUpper(strings.TrimSpace(req.OrgCode))
+		if req.OrgCode == "" || strings.TrimSpace(req.PositionTitle) == "" {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "ID Khusus dan nama jabatan wajib diisi"})
+			return
+		}
+
+		store.mu.Lock()
+		for _, existing := range store.Organizations {
+			if strings.EqualFold(existing.OrgCode, req.OrgCode) {
+				store.mu.Unlock()
+				writeJSON(w, http.StatusConflict, map[string]string{"error": "ID Khusus unit sudah terdaftar"})
+				return
+			}
+		}
+		req.ID = store.NextOrgID
+		store.NextOrgID++
+		if req.SubUnits == nil {
+			req.SubUnits = []string{}
+		}
+		store.Organizations[req.ID] = &req
+		store.mu.Unlock()
+
+		writeJSON(w, http.StatusCreated, map[string]any{
+			"success": true,
+			"data":    req,
+		})
+	})))
+
+	mux.Handle("PUT /api/v1/admin/organization/{id}", middleware.RequireAuth(domain.RoleStaff, domain.RoleAdmin, domain.RoleSuperadmin)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		idVal, err := strconv.ParseUint(r.PathValue("id"), 10, 64)
+		if err != nil {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "ID unit tidak valid"})
+			return
+		}
+		var req domain.OrganizationNode
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "Format payload tidak valid"})
+			return
+		}
+		req.OrgCode = strings.ToUpper(strings.TrimSpace(req.OrgCode))
+		req.ID = uint(idVal)
+		if req.SubUnits == nil {
+			req.SubUnits = []string{}
+		}
+
+		store.mu.Lock()
+		if _, exists := store.Organizations[req.ID]; !exists {
+			store.mu.Unlock()
+			writeJSON(w, http.StatusNotFound, map[string]string{"error": "Simpul struktur organisasi tidak ditemukan"})
+			return
+		}
+		store.Organizations[req.ID] = &req
+		store.mu.Unlock()
+
+		writeJSON(w, http.StatusOK, map[string]any{
+			"success": true,
+			"data":    req,
+		})
+	})))
+
+	mux.Handle("DELETE /api/v1/admin/organization/{id}", middleware.RequireAuth(domain.RoleStaff, domain.RoleAdmin, domain.RoleSuperadmin)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		idVal, err := strconv.ParseUint(r.PathValue("id"), 10, 64)
+		if err != nil {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "ID unit tidak valid"})
+			return
+		}
+		store.mu.Lock()
+		if _, exists := store.Organizations[uint(idVal)]; !exists {
+			store.mu.Unlock()
+			writeJSON(w, http.StatusNotFound, map[string]string{"error": "Simpul struktur tidak ditemukan"})
+			return
+		}
+		delete(store.Organizations, uint(idVal))
+		store.mu.Unlock()
+
+		writeJSON(w, http.StatusOK, map[string]any{"success": true})
+	})))
+
+	// 9. SIAP TERTIB: Kirim Laporan Publik + Notifikasi Email Pelapor
 	mux.HandleFunc("POST /api/v1/siaptertib/lapor", func(w http.ResponseWriter, r *http.Request) {
 		var req domain.Complaint
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -330,6 +517,13 @@ func main() {
 		if req.ViolationType == "" || req.AddressDetail == "" {
 			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "Jenis pelanggaran dan detail alamat wajib diisi"})
 			return
+		}
+
+		if req.EvidenceImageURL == "" && req.EvidencePhotos != "" {
+			req.EvidenceImageURL = req.EvidencePhotos
+		}
+		if req.EvidencePhotos == "" && req.EvidenceImageURL != "" {
+			req.EvidencePhotos = req.EvidenceImageURL
 		}
 
 		ticket := utils.GenerateTicketCode()
@@ -343,18 +537,30 @@ func main() {
 		store.Complaints[ticket] = &req
 		store.mu.Unlock()
 
-		slog.Info("Laporan aduan baru diterima", "ticket", ticket, "anonim", req.IsAnonymous, "jenis", req.ViolationType)
+		emailNotice := utils.SendComplaintEmail(
+			cfg,
+			req.ReporterEmail,
+			ticket,
+			string(req.Status),
+			req.RegencyName,
+			"",
+			"",
+		)
+
+		slog.Info("Laporan aduan baru diterima", "ticket", ticket, "anonim", req.IsAnonymous, "jenis", req.ViolationType, "email_mode", emailNotice.Mode)
 
 		writeJSON(w, http.StatusCreated, map[string]any{
 			"success":     true,
 			"message":     "Laporan aduan Anda berhasil diterima dan sedang diverifikasi petugas.",
 			"ticket_code": ticket,
+			"email":       emailNotice,
+			"data":        req,
 		})
 	})
 
-	// 8. SIAP TERTIB: Lacak Tiket Aduan Publik
+	// 10. SIAP TERTIB: Lacak Tiket Aduan Publik (Selalu Masked)
 	mux.HandleFunc("GET /api/v1/siaptertib/lacak/{ticket}", func(w http.ResponseWriter, r *http.Request) {
-		ticket := r.PathValue("ticket")
+		ticket := strings.ToUpper(strings.TrimSpace(r.PathValue("ticket")))
 		store.mu.RLock()
 		comp, exists := store.Complaints[ticket]
 		store.mu.RUnlock()
@@ -364,39 +570,51 @@ func main() {
 			return
 		}
 
-		// Mask sensitive identity if report is marked anonymous
-		displayName := comp.ReporterName
-		displayNIK := comp.ReporterNIK
-		displayPhone := comp.ReporterPhone
-		if comp.IsAnonymous {
-			displayName, displayNIK, displayPhone = utils.MaskReporterIdentity(comp.ReporterName, comp.ReporterNIK, comp.ReporterPhone)
+		// Public privacy rule: ALWAYS mask reporter identity regardless of is_anonymous flag
+		maskedName, maskedNIK, maskedPhone, maskedEmail := utils.MaskReporterIdentity(
+			comp.ReporterName,
+			comp.ReporterNIK,
+			comp.ReporterPhone,
+			comp.ReporterEmail,
+		)
+		evidence := comp.EvidenceImageURL
+		if evidence == "" {
+			evidence = comp.EvidencePhotos
 		}
 
 		writeJSON(w, http.StatusOK, map[string]any{
 			"success": true,
 			"data": map[string]any{
-				"ticket_code":    comp.TicketCode,
-				"status":         comp.Status,
-				"is_anonymous":   comp.IsAnonymous,
-				"reporter_name":  displayName,
-				"reporter_nik":   displayNIK,
-				"reporter_phone": displayPhone,
-				"violation_type": comp.ViolationType,
-				"regency_name":   comp.RegencyName,
-				"district_name":  comp.DistrictName,
-				"address_detail": comp.AddressDetail,
-				"latitude":       comp.Latitude,
-				"longitude":      comp.Longitude,
-				"description":    comp.Description,
-				"disposed_to":    comp.DisposedTo,
-				"action_notes":   comp.ActionNotes,
-				"created_at":     comp.CreatedAt,
+				"ticket_code":        comp.TicketCode,
+				"status":             comp.Status,
+				"is_anonymous":       comp.IsAnonymous,
+				"reporter_name":      maskedName,
+				"reporter_nik":       maskedNIK,
+				"reporter_phone":     maskedPhone,
+				"reporter_email":     maskedEmail,
+				"masked_name":        maskedName,
+				"masked_nik":         maskedNIK,
+				"masked_phone":       maskedPhone,
+				"masked_email":       maskedEmail,
+				"violation_type":     comp.ViolationType,
+				"regency_name":       comp.RegencyName,
+				"district_name":      comp.DistrictName,
+				"village_name":       comp.VillageName,
+				"address_detail":     comp.AddressDetail,
+				"latitude":           comp.Latitude,
+				"longitude":          comp.Longitude,
+				"description":        comp.Description,
+				"evidence_image_url": evidence,
+				"evidence_photos":    evidence,
+				"disposed_to":        comp.DisposedTo,
+				"action_notes":       comp.ActionNotes,
+				"created_at":         comp.CreatedAt,
 			},
 		})
 	})
 
-	// 9. Admin Satpol PP: List All Complaints
-	mux.HandleFunc("GET /api/v1/admin/complaints", func(w http.ResponseWriter, r *http.Request) {
+	// 11. Admin Satpol PP: List All Complaints
+	mux.Handle("GET /api/v1/admin/complaints", middleware.RequireAuth(domain.RoleStaff, domain.RoleAdmin, domain.RoleSuperadmin)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		store.mu.RLock()
 		defer store.mu.RUnlock()
 
@@ -410,11 +628,11 @@ func main() {
 			"total":   len(list),
 			"data":    list,
 		})
-	})
+	})))
 
-	// 10. Admin Satpol PP: Update Complaint Status & Disposisi
-	mux.HandleFunc("PUT /api/v1/admin/complaints/{ticket}/status", func(w http.ResponseWriter, r *http.Request) {
-		ticket := r.PathValue("ticket")
+	// 12. Admin Satpol PP: Update Complaint Status, Disposisi & Email Notification
+	mux.Handle("PUT /api/v1/admin/complaints/{ticket}/status", middleware.RequireAuth(domain.RoleStaff, domain.RoleAdmin, domain.RoleSuperadmin)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ticket := strings.ToUpper(strings.TrimSpace(r.PathValue("ticket")))
 		var req struct {
 			Status      domain.ComplaintStatus `json:"status"`
 			DisposedTo  string                 `json:"disposed_to"`
@@ -447,17 +665,215 @@ func main() {
 			comp.OfficerName = req.OfficerName
 		}
 		comp.UpdatedAt = time.Now()
+		snapshot := *comp
 		store.mu.Unlock()
+
+		emailNotice := utils.SendComplaintEmail(
+			cfg,
+			snapshot.ReporterEmail,
+			snapshot.TicketCode,
+			string(snapshot.Status),
+			snapshot.RegencyName,
+			snapshot.DisposedTo,
+			snapshot.ActionNotes,
+		)
 
 		writeJSON(w, http.StatusOK, map[string]any{
 			"success": true,
 			"message": "Status penanganan aduan berhasil diperbarui",
-			"data":    comp,
+			"email":   emailNotice,
+			"data":    snapshot,
 		})
-	})
+	})))
 
-	// 11. Superadmin Diskominfo: Dynamic CMS Settings Update
-	mux.HandleFunc("PUT /api/v1/superadmin/settings", func(w http.ResponseWriter, r *http.Request) {
+	// 13. Superadmin Diskominfo: User RBAC Management
+	mux.Handle("GET /api/v1/superadmin/users", middleware.RequireAuth(domain.RoleSuperadmin)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		store.mu.RLock()
+		defer store.mu.RUnlock()
+		list := make([]*domain.User, 0, len(store.Users))
+		for _, u := range store.Users {
+			list = append(list, u)
+		}
+		writeJSON(w, http.StatusOK, map[string]any{
+			"success": true,
+			"data":    list,
+		})
+	})))
+
+	mux.Handle("POST /api/v1/superadmin/users", middleware.RequireAuth(domain.RoleSuperadmin)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var req struct {
+			Name     string      `json:"name"`
+			Username string      `json:"username"`
+			Email    string      `json:"email"`
+			Password string      `json:"password"`
+			Role     domain.Role `json:"role"`
+			Bidang   string      `json:"bidang"`
+			IsActive *bool       `json:"is_active"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "Payload pengguna tidak valid"})
+			return
+		}
+		uname := strings.ToLower(strings.TrimSpace(req.Username))
+		if uname == "" || strings.TrimSpace(req.Name) == "" {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "Nama dan username wajib diisi"})
+			return
+		}
+		store.mu.Lock()
+		if _, dup := store.Users[uname]; dup {
+			store.mu.Unlock()
+			writeJSON(w, http.StatusConflict, map[string]string{"error": "Username sudah terdaftar"})
+			return
+		}
+		pass := strings.TrimSpace(req.Password)
+		if pass == "" {
+			pass = "satpolpp2026"
+		}
+		active := true
+		if req.IsActive != nil {
+			active = *req.IsActive
+		}
+		user := &domain.User{
+			ID:        store.NextUserID,
+			Name:      strings.TrimSpace(req.Name),
+			Username:  uname,
+			Email:     strings.TrimSpace(req.Email),
+			Password:  pass,
+			Role:      req.Role,
+			Bidang:    strings.TrimSpace(req.Bidang),
+			IsActive:  active,
+			CreatedAt: time.Now(),
+		}
+		store.NextUserID++
+		store.Users[uname] = user
+		store.mu.Unlock()
+
+		writeJSON(w, http.StatusCreated, map[string]any{
+			"success": true,
+			"data":    user,
+		})
+	})))
+
+	mux.Handle("PUT /api/v1/superadmin/users/{id}", middleware.RequireAuth(domain.RoleSuperadmin)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		idVal, err := strconv.ParseUint(r.PathValue("id"), 10, 64)
+		if err != nil {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "ID user tidak valid"})
+			return
+		}
+		var req struct {
+			Name     string      `json:"name"`
+			Email    string      `json:"email"`
+			Password string      `json:"password"`
+			Role     domain.Role `json:"role"`
+			Bidang   string      `json:"bidang"`
+			IsActive *bool       `json:"is_active"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "Payload tidak valid"})
+			return
+		}
+
+		store.mu.Lock()
+		var target *domain.User
+		for _, u := range store.Users {
+			if u.ID == uint(idVal) {
+				target = u
+				break
+			}
+		}
+		if target == nil {
+			store.mu.Unlock()
+			writeJSON(w, http.StatusNotFound, map[string]string{"error": "Pengguna tidak ditemukan"})
+			return
+		}
+		if req.Name != "" {
+			target.Name = strings.TrimSpace(req.Name)
+		}
+		if req.Email != "" {
+			target.Email = strings.TrimSpace(req.Email)
+		}
+		if req.Role != "" {
+			target.Role = req.Role
+		}
+		if req.Bidang != "" {
+			target.Bidang = strings.TrimSpace(req.Bidang)
+		}
+		if req.Password != "" {
+			target.Password = req.Password
+		}
+		if req.IsActive != nil {
+			target.IsActive = *req.IsActive
+		}
+		target.UpdatedAt = time.Now()
+		snapshot := *target
+		store.mu.Unlock()
+
+		writeJSON(w, http.StatusOK, map[string]any{
+			"success": true,
+			"data":    snapshot,
+		})
+	})))
+
+	mux.Handle("PATCH /api/v1/superadmin/users/{id}/status", middleware.RequireAuth(domain.RoleSuperadmin)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		idVal, err := strconv.ParseUint(r.PathValue("id"), 10, 64)
+		if err != nil {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "ID user tidak valid"})
+			return
+		}
+		var req struct {
+			IsActive bool `json:"is_active"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "Payload tidak valid"})
+			return
+		}
+		store.mu.Lock()
+		var target *domain.User
+		for _, u := range store.Users {
+			if u.ID == uint(idVal) {
+				target = u
+				break
+			}
+		}
+		if target == nil {
+			store.mu.Unlock()
+			writeJSON(w, http.StatusNotFound, map[string]string{"error": "Pengguna tidak ditemukan"})
+			return
+		}
+		target.IsActive = req.IsActive
+		target.UpdatedAt = time.Now()
+		store.mu.Unlock()
+
+		writeJSON(w, http.StatusOK, map[string]any{"success": true})
+	})))
+
+	mux.Handle("DELETE /api/v1/superadmin/users/{id}", middleware.RequireAuth(domain.RoleSuperadmin)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		idVal, err := strconv.ParseUint(r.PathValue("id"), 10, 64)
+		if err != nil {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "ID user tidak valid"})
+			return
+		}
+		store.mu.Lock()
+		var keyToDelete string
+		for k, u := range store.Users {
+			if u.ID == uint(idVal) {
+				keyToDelete = k
+				break
+			}
+		}
+		if keyToDelete == "" {
+			store.mu.Unlock()
+			writeJSON(w, http.StatusNotFound, map[string]string{"error": "Pengguna tidak ditemukan"})
+			return
+		}
+		delete(store.Users, keyToDelete)
+		store.mu.Unlock()
+
+		writeJSON(w, http.StatusOK, map[string]any{"success": true})
+	})))
+
+	// 14. Superadmin Diskominfo: Dynamic CMS Settings Update
+	mux.Handle("PUT /api/v1/superadmin/settings", middleware.RequireAuth(domain.RoleSuperadmin)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var updates map[string]string
 		if err := json.NewDecoder(r.Body).Decode(&updates); err != nil {
 			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "Invalid body"})
@@ -475,16 +891,15 @@ func main() {
 			"message": "Pengaturan CMS berhasil diperbarui",
 			"data":    store.Settings,
 		})
-	})
+	})))
 
-	// 12. Strict Image Evidence Upload (MIME Magic-Bytes Validated & 5MB Max)
+	// 15. Strict Image Evidence Upload (MIME Magic-Bytes Validated & 5MB Max)
 	imageStorage, err := storage.NewImageStorage("./uploads/evidence")
 	if err != nil {
 		slog.Error("Gagal inisialisasi storage gambar", "error", err)
 	}
 
 	mux.HandleFunc("POST /api/v1/upload/evidence", func(w http.ResponseWriter, r *http.Request) {
-		// Limit body size to 6 MB (5MB file + multipart form overhead)
 		r.Body = http.MaxBytesReader(w, r.Body, 6*1024*1024)
 		if err := r.ParseMultipartForm(6 * 1024 * 1024); err != nil {
 			writeJSON(w, http.StatusBadRequest, map[string]any{
@@ -533,14 +948,9 @@ func main() {
 	fs := http.FileServer(http.Dir("./uploads"))
 	mux.Handle("/uploads/", http.StripPrefix("/uploads/", fs))
 
-	// Frontier Defense-in-Depth Middleware Chain:
-	// 1. Panic Recovery (Outermost)
-	// 2. HTTP Security Headers (CSP, HSTS, X-Content-Type-Options, etc.)
-	// 3. IP Token-Bucket Rate Limiter (60 req/min)
-	// 4. Configurable CORS (Vite + Gov Domains)
 	rateLimiter := middleware.NewIPRateLimiter(60, time.Second)
 	corsMiddleware := middleware.CORS([]string{
-		"*", // Allow development origins
+		"*",
 		"http://localhost:5173",
 		"http://localhost:3000",
 		"http://127.0.0.1:5173",

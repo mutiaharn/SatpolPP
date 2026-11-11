@@ -148,7 +148,7 @@
       if (line.startsWith('> ')) {
         if (inOl) { html += '</ol>'; inOl = false; }
         if (inUl) { html += '</ul>'; inUl = false; }
-        html += `<blockquote class="border-l-4 border-[#F08300] pl-4 italic text-[#2b2f3f] my-3 bg-[#fcfbf7] py-2 rounded-r-lg">${formatInline(line.slice(2))}</blockquote>`;
+        html += `<blockquote class="border-l-4 border-[#F08300] pl-4 italic text-[#3d261a] my-3 bg-[#fcfbf7] py-2 rounded-r-lg">${formatInline(line.slice(2))}</blockquote>`;
         continue;
       }
 
@@ -164,7 +164,7 @@
       const numMatch = line.match(/^\s*(\d+)\.\s+(.*)$/);
       if (numMatch) {
         if (inUl) { html += '</ul>'; inUl = false; }
-        if (!inOl) { html += '<ol class="list-decimal pl-5 space-y-1 my-2 text-xs text-[#2b2f3f]">'; inOl = true; }
+        if (!inOl) { html += '<ol class="list-decimal pl-5 space-y-1 my-2 text-xs text-[#3d261a]">'; inOl = true; }
         html += `<li>${formatInline(numMatch[2])}</li>`;
         continue;
       }
@@ -173,7 +173,7 @@
       const bulletMatch = line.match(/^\s*[-*]\s+(.*)$/);
       if (bulletMatch) {
         if (inOl) { html += '</ol>'; inOl = false; }
-        if (!inUl) { html += '<ul class="list-disc pl-5 space-y-1 my-2 text-xs text-[#2b2f3f]">'; inUl = true; }
+        if (!inUl) { html += '<ul class="list-disc pl-5 space-y-1 my-2 text-xs text-[#3d261a]">'; inUl = true; }
         html += `<li>${formatInline(bulletMatch[1])}</li>`;
         continue;
       }
@@ -184,7 +184,7 @@
 
       // Paragraph
       if (line.trim() !== '') {
-        html += `<p class="text-xs text-[#2b2f3f] leading-relaxed my-2.5">${formatInline(line)}</p>`;
+        html += `<p class="text-xs text-[#3d261a] leading-relaxed my-2.5">${formatInline(line)}</p>`;
       }
     }
 

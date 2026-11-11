@@ -1,604 +1,704 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { 
-    siteSettingsStore, 
-    usersStore, 
-    auditLogsStore, 
-    complaintsStore, 
+  import {
+    Users,
+    Building2,
+    Settings,
+    MapPin,
+    History,
+    ShieldCheck,
+    Plus,
+    Edit3,
+    Trash2,
+    CheckCircle2,
+    UserCheck,
+    UserX
+  } from 'lucide-svelte';
+  import {
+    siteSettingsStore,
+    usersStore,
+    auditLogsStore,
+    complaintsStore,
+    organizationStore,
     defaultRegencies,
-    type AuditEntry
+    logAudit
   } from '$lib/stores/appState';
-  import type { SiteSettings, User } from '$lib/types';
+  import {
+    saveUser,
+    setUserActive,
+    deleteUser,
+    fetchOrganization
+  } from '$lib/api/client';
+  import { getSession } from '$lib/utils/auth';
+  import type { SiteSettings, User, UserRole } from '$lib/types';
+  import DashboardShell, { type DashboardNavItem } from '$lib/components/layout/DashboardShell.svelte';
+  import DataTable from '$lib/components/ui/DataTable.svelte';
+  import Modal from '$lib/components/ui/Modal.svelte';
+  import OrganizationManager from '$lib/components/cms/OrganizationManager.svelte';
 
-  let activeTab: 'settings' | 'users' | 'regencies' | 'audit' | 'server' = 'settings';
+  type SuperTab = 'users' | 'organization' | 'settings' | 'regencies' | 'audit' | 'server';
+  let activeTab: SuperTab = 'users';
+  let currentUser: User | null = null;
 
-  // CMS Settings Local Form Model
-  let currentSettings: SiteSettings = {
-    app_name: '',
-    agency_tagline: '',
-    office_address: '',
-    call_center: '',
-    emergency_hotline: '',
-    email_contact: '',
-    kasatpol_name: '',
-    kasatpol_quote: ''
-  };
+  let toastMessage = '';
+  function showToast(msg: string) {
+    toastMessage = msg;
+    setTimeout(() => {
+      if (toastMessage === msg) toastMessage = '';
+    }, 5000);
+  }
 
-  siteSettingsStore.subscribe(val => {
-    currentSettings = { ...val };
+  onMount(() => {
+    const session = getSession();
+    if (session?.user) {
+      currentUser = session.user;
+    }
+    fetchOrganization();
   });
 
-  let isSaving = false;
-  let saveSuccess = false;
+  $: navItems = [
+    { id: 'users', label: 'Manajemen Pengguna', icon: Users, badge: $usersStore.length, section: 'Akses & Organisasi' },
+    { id: 'organization', label: 'Struktur Organisasi', icon: Building2, badge: $organizationStore.length },
+    { id: 'settings', label: 'Konfigurasi Portal', icon: Settings, section: 'Sistem & Wilayah' },
+    { id: 'regencies', label: '24 Kab/Kota', icon: MapPin, badge: defaultRegencies.length },
+    { id: 'audit', label: 'Audit Trail', icon: History, badge: $auditLogsStore.length, section: 'Keamanan' },
+    { id: 'server', label: 'Telemetri Sistem', icon: ShieldCheck }
+  ] satisfies DashboardNavItem[];
 
-  function handleSaveSettings() {
-    isSaving = true;
-    siteSettingsStore.set(currentSettings);
-    
-    // Log audit trail
-    auditLogsStore.update(logs => [
-      {
-        id: Date.now(),
-        user_name: 'superadmin',
-        action: 'UPDATE_CMS_SETTINGS',
-        resource: 'SiteSettings',
-        details: 'Memperbarui konfigurasi identitas dan kontak resmi portal',
-        timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19),
-        ip_address: '103.151.191.73'
-      },
-      ...logs
-    ]);
-
-    setTimeout(() => {
-      isSaving = false;
-      saveSuccess = true;
-      setTimeout(() => saveSuccess = false, 3000);
-    }, 400);
-  }
-
-  // User Management
-  let usersList: User[] = [];
-  usersStore.subscribe(val => usersList = val);
-
-  let showAddUserModal = false;
-  let newUser: Partial<User> = {
-    name: '',
-    username: '',
-    email: '',
-    role: 'STAFF_SATPOL',
-    bidang: 'Bidang Ketenteraman dan Ketertiban Umum',
-    is_active: true
+  const tabMeta: Record<SuperTab, { title: string; desc: string }> = {
+    users: {
+      title: 'Manajemen Pengguna & Hak Akses (RBAC)',
+      desc: 'Kelola akun Superadmin, Kasatpol, dan Staf Bidang termasuk aktivasi dan pengaturan peran.'
+    },
+    organization: {
+      title: 'Manajemen Struktur Organisasi (SOTK)',
+      desc: 'Tambah dan perbarui simpul jabatan, ID khusus (ORG-*), serta sub-unit kerja dinamis.'
+    },
+    settings: {
+      title: 'Konfigurasi Identitas Portal & Kontak Resmi',
+      desc: 'Ubah informasi instansi, nama pimpinan, sambutan, dan kontak SIAP TERTIB tanpa hardcode.'
+    },
+    regencies: {
+      title: 'Referensi 24 Kabupaten / Kota Sulawesi Selatan',
+      desc: 'Wilayah yurisdiksi penegakan Peraturan Daerah yang terhubung ke formulir aduan SIAP TERTIB.'
+    },
+    audit: {
+      title: 'Audit Trail & Log Aktivitas Sistem',
+      desc: 'Jejak kronologis pembukaan masking identitas, perubahan status SOP, serta administrasi akun.'
+    },
+    server: {
+      title: 'Telemetri Sistem & Lingkungan Runtime',
+      desc: 'Ringkasan arsitektur frontend SvelteKit, REST API Go, dan mode penyimpanan aktif.'
+    }
   };
 
-  function handleAddUser() {
-    if (!newUser.name || !newUser.username || !newUser.email) {
-      alert('Nama, username, dan email wajib diisi.');
+  // ==========================================
+  // 1. MANAJEMEN PENGGUNA (MODAL CRUD + RBAC)
+  // ==========================================
+  let userModalOpen = false;
+  let isNewUser = true;
+  let userFormError = '';
+  let isSavingUser = false;
+
+  let formUserId = 0;
+  let formName = '';
+  let formUsername = '';
+  let formEmail = '';
+  let formRole: UserRole = 'STAFF_SATPOL';
+  let formBidang = 'Bidang Ketenteraman dan Ketertiban Umum';
+  let formPassword = '';
+  let formActive = true;
+
+  let deleteUserModalOpen = false;
+  let deleteUserTarget: User | null = null;
+  let deleteUserError = '';
+
+  function openAddUserModal() {
+    isNewUser = true;
+    formUserId = 0;
+    formName = '';
+    formUsername = '';
+    formEmail = '';
+    formRole = 'STAFF_SATPOL';
+    formBidang = $organizationStore[1]?.position_title || 'Bidang Ketenteraman dan Ketertiban Umum';
+    formPassword = '';
+    formActive = true;
+    userFormError = '';
+    userModalOpen = true;
+  }
+
+  function openEditUserModal(u: User) {
+    isNewUser = false;
+    formUserId = u.id;
+    formName = u.name;
+    formUsername = u.username;
+    formEmail = u.email;
+    formRole = u.role;
+    formBidang = u.bidang || '';
+    formPassword = '';
+    formActive = u.is_active;
+    userFormError = '';
+    userModalOpen = true;
+  }
+
+  async function handleSaveUser() {
+    userFormError = '';
+    const cleanUsername = formUsername.trim().toLowerCase().replace(/\s+/g, '');
+    if (!formName.trim() || !cleanUsername || !formEmail.trim()) {
+      userFormError = 'Nama lengkap, username, dan email wajib diisi.';
       return;
     }
-    const created: User = {
-      id: Date.now(),
-      name: newUser.name,
-      username: newUser.username.toLowerCase().replace(/\s+/g, ''),
-      email: newUser.email,
-      role: newUser.role as any || 'STAFF_SATPOL',
-      bidang: newUser.bidang || 'Sekretariat',
-      is_active: true
+    const duplicate = $usersStore.find(
+      u => u.username.toLowerCase() === cleanUsername && (isNewUser || u.id !== formUserId)
+    );
+    if (duplicate) {
+      userFormError = `Username "${cleanUsername}" sudah terdaftar.`;
+      return;
+    }
+
+    isSavingUser = true;
+    const payload: User = {
+      id: isNewUser ? Date.now() : formUserId,
+      name: formName.trim(),
+      username: cleanUsername,
+      email: formEmail.trim(),
+      role: formRole,
+      bidang: formBidang.trim() || 'Sekretariat',
+      is_active: formActive
     };
-    usersStore.update(items => [...items, created]);
-    auditLogsStore.update(logs => [
-      {
-        id: Date.now(),
-        user_name: 'superadmin',
-        action: 'CREATE_USER',
-        resource: `User #${created.username}`,
-        details: `Menambahkan akun baru role ${created.role} (${created.name})`,
-        timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19),
-        ip_address: '103.151.191.73'
-      },
-      ...logs
-    ]);
-    showAddUserModal = false;
-    newUser = {
-      name: '',
-      username: '',
-      email: '',
-      role: 'STAFF_SATPOL',
-      bidang: 'Bidang Ketenteraman dan Ketertiban Umum',
-      is_active: true
-    };
+
+    try {
+      await saveUser(payload, isNewUser, formPassword.trim() || undefined);
+      logAudit(
+        currentUser?.username || 'superadmin',
+        isNewUser ? 'CREATE_USER' : 'UPDATE_USER',
+        `User #${payload.username}`,
+        `${isNewUser ? 'Menambahkan' : 'Memperbarui'} akun role ${payload.role} (${payload.name})`
+      );
+      showToast(`Akun "${payload.username}" berhasil ${isNewUser ? 'ditambahkan' : 'diperbarui'}.`);
+      userModalOpen = false;
+    } finally {
+      isSavingUser = false;
+    }
   }
 
-  function toggleUserStatus(id: number) {
-    usersStore.update(items => items.map(u => {
-      if (u.id === id) {
-        const nextStatus = !u.is_active;
-        auditLogsStore.update(logs => [
-          {
-            id: Date.now(),
-            user_name: 'superadmin',
-            action: nextStatus ? 'ACTIVATE_USER' : 'SUSPEND_USER',
-            resource: `User #${u.username}`,
-            details: `Mengubah status akun menjadi ${nextStatus ? 'Aktif' : 'Nonaktif'}`,
-            timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19),
-            ip_address: '103.151.191.73'
-          },
-          ...logs
-        ]);
-        return { ...u, is_active: nextStatus };
-      }
-      return u;
-    }));
+  async function handleToggleUserStatus(u: User) {
+    const nextStatus = !u.is_active;
+    if (!nextStatus && currentUser && currentUser.id === u.id) {
+      showToast('Tidak dapat menonaktifkan akun yang sedang Anda gunakan saat ini.');
+      return;
+    }
+    await setUserActive(u.id, nextStatus);
+    logAudit(
+      currentUser?.username || 'superadmin',
+      nextStatus ? 'ACTIVATE_USER' : 'SUSPEND_USER',
+      `User #${u.username}`,
+      `Mengubah status akun menjadi ${nextStatus ? 'Aktif' : 'Nonaktif'}`
+    );
+    showToast(`Status akun "${u.username}" diubah menjadi ${nextStatus ? 'Aktif' : 'Nonaktif'}.`);
   }
 
-  // Audit Logs
-  let auditLogs: AuditEntry[] = [];
-  auditLogsStore.subscribe(val => auditLogs = val);
+  function askDeleteUser(u: User) {
+    deleteUserTarget = u;
+    deleteUserError = '';
+    const activeSuperadmins = $usersStore.filter(x => x.role === 'SUPERADMIN_DISKOMINFO' && x.id !== u.id);
+    if (u.role === 'SUPERADMIN_DISKOMINFO' && activeSuperadmins.length === 0) {
+      deleteUserError = 'Minimal harus tersisa satu akun Superadmin dalam sistem.';
+    } else if (currentUser && currentUser.id === u.id) {
+      deleteUserError = 'Tidak dapat menghapus akun yang sedang aktif masuk.';
+    }
+    deleteUserModalOpen = true;
+  }
 
-  // Stats
-  let totalComplaints = 0;
-  complaintsStore.subscribe(val => totalComplaints = val.length);
+  async function confirmDeleteUser() {
+    if (!deleteUserTarget || deleteUserError) return;
+    const target = deleteUserTarget;
+    await deleteUser(target.id);
+    logAudit(
+      currentUser?.username || 'superadmin',
+      'DELETE_USER',
+      `User #${target.username}`,
+      `Menghapus akun pengguna ${target.name}`
+    );
+    showToast(`Akun "${target.username}" berhasil dihapus.`);
+    deleteUserModalOpen = false;
+    deleteUserTarget = null;
+  }
+
+  // ==========================================
+  // 2. KONFIGURASI PORTAL (SITE SETTINGS)
+  // ==========================================
+  let currentSettings: SiteSettings = { ...$siteSettingsStore };
+  let settingsInitialized = false;
+  $: if ($siteSettingsStore && !settingsInitialized) {
+    currentSettings = { ...$siteSettingsStore };
+    settingsInitialized = true;
+  }
+
+  let isSavingSettings = false;
+  function handleSaveSettings() {
+    isSavingSettings = true;
+    siteSettingsStore.set({ ...currentSettings });
+    logAudit(
+      currentUser?.username || 'superadmin',
+      'UPDATE_CMS_SETTINGS',
+      'SiteSettings',
+      'Memperbarui konfigurasi identitas dan kontak resmi portal'
+    );
+    setTimeout(() => {
+      isSavingSettings = false;
+      showToast('Konfigurasi portal berhasil disimpan dan disinkronkan ke portal publik.');
+    }, 250);
+  }
+
+  function roleBadgeStyle(role: UserRole) {
+    if (role === 'SUPERADMIN_DISKOMINFO') return 'bg-[#1a120c] text-[#F08300] border-[#3d261a]';
+    if (role === 'ADMIN_SATPOL') return 'bg-orange-50 text-orange-900 border-orange-200';
+    return 'bg-[#f9f4e8] text-[#3d261a] border-[#eee9db]';
+  }
 </script>
 
 <svelte:head>
-  <title>Konsol Superadmin Diskominfo-SP | Satpol PP Sulsel</title>
+  <title>Panel Superadmin &amp; Manajemen Akses | Satpol PP Sulsel</title>
 </svelte:head>
 
-<div class="min-h-screen bg-[#f8f9fa] py-8 px-4 sm:px-6 lg:px-8">
-  <div class="max-w-7xl mx-auto space-y-6">
+<DashboardShell
+  portalLabel="Superadmin Sistem"
+  portalTag="DISKOMINFO & RBAC"
+  {navItems}
+  bind:activeTab
+  pageTitle={tabMeta[activeTab].title}
+  pageDescription={tabMeta[activeTab].desc}
+  user={currentUser}
+  quickSwitchHref="/admin/dashboard"
+  quickSwitchLabel="Panel Admin Satpol"
+>
+  <svelte:fragment slot="header-actions">
+    <a
+      href="/admin/dashboard"
+      class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#f9f4e8] hover:bg-[#eee9db] text-[#1a120c] text-xs font-bold border border-[#eee9db] transition"
+    >
+      Meja Admin Satpol
+    </a>
+  </svelte:fragment>
 
-    <!-- Header Panel -->
-    <div class="bg-[#101116] text-white p-6 md:p-8 rounded-2xl border-b-4 border-[#F08300] shadow-sm">
-      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <div class="flex items-center gap-2">
-            <span class="inline-block w-2.5 h-2.5 bg-emerald-500 rounded-full"></span>
-            <span class="text-[#F08300] font-bold text-xs uppercase tracking-widest">
-              Pemerintah Provinsi Sulawesi Selatan &bull; Dinas Komunikasi, Informatika, Statistik dan Persandian
+  <!-- Ringkasan Metrik Superadmin -->
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="bg-white border border-[#eee9db] rounded-2xl p-5 shadow-xs">
+      <div class="text-[11px] font-bold text-[#3d261a]/75 uppercase">Total Akun RBAC</div>
+      <div class="text-2xl md:text-3xl font-black text-[#1a120c] mt-1.5">{$usersStore.length}</div>
+      <div class="text-[11px] text-[#3d261a]/65 mt-0.5">
+        {$usersStore.filter(u => u.is_active).length} akun aktif
+      </div>
+    </div>
+    <div class="bg-white border border-[#eee9db] rounded-2xl p-5 shadow-xs">
+      <div class="text-[11px] font-bold text-[#F08300] uppercase">Simpul Struktur SOTK</div>
+      <div class="text-2xl md:text-3xl font-black text-[#1a120c] mt-1.5">{$organizationStore.length}</div>
+      <div class="text-[11px] text-[#3d261a]/65 mt-0.5">Unit kerja dinamis</div>
+    </div>
+    <div class="bg-white border border-[#eee9db] rounded-2xl p-5 shadow-xs">
+      <div class="text-[11px] font-bold text-[#3d261a]/75 uppercase">Aduan SIAP TERTIB</div>
+      <div class="text-2xl md:text-3xl font-black text-[#1a120c] mt-1.5">{$complaintsStore.length}</div>
+      <div class="text-[11px] text-[#3d261a]/65 mt-0.5">24 kab/kota terhubung</div>
+    </div>
+    <div class="bg-white border border-[#eee9db] rounded-2xl p-5 shadow-xs">
+      <div class="text-[11px] font-bold text-emerald-800 uppercase">Catatan Audit Trail</div>
+      <div class="text-2xl md:text-3xl font-black text-emerald-700 mt-1.5">{$auditLogsStore.length}</div>
+      <div class="text-[11px] text-emerald-700/80 mt-0.5">Log keamanan tercatat</div>
+    </div>
+  </div>
+
+  {#if toastMessage}
+    <div
+      role="status"
+      class="flex items-center justify-between gap-3 px-4 py-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs font-bold shadow-xs"
+    >
+      <div class="flex items-center gap-2">
+        <CheckCircle2 class="w-4 h-4 text-emerald-600 shrink-0" />
+        <span>{toastMessage}</span>
+      </div>
+      <button type="button" on:click={() => (toastMessage = '')} class="text-xs underline opacity-75 hover:opacity-100">
+        Tutup
+      </button>
+    </div>
+  {/if}
+
+  <!-- TAB 1: MANAJEMEN PENGGUNA -->
+  {#if activeTab === 'users'}
+    <DataTable
+      items={$usersStore}
+      searchFields={['name', 'username', 'email', 'role', 'bidang']}
+      searchPlaceholder="Cari nama, username, bidang, atau role pengguna..."
+      pageSize={10}
+      pageSizeOptions={[5, 10, 25]}
+      title="Daftar Akun Operator &amp; Administrator"
+      description="Tambah, ubah peran, aktifkan/nonaktifkan, atau hapus akun pengelola portal."
+      emptyMessage="Tidak ada akun pengguna yang sesuai dengan pencarian."
+    >
+      <svelte:fragment slot="header-actions">
+        <button
+          type="button"
+          on:click={openAddUserModal}
+          class="inline-flex items-center gap-1.5 bg-[#F08300] hover:bg-[#d97300] text-white text-xs font-bold px-4 py-2 rounded-xl transition shadow-xs"
+        >
+          <Plus class="w-4 h-4" />
+          Tambah Akun Baru
+        </button>
+      </svelte:fragment>
+
+      <tr slot="head">
+        <th class="px-4 py-3.5">Nama &amp; Email</th>
+        <th class="px-4 py-3.5">Username</th>
+        <th class="px-4 py-3.5">Peran (Role)</th>
+        <th class="px-4 py-3.5">Unit / Bidang</th>
+        <th class="px-4 py-3.5">Status</th>
+        <th class="px-4 py-3.5 text-right">Aksi</th>
+      </tr>
+
+      <tr slot="row" let:item class="hover:bg-[#f9f4e8]/55 transition">
+        <td class="px-4 py-3.5 align-top">
+          <div class="font-bold text-xs text-[#1a120c]">{item.name}</div>
+          <div class="text-[11px] text-[#3d261a]/70">{item.email}</div>
+        </td>
+        <td class="px-4 py-3.5 align-top font-mono text-xs font-bold text-[#3d261a]">@{item.username}</td>
+        <td class="px-4 py-3.5 align-top">
+          <span class="inline-block px-2.5 py-1 rounded-lg border text-[10px] font-bold uppercase {roleBadgeStyle(item.role)}">
+            {item.role}
+          </span>
+        </td>
+        <td class="px-4 py-3.5 align-top text-xs text-[#3d261a]">{item.bidang || '-'}</td>
+        <td class="px-4 py-3.5 align-top">
+          {#if item.is_active}
+            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-[10px] font-bold">
+              Aktif
             </span>
-          </div>
-          <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight mt-1">
-            Konsol Pengembang &amp; Superadmin Sistem
-          </h1>
-          <p class="text-xs text-[#9ca3af] mt-1">
-            Pengelolaan infrastruktur hosting, manajemen hak akses terpusat, audit trail keamanan, dan konfigurasi portal tanpa hardcode.
-          </p>
-        </div>
-
-        <div class="flex flex-wrap gap-2.5">
-          <a 
-            href="/admin/dashboard" 
-            class="bg-[#2b2f3f] hover:bg-gray-800 text-white text-xs font-bold uppercase px-4 py-2.5 rounded-xl border border-gray-700 transition"
-          >
-            Dashboard Staff Satpol
-          </a>
-          <a 
-            href="/" 
-            class="bg-[#F08300] hover:bg-[#d97400] text-white text-xs font-bold uppercase px-4 py-2.5 rounded-xl transition"
-          >
-            Lihat Portal Publik
-          </a>
-        </div>
-      </div>
-
-      <!-- Quick Metrics Ribbon -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 pt-6 border-t border-gray-800">
-        <div>
-          <div class="text-[11px] text-[#9ca3af] uppercase font-semibold">Total Pengguna Terdaftar</div>
-          <div class="text-xl font-bold text-white mt-0.5">{usersList.length} Akun</div>
-        </div>
-        <div>
-          <div class="text-[11px] text-[#9ca3af] uppercase font-semibold">Laporan Masuk SIAP TERTIB</div>
-          <div class="text-xl font-bold text-[#F08300] mt-0.5">{totalComplaints} Berkas</div>
-        </div>
-        <div>
-          <div class="text-[11px] text-[#9ca3af] uppercase font-semibold">Cakupan Wilayah</div>
-          <div class="text-xl font-bold text-white mt-0.5">{defaultRegencies.length} Kab / Kota</div>
-        </div>
-        <div>
-          <div class="text-[11px] text-[#9ca3af] uppercase font-semibold">Status Gateway API</div>
-          <div class="text-xl font-bold text-emerald-400 mt-0.5">Aktif (Port 8080)</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Navigation Tabs -->
-    <div class="flex flex-wrap border border-gray-200 bg-white rounded-xl p-1 gap-1">
-      <button 
-        class={`px-4 py-2.5 text-xs font-bold uppercase transition rounded-lg ${activeTab === 'settings' ? 'bg-[#F08300] text-white' : 'text-gray-600 hover:bg-gray-100'}`}
-        on:click={() => activeTab = 'settings'}
-      >
-        Pengaturan CMS &amp; Metadata
-      </button>
-      <button 
-        class={`px-4 py-2.5 text-xs font-bold uppercase transition rounded-lg ${activeTab === 'users' ? 'bg-[#F08300] text-white' : 'text-gray-600 hover:bg-gray-100'}`}
-        on:click={() => activeTab = 'users'}
-      >
-        Manajemen Akun (RBAC)
-      </button>
-      <button 
-        class={`px-4 py-2.5 text-xs font-bold uppercase transition rounded-lg ${activeTab === 'regencies' ? 'bg-[#F08300] text-white' : 'text-gray-600 hover:bg-gray-100'}`}
-        on:click={() => activeTab = 'regencies'}
-      >
-        Master Wilayah (24 Kab/Kota)
-      </button>
-      <button 
-        class={`px-4 py-2.5 text-xs font-bold uppercase transition rounded-lg ${activeTab === 'audit' ? 'bg-[#F08300] text-white' : 'text-gray-600 hover:bg-gray-100'}`}
-        on:click={() => activeTab = 'audit'}
-      >
-        Audit Trail Keamanan ({auditLogs.length})
-      </button>
-      <button 
-        class={`px-4 py-2.5 text-xs font-bold uppercase transition rounded-lg ${activeTab === 'server' ? 'bg-[#F08300] text-white' : 'text-gray-600 hover:bg-gray-100'}`}
-        on:click={() => activeTab = 'server'}
-      >
-        Telemetri Server &amp; Host
-      </button>
-    </div>
-
-    {#if saveSuccess}
-      <div class="bg-emerald-50 border border-emerald-300 text-emerald-800 text-xs p-4 rounded-xl font-semibold flex items-center justify-between">
-        <span>Pengaturan CMS berhasil disimpan dan disinkronkan ke portal publik secara instan.</span>
-        <span class="text-[10px] uppercase font-bold tracking-wider bg-emerald-200 px-2 py-0.5 rounded">Tersimpan</span>
-      </div>
-    {/if}
-
-    <!-- TAB 1: CMS SETTINGS -->
-    {#if activeTab === 'settings'}
-      <div class="bg-white border border-[#eee9db] rounded-2xl shadow-sm p-6 md:p-8 space-y-6">
-        <div class="border-b border-gray-100 pb-4">
-          <h2 class="text-base font-bold text-[#101116] uppercase tracking-wide">
-            Konfigurasi Identitas Instansi &amp; CMS Terpusat
-          </h2>
-          <p class="text-xs text-[#6f7775] mt-1">
-            Bidang-bidang di bawah ini mengontrol seluruh teks pimpinan, kontak darurat, serta alamat resmi yang tampil di header dan footer portal secara terpusat tanpa kompilasi ulang kode.
-          </p>
-        </div>
-
-        <form on:submit|preventDefault={handleSaveSettings} class="space-y-5">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div>
-              <label for="sup-app-name" class="block text-xs font-bold uppercase text-[#101116] mb-1">
-                Judul Portal / Instansi
-              </label>
-              <input 
-                id="sup-app-name"
-                type="text" 
-                bind:value={currentSettings.app_name} 
-                class="w-full border border-gray-300 rounded-lg p-2.5 text-xs text-[#101116] focus:border-[#F08300] focus:outline-none" 
-              />
-            </div>
-
-            <div>
-              <label for="sup-kasatpol-name" class="block text-xs font-bold uppercase text-[#101116] mb-1">
-                Nama Lengkap &amp; Gelar Kepala Satpol PP
-              </label>
-              <input 
-                id="sup-kasatpol-name"
-                type="text" 
-                bind:value={currentSettings.kasatpol_name} 
-                class="w-full border border-gray-300 rounded-lg p-2.5 text-xs text-[#101116] focus:border-[#F08300] focus:outline-none" 
-              />
-            </div>
-
-            <div>
-              <label for="sup-call-center" class="block text-xs font-bold uppercase text-[#101116] mb-1">
-                Nomor Telepon Kantor / Call Center
-              </label>
-              <input 
-                id="sup-call-center"
-                type="text" 
-                bind:value={currentSettings.call_center} 
-                class="w-full border border-gray-300 rounded-lg p-2.5 text-xs text-[#101116] focus:border-[#F08300] focus:outline-none" 
-              />
-            </div>
-
-            <div>
-              <label for="sup-hotline" class="block text-xs font-bold uppercase text-[#101116] mb-1">
-                Nomor Hotline Aduan Cepat (SIAP TERTIB / WhatsApp)
-              </label>
-              <input 
-                id="sup-hotline"
-                type="text" 
-                bind:value={currentSettings.emergency_hotline} 
-                class="w-full border border-gray-300 rounded-lg p-2.5 text-xs text-[#101116] focus:border-[#F08300] focus:outline-none" 
-              />
-            </div>
-
-            <div>
-              <label for="sup-email" class="block text-xs font-bold uppercase text-[#101116] mb-1">
-                Email Korespondensi Resmi Instansi
-              </label>
-              <input 
-                id="sup-email"
-                type="email" 
-                bind:value={currentSettings.email_contact} 
-                class="w-full border border-gray-300 rounded-lg p-2.5 text-xs text-[#101116] focus:border-[#F08300] focus:outline-none" 
-              />
-            </div>
-
-            <div>
-              <label for="sup-address" class="block text-xs font-bold uppercase text-[#101116] mb-1">
-                Alamat Kantor Satpol PP Prov. Sulsel
-              </label>
-              <input 
-                id="sup-address"
-                type="text" 
-                bind:value={currentSettings.office_address} 
-                class="w-full border border-gray-300 rounded-lg p-2.5 text-xs text-[#101116] focus:border-[#F08300] focus:outline-none" 
-              />
-            </div>
-
-            <div class="md:col-span-2">
-              <label for="sup-tagline" class="block text-xs font-bold uppercase text-[#101116] mb-1">
-                Semboyan &amp; Tagline Resmi (Praja Wibawa)
-              </label>
-              <textarea 
-                id="sup-tagline"
-                bind:value={currentSettings.agency_tagline} 
-                rows="2" 
-                class="w-full border border-gray-300 rounded-lg p-2.5 text-xs text-[#101116] focus:border-[#F08300] focus:outline-none"
-              ></textarea>
-            </div>
-
-            <div class="md:col-span-2">
-              <label for="sup-quote" class="block text-xs font-bold uppercase text-[#101116] mb-1">
-                Pernyataan Sambutan Kasatpol PP di Beranda
-              </label>
-              <textarea 
-                id="sup-quote"
-                bind:value={currentSettings.kasatpol_quote} 
-                rows="3" 
-                class="w-full border border-gray-300 rounded-lg p-2.5 text-xs text-[#101116] focus:border-[#F08300] focus:outline-none"
-              ></textarea>
-            </div>
-          </div>
-
-          <div class="pt-4 border-t border-gray-100 flex justify-end">
-            <button 
-              type="submit" 
-              disabled={isSaving}
-              class="bg-[#F08300] hover:bg-[#d97400] text-white font-bold text-xs uppercase px-6 py-2.5 rounded-xl transition disabled:opacity-50"
+          {:else}
+            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-red-50 border border-red-200 text-red-700 text-[10px] font-bold">
+              Nonaktif
+            </span>
+          {/if}
+        </td>
+        <td class="px-4 py-3.5 align-top text-right whitespace-nowrap">
+          <div class="inline-flex items-center gap-1.5">
+            <button
+              type="button"
+              on:click={() => openEditUserModal(item)}
+              class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-[#f9f4e8] hover:bg-[#eee9db] text-[#1a120c] text-xs font-bold border border-[#eee9db] transition"
             >
-              {#if isSaving}Menyimpan ke Database...{:else}Simpan Pembaruan CMS{/if}
+              <Edit3 class="w-3.5 h-3.5" />
+              Edit
+            </button>
+            <button
+              type="button"
+              on:click={() => handleToggleUserStatus(item)}
+              title={item.is_active ? 'Nonaktifkan akun' : 'Aktifkan akun'}
+              class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl border text-xs font-bold transition {item.is_active ? 'bg-amber-50 hover:bg-amber-100 text-amber-900 border-amber-200' : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-emerald-200'}"
+            >
+              {#if item.is_active}
+                <UserX class="w-3.5 h-3.5" />
+                Nonaktifkan
+              {:else}
+                <UserCheck class="w-3.5 h-3.5" />
+                Aktifkan
+              {/if}
+            </button>
+            <button
+              type="button"
+              on:click={() => askDeleteUser(item)}
+              aria-label="Hapus akun {item.username}"
+              class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-700 text-xs font-bold border border-red-200 transition"
+            >
+              <Trash2 class="w-3.5 h-3.5" />
             </button>
           </div>
-        </form>
-      </div>
-    {/if}
+        </td>
+      </tr>
+    </DataTable>
+  {/if}
 
-    <!-- TAB 2: USER MANAGEMENT (RBAC) -->
-    {#if activeTab === 'users'}
-      <div class="bg-white border border-[#eee9db] shadow-sm p-6 md:p-8 space-y-6">
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-gray-100 pb-4">
+  <!-- TAB 2: STRUKTUR ORGANISASI DINAMIS -->
+  {#if activeTab === 'organization'}
+    <OrganizationManager actorName={currentUser?.username || 'superadmin'} />
+  {/if}
+
+  <!-- TAB 3: KONFIGURASI PORTAL -->
+  {#if activeTab === 'settings'}
+    <div class="bg-white border border-[#eee9db] rounded-2xl shadow-xs p-6 md:p-8 space-y-6">
+      <div class="border-b border-[#eee9db] pb-4">
+        <h2 class="text-base font-black text-[#1a120c]">Identitas Instansi &amp; Kontak Portal</h2>
+        <p class="text-xs text-[#3d261a]/75 mt-1">
+          Perubahan langsung memperbarui informasi resmi di seluruh halaman publik.
+        </p>
+      </div>
+
+      <form on:submit|preventDefault={handleSaveSettings} class="space-y-5">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div>
-            <h2 class="text-base font-bold text-[#101116] uppercase tracking-wide">
-              Manajemen Hak Akses &amp; Akun Petugas (RBAC)
-            </h2>
-            <p class="text-xs text-[#6f7775] mt-1">
-              Pengaturan hierarki pengguna antara Superadmin Diskominfo, Admin Pimpinan Satpol PP, dan Petugas Teknis Bidang.
-            </p>
+            <label for="sup-app-name" class="block text-xs font-bold text-[#1a120c] mb-1.5">Judul Portal / Instansi</label>
+            <input id="sup-app-name" type="text" bind:value={currentSettings.app_name} class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs text-[#1a120c] focus:border-[#F08300] focus:outline-none" />
           </div>
-          <button 
-            on:click={() => showAddUserModal = true}
-            class="bg-[#2b2f3f] hover:bg-[#101116] text-white text-xs font-bold uppercase px-4 py-2.5 rounded-none transition"
+          <div>
+            <label for="sup-kasatpol-name" class="block text-xs font-bold text-[#1a120c] mb-1.5">Nama Kepala Satpol PP</label>
+            <input id="sup-kasatpol-name" type="text" bind:value={currentSettings.kasatpol_name} class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs text-[#1a120c] focus:border-[#F08300] focus:outline-none" />
+          </div>
+          <div>
+            <label for="sup-call-center" class="block text-xs font-bold text-[#1a120c] mb-1.5">Telepon / Call Center</label>
+            <input id="sup-call-center" type="text" bind:value={currentSettings.call_center} class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs text-[#1a120c] focus:border-[#F08300] focus:outline-none" />
+          </div>
+          <div>
+            <label for="sup-hotline" class="block text-xs font-bold text-[#1a120c] mb-1.5">Hotline Aduan Cepat</label>
+            <input id="sup-hotline" type="text" bind:value={currentSettings.emergency_hotline} class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs text-[#1a120c] focus:border-[#F08300] focus:outline-none" />
+          </div>
+          <div>
+            <label for="sup-email" class="block text-xs font-bold text-[#1a120c] mb-1.5">Email Resmi Instansi</label>
+            <input id="sup-email" type="email" bind:value={currentSettings.email_contact} class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs text-[#1a120c] focus:border-[#F08300] focus:outline-none" />
+          </div>
+          <div>
+            <label for="sup-address" class="block text-xs font-bold text-[#1a120c] mb-1.5">Alamat Markas Komando</label>
+            <input id="sup-address" type="text" bind:value={currentSettings.office_address} class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs text-[#1a120c] focus:border-[#F08300] focus:outline-none" />
+          </div>
+          <div class="md:col-span-2">
+            <label for="sup-tagline" class="block text-xs font-bold text-[#1a120c] mb-1.5">Semboyan / Tagline Resmi</label>
+            <textarea id="sup-tagline" rows="2" bind:value={currentSettings.agency_tagline} class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs text-[#1a120c] focus:border-[#F08300] focus:outline-none"></textarea>
+          </div>
+          <div class="md:col-span-2">
+            <label for="sup-quote" class="block text-xs font-bold text-[#1a120c] mb-1.5">Sambutan Kepala Satpol PP di Beranda</label>
+            <textarea id="sup-quote" rows="3" bind:value={currentSettings.kasatpol_quote} class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs text-[#1a120c] focus:border-[#F08300] focus:outline-none"></textarea>
+          </div>
+        </div>
+
+        <div class="pt-4 border-t border-[#eee9db] flex justify-end">
+          <button
+            type="submit"
+            disabled={isSavingSettings}
+            class="bg-[#F08300] hover:bg-[#d97300] text-white font-bold text-xs px-6 py-2.5 rounded-xl transition disabled:opacity-60 shadow-sm"
           >
-            + Tambah Pengguna Baru
+            {isSavingSettings ? 'Menyimpan...' : 'Simpan Konfigurasi Portal'}
           </button>
         </div>
+      </form>
+    </div>
+  {/if}
 
-        {#if showAddUserModal}
-          <div class="bg-[#f9f4e8] border border-[#eee9db] p-5 space-y-4">
-            <div class="text-xs font-bold text-[#101116] uppercase tracking-wider">Form Tambah Petugas / Administrator</div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <div>
-                <label for="new-user-fullname" class="block text-[10px] font-bold uppercase text-[#6f7775] mb-1">Nama Lengkap</label>
-                <input id="new-user-fullname" type="text" bind:value={newUser.name} placeholder="Nama Petugas" class="w-full border border-gray-300 p-2 text-xs bg-white" />
-              </div>
-              <div>
-                <label for="new-user-username" class="block text-[10px] font-bold uppercase text-[#6f7775] mb-1">Username Login</label>
-                <input id="new-user-username" type="text" bind:value={newUser.username} placeholder="contoh: dantonops" class="w-full border border-gray-300 p-2 text-xs bg-white" />
-              </div>
-              <div>
-                <label for="new-user-email" class="block text-[10px] font-bold uppercase text-[#6f7775] mb-1">Email Resmi</label>
-                <input id="new-user-email" type="email" bind:value={newUser.email} placeholder="email@sulselprov.go.id" class="w-full border border-gray-300 p-2 text-xs bg-white" />
-              </div>
-              <div>
-                <label for="new-user-role" class="block text-[10px] font-bold uppercase text-[#6f7775] mb-1">Tingkat Hak Akses (Role)</label>
-                <select id="new-user-role" bind:value={newUser.role} class="w-full border border-gray-300 p-2 text-xs bg-white">
-                  <option value="STAFF_SATPOL">Staff Petugas Satpol PP</option>
-                  <option value="ADMIN_SATPOL">Admin Satpol PP (Kasatpol)</option>
-                  <option value="SUPERADMIN_DISKOMINFO">Superadmin (Diskominfo)</option>
-                </select>
-              </div>
-              <div class="md:col-span-2">
-                <label for="new-user-bidang" class="block text-[10px] font-bold uppercase text-[#6f7775] mb-1">Unit Kerja / Bidang</label>
-                <input id="new-user-bidang" type="text" bind:value={newUser.bidang} placeholder="Contoh: Bidang Penegakan Perda" class="w-full border border-gray-300 p-2 text-xs bg-white" />
-              </div>
-            </div>
-            <div class="flex justify-end gap-2 pt-2">
-              <button on:click={() => showAddUserModal = false} class="px-4 py-2 border border-gray-300 text-xs font-bold text-gray-700 bg-white">Batal</button>
-              <button on:click={handleAddUser} class="px-5 py-2 bg-[#F08300] text-white text-xs font-bold uppercase">Simpan Pengguna</button>
-            </div>
-          </div>
-        {/if}
-
-        <div class="overflow-x-auto border border-gray-200">
-          <table class="w-full text-left text-xs">
-            <thead class="bg-gray-50 border-b border-gray-200 text-[#6f7775] uppercase text-[10px] tracking-wider">
-              <tr>
-                <th class="p-3.5">Nama &amp; Identitas</th>
-                <th class="p-3.5">Username</th>
-                <th class="p-3.5">Role Akses</th>
-                <th class="p-3.5">Unit Kerja / Bidang</th>
-                <th class="p-3.5">Status Akun</th>
-                <th class="p-3.5 text-right">Opsi</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-100">
-              {#each usersList as u}
-                <tr class="hover:bg-gray-50/70 transition">
-                  <td class="p-3.5">
-                    <div class="font-bold text-[#101116]">{u.name}</div>
-                    <div class="text-[11px] text-[#6f7775]">{u.email}</div>
-                  </td>
-                  <td class="p-3.5 font-mono text-[#101116] font-semibold">{u.username}</td>
-                  <td class="p-3.5">
-                    <span class={`text-[10px] font-bold uppercase px-2 py-0.5 border ${u.role === 'SUPERADMIN_DISKOMINFO' ? 'bg-purple-50 text-purple-800 border-purple-200' : u.role === 'ADMIN_SATPOL' ? 'bg-amber-50 text-amber-800 border-amber-200' : 'bg-blue-50 text-blue-800 border-blue-200'}`}>
-                      {u.role}
-                    </span>
-                  </td>
-                  <td class="p-3.5 text-[#6f7775]">{u.bidang || '-'}</td>
-                  <td class="p-3.5">
-                    {#if u.is_active}
-                      <span class="text-emerald-700 font-bold text-[10px] uppercase">Aktif</span>
-                    {:else}
-                      <span class="text-rose-700 font-bold text-[10px] uppercase">Dinonaktifkan</span>
-                    {/if}
-                  </td>
-                  <td class="p-3.5 text-right">
-                    <button 
-                      on:click={() => toggleUserStatus(u.id)}
-                      class={`text-[11px] font-bold uppercase px-3 py-1 border transition ${u.is_active ? 'border-rose-300 text-rose-700 hover:bg-rose-50' : 'border-emerald-300 text-emerald-700 hover:bg-emerald-50'}`}
-                    >
-                      {u.is_active ? 'Nonaktifkan' : 'Aktifkan'}
-                    </button>
-                  </td>
-                </tr>
-              {/each}
-            </tbody>
-          </table>
-        </div>
+  <!-- TAB 4: 24 KABUPATEN/KOTA -->
+  {#if activeTab === 'regencies'}
+    <div class="bg-white border border-[#eee9db] rounded-2xl shadow-xs p-6 md:p-8 space-y-5">
+      <div class="border-b border-[#eee9db] pb-4">
+        <h2 class="text-base font-black text-[#1a120c]">Wilayah Administratif 24 Kabupaten / Kota</h2>
+        <p class="text-xs text-[#3d261a]/75 mt-1">
+          Daftar kode referensi Kemendagri Sulawesi Selatan yang digunakan pada formulir aduan SIAP TERTIB.
+        </p>
       </div>
-    {/if}
 
-    <!-- TAB 3: MASTER DATA 24 KAB/KOTA -->
-    {#if activeTab === 'regencies'}
-      <div class="bg-white border border-[#eee9db] shadow-sm p-6 md:p-8 space-y-6">
-        <div class="border-b border-gray-100 pb-4">
-          <h2 class="text-base font-bold text-[#101116] uppercase tracking-wide">
-            Master Data 24 Kabupaten &amp; Kota Provinsi Sulawesi Selatan
-          </h2>
-          <p class="text-xs text-[#6f7775] mt-1">
-            Data referensi wilayah yurisdiksi penegakan Peraturan Daerah dan penanganan aduan masyarakat melalui SIAP TERTIB.
-          </p>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-          {#each defaultRegencies as reg, idx}
-            <div class="border border-gray-200 p-3 bg-gray-50/50 hover:border-[#F08300] transition">
-              <div class="flex justify-between items-center text-[10px] text-[#6f7775]">
-                <span class="font-mono">KODE: {reg.id}</span>
-                <span class="font-bold text-emerald-700 uppercase">Terkoneksi</span>
-              </div>
-              <div class="font-bold text-xs text-[#101116] mt-1">{reg.name}</div>
-              <div class="text-[10px] text-[#6f7775] mt-1">Yurisdiksi Satpol PP Prov. Sulsel</div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5">
+        {#each defaultRegencies as reg}
+          <div class="border border-[#eee9db] rounded-2xl p-4 bg-[#f9f4e8]/55 hover:border-[#F08300] transition">
+            <div class="flex justify-between items-center text-[10px] text-[#3d261a]/70">
+              <span class="font-mono font-bold">KODE: {reg.id}</span>
+              <span class="font-bold text-emerald-700 uppercase">Aktif</span>
             </div>
-          {/each}
-        </div>
-      </div>
-    {/if}
-
-    <!-- TAB 4: AUDIT TRAIL LOGS -->
-    {#if activeTab === 'audit'}
-      <div class="bg-white border border-[#eee9db] shadow-sm p-6 md:p-8 space-y-6">
-        <div class="border-b border-gray-100 pb-4">
-          <h2 class="text-base font-bold text-[#101116] uppercase tracking-wide">
-            Audit Trail &amp; Log Keamanan Sistem Terpadu
-          </h2>
-          <p class="text-xs text-[#6f7775] mt-1">
-            Catatan kronologis perubahan data, tindak lanjut pengaduan, otentikasi login, serta perubahan konfigurasi server oleh seluruh operator.
-          </p>
-        </div>
-
-        <div class="overflow-x-auto border border-gray-200">
-          <table class="w-full text-left text-xs">
-            <thead class="bg-gray-50 border-b border-gray-200 text-[#6f7775] uppercase text-[10px] tracking-wider">
-              <tr>
-                <th class="p-3">Waktu (WITA)</th>
-                <th class="p-3">Pengguna</th>
-                <th class="p-3">Aksi Sistem</th>
-                <th class="p-3">Entitas / Resi</th>
-                <th class="p-3">Keterangan Aktivitas</th>
-                <th class="p-3">Alamat IP</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-100 font-mono text-[11px]">
-              {#each auditLogs as log}
-                <tr class="hover:bg-gray-50/70 transition font-sans">
-                  <td class="p-3 text-[#6f7775] whitespace-nowrap">{log.timestamp}</td>
-                  <td class="p-3 font-bold text-[#101116]">{log.user_name}</td>
-                  <td class="p-3">
-                    <span class="bg-gray-100 text-[#101116] font-bold text-[10px] uppercase px-2 py-0.5 border border-gray-300">
-                      {log.action}
-                    </span>
-                  </td>
-                  <td class="p-3 font-semibold text-[#101116]">{log.resource}</td>
-                  <td class="p-3 text-[#6f7775]">{log.details}</td>
-                  <td class="p-3 font-mono text-[#6f7775]">{log.ip_address}</td>
-                </tr>
-              {:else}
-                <tr>
-                  <td colspan="6" class="p-6 text-center text-gray-400">Belum ada catatan log aktivitas.</td>
-                </tr>
-              {/each}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    {/if}
-
-    <!-- TAB 5: SERVER TELEMETRY -->
-    {#if activeTab === 'server'}
-      <div class="bg-white border border-[#eee9db] shadow-sm p-6 md:p-8 space-y-6">
-        <div class="border-b border-gray-100 pb-4">
-          <h2 class="text-base font-bold text-[#101116] uppercase tracking-wide">
-            Status Server &amp; Telemetri Infrastruktur Diskominfo-SP
-          </h2>
-          <p class="text-xs text-[#6f7775] mt-1">
-            Informasi teknis lingkungan hosting server fisik Diskominfo Provinsi Sulawesi Selatan (IP: 103.151.191.73).
-          </p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="border border-gray-200 p-4 bg-gray-50/50">
-            <div class="text-[10px] text-[#6f7775] uppercase font-bold tracking-wider">Backend Gateway Runtime</div>
-            <div class="text-base font-bold text-[#101116] mt-1">Go v1.24 (Gin Gonic Clean Arch)</div>
-            <div class="text-xs text-[#6f7775] mt-2 space-y-1">
-              <div>Port Layanan: <span class="font-mono font-bold text-[#101116]">8080 (REST API)</span></div>
-              <div>Goroutine Aktif: <span class="font-mono text-emerald-700 font-bold">14 Workers</span></div>
-              <div>Alokasi Memori: <span class="font-mono text-[#101116]">12.4 MB</span></div>
-            </div>
+            <div class="font-black text-xs text-[#1a120c] mt-1.5">{reg.name}</div>
+            <div class="text-[11px] text-[#3d261a]/70 mt-0.5">Yurisdiksi Prov. Sulsel</div>
           </div>
+        {/each}
+      </div>
+    </div>
+  {/if}
 
-          <div class="border border-gray-200 p-4 bg-gray-50/50">
-            <div class="text-[10px] text-[#6f7775] uppercase font-bold tracking-wider">Web Server &amp; Reverse Proxy</div>
-            <div class="text-base font-bold text-[#101116] mt-1">Nginx 1.22 / Ubuntu Server</div>
-            <div class="text-xs text-[#6f7775] mt-2 space-y-1">
-              <div>Host Domain: <span class="font-mono font-bold text-[#101116]">satpolpp.sulselprov.go.id</span></div>
-              <div>Subdomain: <span class="font-mono font-bold text-[#101116]">siaptertib.sulselprov.go.id</span></div>
-              <div>Protokol: <span class="font-mono text-emerald-700 font-bold">HTTP/2 TLS Termination</span></div>
-            </div>
-          </div>
+  <!-- TAB 5: AUDIT TRAIL (DATATABLE REUSABLE) -->
+  {#if activeTab === 'audit'}
+    <DataTable
+      items={$auditLogsStore}
+      searchFields={['user_name', 'action', 'resource', 'details', 'ip_address']}
+      searchPlaceholder="Cari operator, aksi, tiket/entitas, atau keterangan..."
+      pageSize={10}
+      pageSizeOptions={[10, 25, 50]}
+      title="Audit Trail &amp; Log Keamanan"
+      description="Catatan kronologis pembukaan masking, tindak lanjut SOP, dan administrasi akun."
+      emptyMessage="Belum ada catatan aktivitas yang sesuai pencarian."
+    >
+      <tr slot="head">
+        <th class="px-4 py-3.5">Waktu</th>
+        <th class="px-4 py-3.5">Operator</th>
+        <th class="px-4 py-3.5">Aksi Sistem</th>
+        <th class="px-4 py-3.5">Entitas / Target</th>
+        <th class="px-4 py-3.5">Rincian</th>
+      </tr>
 
-          <div class="border border-gray-200 p-4 bg-gray-50/50">
-            <div class="text-[10px] text-[#6f7775] uppercase font-bold tracking-wider">Basis Data Terpadu</div>
-            <div class="text-base font-bold text-[#101116] mt-1">PostgreSQL 16 / SQLite Engine</div>
-            <div class="text-xs text-[#6f7775] mt-2 space-y-1">
-              <div>Status Koneksi: <span class="font-bold text-emerald-700">TERHUBUNG</span></div>
-              <div>Connection Pool: <span class="font-mono text-[#101116]">5 / 25 Conns</span></div>
-              <div>Integritas Relasi: <span class="font-bold text-[#101116]">OK (Strict Foreign Keys)</span></div>
-            </div>
+      <tr slot="row" let:item class="hover:bg-[#f9f4e8]/55 transition">
+        <td class="px-4 py-3 text-[11px] font-mono text-[#3d261a]/75 whitespace-nowrap">{item.timestamp}</td>
+        <td class="px-4 py-3 text-xs font-bold text-[#1a120c]">{item.user_name}</td>
+        <td class="px-4 py-3">
+          <span class="inline-block px-2.5 py-0.5 rounded-lg bg-[#f9f4e8] border border-[#eee9db] text-[#1a120c] font-mono text-[10px] font-bold">
+            {item.action}
+          </span>
+        </td>
+        <td class="px-4 py-3 text-xs font-semibold text-[#3d261a]">{item.resource}</td>
+        <td class="px-4 py-3 text-xs text-[#3d261a]/80">{item.details}</td>
+      </tr>
+    </DataTable>
+  {/if}
+
+  <!-- TAB 6: TELEMETRI SISTEM -->
+  {#if activeTab === 'server'}
+    <div class="bg-white border border-[#eee9db] rounded-2xl shadow-xs p-6 md:p-8 space-y-6">
+      <div class="border-b border-[#eee9db] pb-4">
+        <h2 class="text-base font-black text-[#1a120c]">Status Runtime &amp; Arsitektur Sistem</h2>
+        <p class="text-xs text-[#3d261a]/75 mt-1">
+          Konfigurasi layanan frontend SvelteKit dan API Go (mode lokal / transisi basis data).
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="border border-[#eee9db] rounded-2xl p-5 bg-[#f9f4e8]/55 space-y-2">
+          <div class="text-[10px] font-bold uppercase tracking-wider text-[#3d261a]/70">Frontend Portal</div>
+          <div class="text-sm font-black text-[#1a120c]">SvelteKit + Tailwind CSS</div>
+          <div class="text-xs text-[#3d261a]/80 space-y-1">
+            <div>Dev Server: <span class="font-mono font-bold">Port 3000</span></div>
+            <div>Proxy API: <span class="font-mono font-bold">/api &rarr; :8080</span></div>
           </div>
         </div>
 
-        <div class="p-4 bg-[#f9f4e8] border border-[#eee9db] text-xs text-[#6f7775] space-y-2">
-          <div class="font-bold text-[#101116] uppercase text-[11px]">Rekomendasi Deployment Server Diskominfo:</div>
-          <p>
-            Binary backend Go terkompilasi mandiri (`api.exe` / `api_linux`) tidak memerlukan runtime interpreter eksternal seperti Apache/PHP lawas, mengurangi attack vector secara drastis serta menghemat penggunaan RAM server hingga &gt;85%.
-          </p>
+        <div class="border border-[#eee9db] rounded-2xl p-5 bg-[#f9f4e8]/55 space-y-2">
+          <div class="text-[10px] font-bold uppercase tracking-wider text-[#3d261a]/70">Backend &amp; Mailer</div>
+          <div class="text-sm font-black text-[#1a120c]">Go net/http &amp; net/smtp</div>
+          <div class="text-xs text-[#3d261a]/80 space-y-1">
+            <div>Masking Publik: <span class="font-bold text-emerald-700">Selalu Aktif</span></div>
+            <div>Email Pelapor: <span class="font-bold">SMTP / Simulasi Lokal</span></div>
+          </div>
         </div>
+
+        <div class="border border-[#eee9db] rounded-2xl p-5 bg-[#f9f4e8]/55 space-y-2">
+          <div class="text-[10px] font-bold uppercase tracking-wider text-[#3d261a]/70">Penyimpanan Data</div>
+          <div class="text-sm font-black text-[#1a120c]">In-Memory + LocalStorage</div>
+          <div class="text-xs text-[#3d261a]/80 space-y-1">
+            <div>Integrasi PostgreSQL: <span class="font-bold text-[#F08300]">Ditahan (Tahap Berikutnya)</span></div>
+            <div>Fallback Offline: <span class="font-bold text-emerald-700">Aktif</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {/if}
+</DashboardShell>
+
+<!-- MODAL: TAMBAH / EDIT PENGGUNA RBAC -->
+<Modal
+  bind:open={userModalOpen}
+  title={isNewUser ? 'Tambah Akun Operator / Administrator' : `Edit Akun @${formUsername}`}
+  subtitle="Atur hak akses dan unit kerja personel."
+  size="md"
+>
+  <form id="user-rbac-form" on:submit|preventDefault={handleSaveUser} class="space-y-4">
+    {#if userFormError}
+      <div role="alert" class="p-3 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs font-bold">
+        {userFormError}
       </div>
     {/if}
 
-  </div>
-</div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <label for="user-name" class="block text-xs font-bold text-[#1a120c] mb-1">Nama Lengkap &amp; Gelar *</label>
+        <input id="user-name" type="text" required bind:value={formName} placeholder="Andi Baso, S.STP" class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs bg-white" />
+        <p class="field-error">Nama wajib diisi.</p>
+      </div>
+      <div>
+        <label for="user-username" class="block text-xs font-bold text-[#1a120c] mb-1">Username Login *</label>
+        <input id="user-username" type="text" required bind:value={formUsername} disabled={!isNewUser} placeholder="staf_perda" class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs bg-white disabled:bg-[#f9f4e8]" />
+        <p class="field-error">Username wajib diisi.</p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <label for="user-email" class="block text-xs font-bold text-[#1a120c] mb-1">Email Dinas *</label>
+        <input id="user-email" type="email" required bind:value={formEmail} placeholder="nama@sulselprov.go.id" class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs bg-white" />
+        <p class="field-error">Format email tidak valid.</p>
+      </div>
+      <div>
+        <label for="user-role" class="block text-xs font-bold text-[#1a120c] mb-1">Tingkat Akses (Role)</label>
+        <select id="user-role" bind:value={formRole} class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs bg-white font-bold">
+          <option value="STAFF_SATPOL">STAFF SATPOL PP (Verifikator &amp; Humas)</option>
+          <option value="ADMIN_SATPOL">ADMIN SATPOL (Pimpinan / Kasatpol)</option>
+          <option value="SUPERADMIN_DISKOMINFO">SUPERADMIN DISKOMINFO</option>
+        </select>
+      </div>
+    </div>
+
+    <div>
+      <label for="user-bidang" class="block text-xs font-bold text-[#1a120c] mb-1">Unit Kerja / Bidang Penugasan</label>
+      <input id="user-bidang" type="text" list="rbac-org-units" bind:value={formBidang} placeholder="Contoh: Bidang Penegakan Perda" class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs bg-white" />
+      <datalist id="rbac-org-units">
+        {#each $organizationStore as org}
+          <option value={org.position_title}></option>
+        {/each}
+      </datalist>
+    </div>
+
+    <div>
+      <label for="user-password" class="block text-xs font-bold text-[#1a120c] mb-1">
+        {isNewUser ? 'Kata Sandi Awal' : 'Kata Sandi Baru (Kosongkan jika tidak diubah)'}
+      </label>
+      <input id="user-password" type="password" bind:value={formPassword} placeholder={isNewUser ? 'Default demo: satpolpp2026' : 'Biarkan kosong untuk tetap'} class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs bg-white" />
+    </div>
+
+    <label class="flex items-center gap-2.5 p-3 rounded-xl bg-[#f9f4e8] border border-[#eee9db] cursor-pointer">
+      <input type="checkbox" bind:checked={formActive} class="rounded text-[#F08300] focus:ring-[#F08300]" />
+      <span class="text-xs font-bold text-[#1a120c]">Akun aktif dan diizinkan masuk ke panel dashboard</span>
+    </label>
+  </form>
+
+  <svelte:fragment slot="footer" let:handleClose>
+    <button
+      type="button"
+      on:click={handleClose}
+      class="px-4 py-2 rounded-xl border border-[#eee9db] bg-white hover:bg-[#f9f4e8] text-xs font-bold text-[#3d261a] transition"
+    >
+      Batal
+    </button>
+    <button
+      type="submit"
+      form="user-rbac-form"
+      disabled={isSavingUser}
+      class="px-5 py-2 rounded-xl bg-[#F08300] hover:bg-[#d97300] disabled:opacity-60 text-white text-xs font-bold transition shadow-sm"
+    >
+      {isSavingUser ? 'Menyimpan...' : isNewUser ? 'Buat Akun' : 'Simpan Perubahan'}
+    </button>
+  </svelte:fragment>
+</Modal>
+
+<!-- MODAL: KONFIRMASI HAPUS PENGGUNA -->
+<Modal
+  bind:open={deleteUserModalOpen}
+  title="Konfirmasi Hapus Pengguna"
+  subtitle={deleteUserTarget ? `@${deleteUserTarget.username} — ${deleteUserTarget.name}` : ''}
+  size="sm"
+>
+  {#if deleteUserError}
+    <div role="alert" class="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs font-medium">
+      {deleteUserError}
+    </div>
+  {:else if deleteUserTarget}
+    <p class="text-xs text-[#3d261a] leading-relaxed">
+      Apakah Anda yakin ingin menghapus akun <strong>@{deleteUserTarget.username}</strong> ({deleteUserTarget.role})?
+    </p>
+  {/if}
+
+  <svelte:fragment slot="footer" let:handleClose>
+    <button
+      type="button"
+      on:click={handleClose}
+      class="px-4 py-2 rounded-xl border border-[#eee9db] bg-white hover:bg-[#f9f4e8] text-xs font-bold text-[#3d261a] transition"
+    >
+      Tutup
+    </button>
+    {#if !deleteUserError}
+      <button
+        type="button"
+        on:click={confirmDeleteUser}
+        class="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition"
+      >
+        Ya, Hapus Akun
+      </button>
+    {/if}
+  </svelte:fragment>
+</Modal>

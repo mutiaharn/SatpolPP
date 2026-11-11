@@ -37,7 +37,7 @@
       <!-- Main Content Column -->
       <div class="lg:col-span-2 space-y-6">
         <div>
-          <span class="inline-block bg-[#101116] text-[#F08300] font-bold text-[10px] uppercase px-3 py-1 rounded-sm border-l-2 border-[#F08300] tracking-wider mb-3">
+          <span class="inline-block bg-[#1a120c] text-[#F08300] font-bold text-[10px] uppercase px-3 py-1 rounded-sm border-l-2 border-[#F08300] tracking-wider mb-3">
             {article.category}
           </span>
           <h1 class="text-2xl md:text-3xl font-extrabold text-[#101116] tracking-tight leading-tight">
@@ -67,7 +67,7 @@
         </div>
 
         <!-- Article Summary & Body Content -->
-        <div class="prose max-w-none text-xs md:text-sm text-[#2b2f3f] leading-relaxed space-y-4">
+        <div class="prose max-w-none text-xs md:text-sm text-[#3d261a] leading-relaxed space-y-4">
           <p class="font-bold text-sm text-[#101116] leading-relaxed bg-[#fcfbf7] border-l-4 border-[#F08300] p-4 rounded-r-xl">
             {article.summary}
           </p>

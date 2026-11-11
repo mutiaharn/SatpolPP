@@ -1,9 +1,11 @@
+export type UserRole = 'SUPERADMIN_DISKOMINFO' | 'ADMIN_SATPOL' | 'STAFF_SATPOL' | 'PUBLIC';
+
 export interface User {
   id: number;
   name: string;
   username: string;
   email: string;
-  role: 'SUPERADMIN_DISKOMINFO' | 'ADMIN_SATPOL' | 'STAFF_SATPOL' | 'PUBLIC';
+  role: UserRole;
   bidang?: string;
   is_active: boolean;
 }
@@ -31,6 +33,10 @@ export interface PublicDocument {
   file_size: string;
 }
 
+export type ComplaintStatus = 'MENUNGGU_VERIFIKASI' | 'DISPOSISI_BIDANG' | 'PENINDAKAN_LAPANGAN' | 'SELESAI' | 'DITOLAK';
+
+export type ViolationType = 'GANGGUAN_TIBUM' | 'PELANGGARAN_PERDA' | 'PENGAMBILDALIHAN_ASET' | 'PERLINDUNGAN_MASYARAKAT';
+
 export interface Complaint {
   id: number;
   ticket_code: string;
@@ -42,6 +48,7 @@ export interface Complaint {
   masked_nik?: string;
   masked_name?: string;
   masked_phone?: string;
+  masked_email?: string;
   violation_type: string;
   regency_id: string;
   regency_name: string;
@@ -51,11 +58,23 @@ export interface Complaint {
   latitude: number;
   longitude: number;
   description: string;
+  /** URL / data-URL foto bukti kejadian (field utama) */
+  evidence_image_url?: string;
+  /** Alias lama dari backend, tetap diterima agar kompatibel */
   evidence_photos?: string;
-  status: 'MENUNGGU_VERIFIKASI' | 'DISPOSISI_BIDANG' | 'PENINDAKAN_LAPANGAN' | 'SELESAI' | 'DITOLAK';
+  status: ComplaintStatus;
   disposed_to?: string;
   action_notes?: string;
   created_at: string;
+}
+
+/** Hasil kirim notifikasi email ke pelapor */
+export interface EmailNotice {
+  sent: boolean;
+  mode: 'smtp' | 'simulated' | 'skipped';
+  to: string;
+  subject: string;
+  message: string;
 }
 
 export interface Regency {
@@ -80,4 +99,22 @@ export interface GalleryItem {
   category: string;
   image_url: string;
   date: string;
+}
+
+/** Node struktur organisasi dinamis (bisa dikelola dari dashboard admin) */
+export interface OrganizationNode {
+  id: number;
+  /** ID khusus unik, contoh: ORG-KST-01 */
+  org_code: string;
+  /** org_code atasan langsung, null untuk pimpinan tertinggi */
+  parent_code: string | null;
+  position_title: string;
+  official_name: string;
+  nip?: string;
+  rank?: string;
+  description?: string;
+  sub_units: string[];
+  photo_url?: string;
+  level: number;
+  sort_order: number;
 }

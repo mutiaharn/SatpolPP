@@ -16,7 +16,7 @@
     </div>
     <div class="text-[#F08300] font-bold text-xs uppercase tracking-widest">Transparansi Penanganan Aduan</div>
     <h1 class="text-3xl font-extrabold text-[#101116] tracking-tight mt-1">Pelacakan Tiket SIAP TERTIB</h1>
-    <div class="w-12 h-1 bg-[#F08300] mt-3"></div>
+    <div class="w-12 h-1 bg-[#F08300] mt-3 rounded-full"></div>
     <p class="text-xs text-[#6f7775] mt-2 max-w-2xl leading-relaxed">
       Pantau tindak lanjut laporan pelanggaran ketertiban umum Anda secara berkala. Masukkan nomor registrasi tiket aduan (contoh: TRB-202611-SAMPLE) untuk melihat kronologi penanganan oleh personel Satpol PP.
     </p>

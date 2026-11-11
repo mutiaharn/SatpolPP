@@ -120,7 +120,7 @@
           {#each bidangMenu as b}
             <a 
               href={`/bidang/${b.slug}`}
-              class={`block px-3.5 py-2.5 text-xs font-bold transition rounded-xl ${slug === b.slug ? 'bg-[#F08300] text-white shadow-xs' : 'text-[#2b2f3f] hover:bg-gray-100'}`}
+              class={`block px-3.5 py-2.5 text-xs font-bold transition rounded-xl ${slug === b.slug ? 'bg-[#F08300] text-white shadow-xs' : 'text-[#3d261a] hover:bg-[#f9f4e8]'}`}
             >
               {b.label}
             </a>
@@ -149,13 +149,13 @@
       <div class="border-b border-gray-100 pb-4">
         <div class="text-[#F08300] font-bold text-xs uppercase tracking-widest">Unit Kerja Satpol PP Sulsel</div>
         <h1 class="text-2xl md:text-3xl font-extrabold text-[#101116] tracking-tight mt-1">{current.title}</h1>
-        <p class="text-xs text-[#2b2f3f] font-semibold mt-2 leading-relaxed">{current.lead}</p>
+        <p class="text-xs text-[#3d261a] font-semibold mt-2 leading-relaxed">{current.lead}</p>
       </div>
 
       <!-- Tasks List -->
       <div class="space-y-3">
         <h3 class="text-xs font-bold uppercase tracking-wider text-[#101116]">Uraian Tugas dan Tanggung Jawab:</h3>
-        <ul class="space-y-2 text-xs text-[#2b2f3f] leading-relaxed">
+        <ul class="space-y-2 text-xs text-[#3d261a] leading-relaxed">
           {#each current.tasks as task}
             <li class="flex items-start gap-2.5">
               <span class="inline-block w-1.5 h-1.5 bg-[#F08300] mt-1.5 flex-shrink-0"></span>

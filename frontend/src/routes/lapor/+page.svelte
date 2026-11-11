@@ -13,7 +13,7 @@
     </div>
     <div class="text-[#F08300] font-bold text-xs uppercase tracking-widest">Kanal Partisipasi Warga Sulsel</div>
     <h1 class="text-3xl font-extrabold text-[#101116] tracking-tight mt-1">SIAP TERTIB &bull; Pengaduan Ketertiban Umum</h1>
-    <div class="w-12 h-1 bg-[#F08300] mt-3"></div>
+    <div class="w-12 h-1 bg-[#F08300] mt-3 rounded-full"></div>
     <p class="text-xs text-[#6f7775] mt-2 max-w-2xl leading-relaxed">
       Sistem Informasi Pengaduan Pelanggaran Peraturan Daerah, Ketenteraman, Ketertiban Umum, dan Pelindungan Masyarakat Provinsi Sulawesi Selatan. Setiap laporan yang masuk akan ditindaklanjuti sesuai Standar Operasional Prosedur (SOP).
     </p>
@@ -29,7 +29,7 @@
         <div class="font-bold text-[#101116]">1. Verifikasi</div>
         <div class="text-[11px] text-[#6f7775] mt-0.5">Pemeriksaan bukti foto &amp; validitas aduan warga.</div>
       </div>
-      <div class="border-l-2 border-[#2b2f3f] pl-3 py-1 bg-gray-50/50">
+      <div class="border-l-2 border-[#3d261a] pl-3 py-1 bg-[#f9f4e8]/60 rounded-r-lg">
         <div class="font-bold text-[#101116]">2. Disposisi</div>
         <div class="text-[11px] text-[#6f7775] mt-0.5">Penugasan ke Bidang Trantibum atau Perda.</div>
       </div>

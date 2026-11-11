@@ -1,48 +1,92 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { 
-    complaintsStore, 
-    articlesStore, 
-    documentsStore, 
+  import {
+    LayoutDashboard,
+    ShieldAlert,
+    Newspaper,
+    FileText,
+    Image,
+    Building2,
+    Plus,
+    Trash2,
+    Eye,
+    EyeOff,
+    Mail,
+    CheckCircle2,
+    MapPin,
+    Download,
+    Edit3
+  } from 'lucide-svelte';
+  import {
+    complaintsStore,
+    articlesStore,
+    documentsStore,
     galleryStore,
-    auditLogsStore,
-    defaultRegencies 
+    organizationStore,
+    logAudit
   } from '$lib/stores/appState';
-  import type { Complaint, Article, PublicDocument, GalleryItem } from '$lib/types';
+  import {
+    updateComplaintStatus,
+    uploadEvidence,
+    fetchOrganization
+  } from '$lib/api/client';
+  import { maskComplaintIdentity } from '$lib/utils/masking';
+  import { getSession } from '$lib/utils/auth';
+  import type {
+    Complaint,
+    ComplaintStatus,
+    Article,
+    PublicDocument,
+    GalleryItem,
+    User
+  } from '$lib/types';
+  import DashboardShell, { type DashboardNavItem } from '$lib/components/layout/DashboardShell.svelte';
   import RichTextEditor from '$lib/components/RichTextEditor.svelte';
   import DataTable from '$lib/components/ui/DataTable.svelte';
   import FileUploader from '$lib/components/ui/FileUploader.svelte';
   import Modal from '$lib/components/ui/Modal.svelte';
+  import StatusBadge from '$lib/components/ui/StatusBadge.svelte';
+  import OrganizationManager from '$lib/components/cms/OrganizationManager.svelte';
 
-  // Navigation tab state
-  type AdminTab = 'overview' | 'complaints' | 'articles' | 'documents' | 'gallery';
+  type AdminTab = 'overview' | 'complaints' | 'articles' | 'documents' | 'gallery' | 'organization';
   let currentTab: AdminTab = 'complaints';
-  let sidebarOpen = false; // Mobile sidebar drawer state
+  let currentUser: User | null = null;
+  let toastMessage = '';
+  let toastType: 'success' | 'info' = 'success';
 
-  let currentUser: any = null;
+  function showToast(msg: string, type: 'success' | 'info' = 'success') {
+    toastMessage = msg;
+    toastType = type;
+    setTimeout(() => {
+      if (toastMessage === msg) toastMessage = '';
+    }, 5000);
+  }
+
+  onMount(() => {
+    const session = getSession();
+    if (session?.user) {
+      currentUser = session.user;
+    }
+    fetchOrganization();
+  });
 
   // ==========================================
-  // 1. COMPLAINTS (SIAP TERTIB) MANAGEMENT
+  // 1. MANAJEMEN ADUAN SIAP TERTIB
   // ==========================================
-  let statusFilter = 'ALL';
-  let searchQuery = '';
+  let statusFilter: 'ALL' | ComplaintStatus = 'ALL';
   let selectedComplaint: Complaint | null = null;
   let isEditingComplaint = false;
+  let isSavingComplaint = false;
 
-  let editStatus: Complaint['status'] = 'MENUNGGU_VERIFIKASI';
+  let editStatus: ComplaintStatus = 'MENUNGGU_VERIFIKASI';
   let editDisposedTo = '';
   let editActionNotes = '';
   let unmaskRequested = false;
 
-  $: filteredComplaints = $complaintsStore.filter(c => {
-    const matchStatus = statusFilter === 'ALL' || c.status === statusFilter;
-    const matchSearch = searchQuery === '' || 
-      c.ticket_code.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      c.reporter_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      c.regency_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      c.violation_type.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchStatus && matchSearch;
-  });
+  $: filteredComplaints =
+    statusFilter === 'ALL'
+      ? $complaintsStore
+      : $complaintsStore.filter(c => c.status === statusFilter);
 
   $: totalCount = $complaintsStore.length;
   $: pendingCount = $complaintsStore.filter(c => c.status === 'MENUNGGU_VERIFIKASI').length;
@@ -50,10 +94,50 @@
   $: inProgressCount = $complaintsStore.filter(c => c.status === 'PENINDAKAN_LAPANGAN').length;
   $: completedCount = $complaintsStore.filter(c => c.status === 'SELESAI').length;
 
+  $: dispositionOptions = $organizationStore
+    .filter(n => n.level >= 2)
+    .map(n => n.position_title);
+
+  $: navItems = [
+    { id: 'overview', label: 'Ikhtisar Operasional', icon: LayoutDashboard, badge: totalCount, section: 'Operasional' },
+    { id: 'complaints', label: 'Aduan SIAP TERTIB', icon: ShieldAlert, badge: pendingCount || undefined },
+    { id: 'articles', label: 'Warta & Berita', icon: Newspaper, badge: $articlesStore.length, section: 'Publikasi & CMS' },
+    { id: 'documents', label: 'Dokumen Publik', icon: FileText, badge: $documentsStore.length },
+    { id: 'gallery', label: 'Galeri Multimedia', icon: Image, badge: $galleryStore.length },
+    { id: 'organization', label: 'Struktur Organisasi', icon: Building2, badge: $organizationStore.length, section: 'Kelembagaan' }
+  ] satisfies DashboardNavItem[];
+
+  const tabMeta: Record<AdminTab, { title: string; desc: string }> = {
+    overview: {
+      title: 'Ikhtisar Operasional & CMS',
+      desc: 'Ringkasan pengaduan masyarakat SIAP TERTIB dan pembaruan konten portal publik.'
+    },
+    complaints: {
+      title: 'Meja Verifikasi Aduan SIAP TERTIB',
+      desc: 'Verifikasi laporan warga, buka masking teraudit, dan kirim notifikasi progres ke pelapor.'
+    },
+    articles: {
+      title: 'Redaksi Warta & Berita Resmi',
+      desc: 'Tulis, kelola, dan publikasikan laporan kegiatan patroli dan rilis Humas.'
+    },
+    documents: {
+      title: 'Arsip Dokumen Transparansi Publik',
+      desc: 'Unggah berkas Renja, Renstra, DPA, LAKIP, Perda, dan SOP resmi.'
+    },
+    gallery: {
+      title: 'Galeri Multimedia Dokumentasi',
+      desc: 'Kelola foto apel kesiapsiagaan, penertiban, dan koordinasi lapangan.'
+    },
+    organization: {
+      title: 'Manajemen Struktur Organisasi (SOTK)',
+      desc: 'Atur simpul unit kerja, ID khusus (ORG-*), sub-unit seksi, dan data pejabat secara dinamis.'
+    }
+  };
+
   function openComplaintDetail(comp: Complaint) {
     selectedComplaint = comp;
     editStatus = comp.status;
-    editDisposedTo = comp.disposed_to || 'Bidang Ketenteraman dan Ketertiban Umum';
+    editDisposedTo = comp.disposed_to || dispositionOptions[0] || 'Bidang Ketenteraman dan Ketertiban Umum';
     editActionNotes = comp.action_notes || '';
     unmaskRequested = false;
     isEditingComplaint = true;
@@ -62,60 +146,52 @@
   function handleUnmaskIdentity() {
     if (!selectedComplaint) return;
     unmaskRequested = true;
-    auditLogsStore.update(logs => [
-      {
-        id: Date.now(),
-        user_name: currentUser?.username || 'petugas',
-        action: 'BUKA_MASKING_ANONIM',
-        resource: `Tiket ${selectedComplaint.ticket_code}`,
-        details: 'Membuka data identitas terlindung pelapor atas wewenang petugas verifikator',
-        timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19),
-        ip_address: '103.151.191.73'
-      },
-      ...logs
-    ]);
+    logAudit(
+      currentUser?.username || 'petugas',
+      'BUKA_MASKING_ANONIM',
+      `Tiket ${selectedComplaint.ticket_code}`,
+      'Membuka data identitas terlindung pelapor atas wewenang petugas verifikator'
+    );
   }
 
-  function saveComplaintUpdate() {
+  async function saveComplaintUpdate() {
     if (!selectedComplaint) return;
-    
-    complaintsStore.update(list => {
-      return list.map(item => {
-        if (item.ticket_code === selectedComplaint?.ticket_code) {
-          return {
-            ...item,
-            status: editStatus,
-            disposed_to: editDisposedTo,
-            action_notes: editActionNotes
-          };
-        }
-        return item;
+    isSavingComplaint = true;
+    const ticket = selectedComplaint.ticket_code;
+    try {
+      const res = await updateComplaintStatus(ticket, {
+        status: editStatus,
+        disposed_to: editDisposedTo.trim(),
+        action_notes: editActionNotes.trim(),
+        officer_name: currentUser?.name || currentUser?.username || 'Petugas Verifikator'
       });
-    });
 
-    auditLogsStore.update(logs => [
-      {
-        id: Date.now(),
-        user_name: currentUser?.username || 'petugas',
-        action: 'UPDATE_STATUS_ADUAN',
-        resource: `Tiket ${selectedComplaint.ticket_code}`,
-        details: `Status SOP: ${editStatus}, Disposisi: ${editDisposedTo}`,
-        timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19),
-        ip_address: '103.151.191.73'
-      },
-      ...logs
-    ]);
+      logAudit(
+        currentUser?.username || 'petugas',
+        'UPDATE_STATUS_ADUAN',
+        `Tiket ${ticket}`,
+        `Status SOP: ${editStatus}, Disposisi: ${editDisposedTo}`
+      );
 
-    alert(`Status tiket ${selectedComplaint.ticket_code} berhasil diperbarui.`);
-    isEditingComplaint = false;
-    selectedComplaint = null;
+      const emailInfo = res.email?.to
+        ? res.email.sent
+          ? ` Notifikasi email terkirim ke ${res.email.to}.`
+          : ` Simulasi notifikasi email disiapkan untuk ${res.email.to}.`
+        : '';
+      showToast(`Status tiket ${ticket} diperbarui.${emailInfo}`);
+      isEditingComplaint = false;
+      selectedComplaint = null;
+    } finally {
+      isSavingComplaint = false;
+    }
   }
 
   // ==========================================
-  // 2. CMS BERITA (KOMPASIANA-GRADE EDITOR)
+  // 2. CMS BERITA (WITH FILEUPLOADER)
   // ==========================================
   let isWritingArticle = false;
-  let articleEditorTab: 'write' | 'preview' = 'write';
+  let editingArticleId: number | null = null;
+  let articleError = '';
 
   let articleTitle = '';
   let articleSlug = '';
@@ -124,94 +200,101 @@
   let articleContent = '';
   let articleAuthor = 'Humas Satpol PP';
   let articleThumbnail = '/uploads/foto_berita/1768182343WhatsApp Image 2026-01-12 at 08.08.43.jpeg';
-  let articleThumbnailPreview = '';
+  let articleFileName = '';
 
-  // Auto-generate slug when title changes
+  function openNewArticleEditor() {
+    editingArticleId = null;
+    articleError = '';
+    articleTitle = '';
+    articleSlug = '';
+    articleCategory = 'Kegiatan';
+    articleSummary = '';
+    articleContent = '';
+    articleAuthor = currentUser?.name || 'Humas Satpol PP';
+    articleThumbnail = '/uploads/foto_berita/1768182343WhatsApp Image 2026-01-12 at 08.08.43.jpeg';
+    articleFileName = '';
+    isWritingArticle = true;
+  }
+
+  function openEditArticle(art: Article) {
+    editingArticleId = art.id;
+    articleError = '';
+    articleTitle = art.title;
+    articleSlug = art.slug;
+    articleCategory = art.category;
+    articleSummary = art.summary;
+    articleContent = art.content;
+    articleAuthor = art.author_name;
+    articleThumbnail = art.thumbnail;
+    articleFileName = '';
+    isWritingArticle = true;
+  }
+
   function handleTitleInput(e: Event) {
     const target = e.target as HTMLInputElement;
     articleTitle = target.value;
-    articleSlug = articleTitle
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)+/g, '');
-  }
-
-  // Handle article image upload
-  function handleArticleImageUpload(e: Event) {
-    const input = e.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      const file = input.files[0];
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        if (event.target?.result) {
-          articleThumbnailPreview = event.target.result as string;
-          articleThumbnail = event.target.result as string;
-        }
-      };
-      reader.readAsDataURL(file);
+    if (!editingArticleId) {
+      articleSlug = articleTitle
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)+/g, '');
     }
   }
 
-  // Helper format markdown/rich text ke clean HTML
+  async function handleArticleThumbChange(e: CustomEvent<{ url: string; file: File; name: string }>) {
+    articleFileName = e.detail.name;
+    articleThumbnail = e.detail.url;
+    const remoteUrl = await uploadEvidence(e.detail.file);
+    if (remoteUrl) articleThumbnail = remoteUrl;
+  }
+
   function renderFormattedHtml(text: string): string {
     if (!text) return '';
+    if (text.trim().startsWith('<p>') || text.trim().startsWith('<h')) return text;
     const lines = text.split('\n');
     let html = '';
     let inOl = false;
     let inUl = false;
 
-    for (let i = 0; i < lines.length; i++) {
-      let line = lines[i];
-
+    for (const line of lines) {
       if (line.startsWith('## ')) {
         if (inOl) { html += '</ol>'; inOl = false; }
         if (inUl) { html += '</ul>'; inUl = false; }
-        html += `<h2 class="text-xl font-extrabold text-[#101116] mt-5 mb-2">${formatInline(line.slice(3))}</h2>`;
+        html += `<h2 class="text-xl font-extrabold text-[#1a120c] mt-5 mb-2">${formatInline(line.slice(3))}</h2>`;
         continue;
       }
       if (line.startsWith('### ')) {
         if (inOl) { html += '</ol>'; inOl = false; }
         if (inUl) { html += '</ul>'; inUl = false; }
-        html += `<h3 class="text-base font-bold text-[#101116] mt-4 mb-1.5">${formatInline(line.slice(4))}</h3>`;
+        html += `<h3 class="text-base font-bold text-[#1a120c] mt-4 mb-1.5">${formatInline(line.slice(4))}</h3>`;
         continue;
       }
       if (line.startsWith('> ')) {
         if (inOl) { html += '</ol>'; inOl = false; }
         if (inUl) { html += '</ul>'; inUl = false; }
-        html += `<blockquote class="border-l-4 border-[#F08300] pl-4 italic text-[#2b2f3f] my-3 bg-[#fcfbf7] py-2 rounded-r-lg">${formatInline(line.slice(2))}</blockquote>`;
+        html += `<blockquote class="border-l-4 border-[#F08300] pl-4 italic text-[#3d261a] my-3 bg-[#f9f4e8] py-2 rounded-r-xl">${formatInline(line.slice(2))}</blockquote>`;
         continue;
       }
-      if (line.startsWith('[Catatan Redaksi]') || line.startsWith(':::callout')) {
-        if (inOl) { html += '</ol>'; inOl = false; }
-        if (inUl) { html += '</ul>'; inUl = false; }
-        html += `<div class="bg-[#f9f4e8] border border-[#eee9db] p-4 rounded-xl my-3 text-xs font-semibold text-[#101116]">${formatInline(line.replace(/:::callout|\[Catatan Redaksi\]/, ''))}</div>`;
-        continue;
-      }
-
       const numMatch = line.match(/^\s*(\d+)\.\s+(.*)$/);
       if (numMatch) {
         if (inUl) { html += '</ul>'; inUl = false; }
-        if (!inOl) { html += '<ol class="list-decimal pl-5 space-y-1 my-2 text-xs text-[#2b2f3f]">'; inOl = true; }
+        if (!inOl) { html += '<ol class="list-decimal pl-5 space-y-1 my-2 text-xs text-[#3d261a]">'; inOl = true; }
         html += `<li>${formatInline(numMatch[2])}</li>`;
         continue;
       }
-
       const bulletMatch = line.match(/^\s*[-*]\s+(.*)$/);
       if (bulletMatch) {
         if (inOl) { html += '</ol>'; inOl = false; }
-        if (!inUl) { html += '<ul class="list-disc pl-5 space-y-1 my-2 text-xs text-[#2b2f3f]">'; inUl = true; }
+        if (!inUl) { html += '<ul class="list-disc pl-5 space-y-1 my-2 text-xs text-[#3d261a]">'; inUl = true; }
         html += `<li>${formatInline(bulletMatch[1])}</li>`;
         continue;
       }
-
       if (inOl) { html += '</ol>'; inOl = false; }
       if (inUl) { html += '</ul>'; inUl = false; }
-
       if (line.trim() !== '') {
-        html += `<p class="text-xs text-[#2b2f3f] leading-relaxed my-2.5">${formatInline(line)}</p>`;
+        html += `<p class="text-xs text-[#3d261a] leading-relaxed my-2.5">${formatInline(line)}</p>`;
       }
     }
-
     if (inOl) html += '</ol>';
     if (inUl) html += '</ul>';
     return html;
@@ -226,61 +309,65 @@
   }
 
   function handlePublishArticle() {
-    if (!articleTitle || !articleSummary) {
-      alert('Judul dan ringkasan warta berita wajib diisi.');
+    articleError = '';
+    if (!articleTitle.trim() || !articleSummary.trim()) {
+      articleError = 'Judul berita dan ringkasan paragraf pembuka wajib diisi.';
       return;
     }
-
     const finalSlug = articleSlug || articleTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     const parsedHtml = renderFormattedHtml(articleContent);
 
-    const newArticle: Article = {
-      id: Date.now(),
-      title: articleTitle,
-      slug: finalSlug,
-      summary: articleSummary,
-      content: parsedHtml ? parsedHtml : `<p>${articleSummary}</p>`,
-      thumbnail: articleThumbnail,
-      category: articleCategory,
-      author_name: articleAuthor,
-      view_count: 1,
-      published_at: new Date().toISOString()
-    };
-
-    articlesStore.update(items => [newArticle, ...items]);
-
-    auditLogsStore.update(logs => [
-      {
+    if (editingArticleId) {
+      articlesStore.update(items =>
+        items.map(a =>
+          a.id === editingArticleId
+            ? {
+                ...a,
+                title: articleTitle.trim(),
+                slug: finalSlug,
+                summary: articleSummary.trim(),
+                content: parsedHtml || `<p>${articleSummary.trim()}</p>`,
+                thumbnail: articleThumbnail,
+                category: articleCategory,
+                author_name: articleAuthor
+              }
+            : a
+        )
+      );
+      logAudit(currentUser?.username || 'humas', 'EDIT_ARTICLE', `Berita: ${articleTitle}`, `Memperbarui konten berita`);
+      showToast('Perubahan warta berita berhasil disimpan.');
+    } else {
+      const newArticle: Article = {
         id: Date.now(),
-        user_name: currentUser?.username || 'humas',
-        action: 'PUBLISH_ARTICLE',
-        resource: `Berita: ${newArticle.title}`,
-        details: `Menerbitkan warta baru kategori ${newArticle.category}`,
-        timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19),
-        ip_address: '103.151.191.73'
-      },
-      ...logs
-    ]);
-
-    alert('Warta Berita berhasil dipublikasikan secara instan ke portal publik!');
-    isWritingArticle = false;
-    articleTitle = '';
-    articleSlug = '';
-    articleSummary = '';
-    articleContent = '';
-    articleThumbnailPreview = '';
-  }
-
-  function handleDeleteArticle(id: number) {
-    if (confirm('Apakah Anda yakin ingin menghapus warta berita ini dari portal?')) {
-      articlesStore.update(items => items.filter(a => a.id !== id));
+        title: articleTitle.trim(),
+        slug: finalSlug,
+        summary: articleSummary.trim(),
+        content: parsedHtml || `<p>${articleSummary.trim()}</p>`,
+        thumbnail: articleThumbnail,
+        category: articleCategory,
+        author_name: articleAuthor,
+        view_count: 1,
+        published_at: new Date().toISOString()
+      };
+      articlesStore.update(items => [newArticle, ...items]);
+      logAudit(
+        currentUser?.username || 'humas',
+        'PUBLISH_ARTICLE',
+        `Berita: ${newArticle.title}`,
+        `Menerbitkan warta baru kategori ${newArticle.category}`
+      );
+      showToast('Warta berita berhasil dipublikasikan ke portal publik.');
     }
+
+    isWritingArticle = false;
+    editingArticleId = null;
   }
 
   // ==========================================
-  // 3. CMS DOKUMEN PUBLIK (REAL FILE UPLOADS)
+  // 3. CMS DOKUMEN PUBLIK (MODAL + FILEUPLOADER)
   // ==========================================
   let showDocModal = false;
+  let docError = '';
   let docTitle = '';
   let docNumber = '';
   let docCategory: PublicDocument['category'] = 'renja';
@@ -289,156 +376,134 @@
   let docFileUrl = '/uploads/dokumen/dokumen_resmi.pdf';
   let uploadedFileName = '';
 
-  function handleDocFileUpload(e: Event) {
-    const input = e.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      const file = input.files[0];
-      uploadedFileName = file.name;
-      
-      // Auto-populate Title if empty
-      if (!docTitle) {
-        docTitle = file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
-      }
+  function openDocModal() {
+    docError = '';
+    docTitle = '';
+    docNumber = '';
+    docCategory = 'renja';
+    docYear = 2026;
+    docSize = '1.8 MB';
+    docFileUrl = '/uploads/dokumen/dokumen_resmi.pdf';
+    uploadedFileName = '';
+    showDocModal = true;
+  }
 
-      // Compute actual file size
-      const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
-      docSize = sizeMb === '0.0' ? `${Math.round(file.size / 1024)} KB` : `${sizeMb} MB`;
-
-      // Create live browser blob URL
-      docFileUrl = URL.createObjectURL(file);
+  function handleDocFileChange(e: CustomEvent<{ url: string; file: File; name: string }>) {
+    const file = e.detail.file;
+    uploadedFileName = e.detail.name;
+    if (!docTitle.trim()) {
+      docTitle = file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
     }
+    const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
+    docSize = sizeMb === '0.0' ? `${Math.max(1, Math.round(file.size / 1024))} KB` : `${sizeMb} MB`;
+    docFileUrl = URL.createObjectURL(file);
   }
 
   function handleSaveDocument() {
-    if (!docTitle) {
-      alert('Nama dokumen publik resmi wajib diisi.');
+    docError = '';
+    if (!docTitle.trim()) {
+      docError = 'Nama / Judul dokumen resmi wajib diisi.';
       return;
     }
-
     const newDoc: PublicDocument = {
       id: Date.now(),
-      title: docTitle,
-      doc_number: docNumber || `050/SATPOL/${docYear}`,
+      title: docTitle.trim(),
+      doc_number: docNumber.trim() || `050/SATPOL/${docYear}`,
       category: docCategory,
-      year: docYear,
+      year: Number(docYear),
       file_url: docFileUrl,
       file_size: docSize
     };
-
     documentsStore.update(items => [newDoc, ...items]);
-
-    auditLogsStore.update(logs => [
-      {
-        id: Date.now(),
-        user_name: currentUser?.username || 'sekretariat',
-        action: 'UPLOAD_DOKUMEN_PUBLIK',
-        resource: `Dokumen: ${newDoc.title}`,
-        details: `Mengunggah berkas transparansi publik kategori ${newDoc.category} TA ${newDoc.year}`,
-        timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19),
-        ip_address: '103.151.191.73'
-      },
-      ...logs
-    ]);
-
-    alert('Dokumen publik berhasil diunggah dan langsung tampil di halaman Dokumen Publik!');
+    logAudit(
+      currentUser?.username || 'sekretariat',
+      'UPLOAD_DOKUMEN_PUBLIK',
+      `Dokumen: ${newDoc.title}`,
+      `Mengunggah berkas transparansi publik kategori ${newDoc.category} TA ${newDoc.year}`
+    );
+    showToast(`Dokumen "${newDoc.title}" berhasil ditambahkan ke arsip publik.`);
     showDocModal = false;
-    docTitle = '';
-    docNumber = '';
-    uploadedFileName = '';
-  }
-
-  function handleDeleteDocument(id: number) {
-    if (confirm('Apakah Anda yakin ingin menghapus dokumen publik ini?')) {
-      documentsStore.update(items => items.filter(d => d.id !== id));
-    }
   }
 
   // ==========================================
-  // 4. CMS GALERI MULTIMEDIA
+  // 4. CMS GALERI MULTIMEDIA (MODAL + FILEUPLOADER)
   // ==========================================
   let showGalleryModal = false;
+  let galleryError = '';
   let galleryTitle = '';
   let galleryCategory = 'Penertiban';
   let galleryDate = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
   let galleryImageUrl = '/uploads/foto_galeri/1687082076352158666_3553275628273619_3927930681691724075_n.jpg';
-  let galleryPreview = '';
+  let galleryFileName = '';
 
-  function handleGalleryImageUpload(e: Event) {
-    const input = e.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      const file = input.files[0];
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        if (event.target?.result) {
-          galleryPreview = event.target.result as string;
-          galleryImageUrl = event.target.result as string;
-        }
-      };
-      reader.readAsDataURL(file);
-    }
+  function openGalleryModal() {
+    galleryError = '';
+    galleryTitle = '';
+    galleryCategory = 'Penertiban';
+    galleryImageUrl = '/uploads/foto_galeri/1687082076352158666_3553275628273619_3927930681691724075_n.jpg';
+    galleryFileName = '';
+    showGalleryModal = true;
+  }
+
+  async function handleGalleryFileChange(e: CustomEvent<{ url: string; file: File; name: string }>) {
+    galleryFileName = e.detail.name;
+    galleryImageUrl = e.detail.url;
+    const remoteUrl = await uploadEvidence(e.detail.file);
+    if (remoteUrl) galleryImageUrl = remoteUrl;
   }
 
   function handleSaveGallery() {
-    if (!galleryTitle) {
-      alert('Judul dokumentasi kegiatan wajib diisi.');
+    galleryError = '';
+    if (!galleryTitle.trim()) {
+      galleryError = 'Judul atau keterangan dokumentasi kegiatan wajib diisi.';
       return;
     }
-
     const newItem: GalleryItem = {
       id: Date.now(),
-      title: galleryTitle,
+      title: galleryTitle.trim(),
       category: galleryCategory,
       image_url: galleryImageUrl,
       date: galleryDate
     };
-
     galleryStore.update(items => [newItem, ...items]);
-
-    auditLogsStore.update(logs => [
-      {
-        id: Date.now(),
-        user_name: currentUser?.username || 'humas',
-        action: 'UPLOAD_GALERI_FOTO',
-        resource: `Foto: ${newItem.title}`,
-        details: `Menambahkan foto dokumentasi kategori ${newItem.category}`,
-        timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19),
-        ip_address: '103.151.191.73'
-      },
-      ...logs
-    ]);
-
-    alert('Foto dokumentasi kegiatan berhasil ditambahkan ke galeri portal!');
+    logAudit(
+      currentUser?.username || 'humas',
+      'UPLOAD_GALERI_FOTO',
+      `Foto: ${newItem.title}`,
+      `Menambahkan foto dokumentasi kategori ${newItem.category}`
+    );
+    showToast('Foto dokumentasi kegiatan berhasil ditambahkan ke galeri.');
     showGalleryModal = false;
-    galleryTitle = '';
-    galleryPreview = '';
   }
 
-  function handleDeleteGallery(id: number) {
-    if (confirm('Apakah Anda yakin ingin menghapus foto kegiatan ini dari galeri?')) {
-      galleryStore.update(items => items.filter(g => g.id !== id));
-    }
+  // ==========================================
+  // 5. KONFIRMASI HAPUS REUSABLE MODAL
+  // ==========================================
+  let confirmDeleteOpen = false;
+  let confirmDeleteType: 'article' | 'document' | 'gallery' = 'article';
+  let confirmDeleteId = 0;
+  let confirmDeleteLabel = '';
+
+  function requestDelete(type: 'article' | 'document' | 'gallery', id: number, label: string) {
+    confirmDeleteType = type;
+    confirmDeleteId = id;
+    confirmDeleteLabel = label;
+    confirmDeleteOpen = true;
   }
 
-  onMount(() => {
-    const authRaw = sessionStorage.getItem('satpol_auth');
-    if (authRaw) {
-      try {
-        currentUser = JSON.parse(authRaw).user;
-      } catch (e) {
-        console.error(e);
-      }
+  function executeDelete() {
+    if (confirmDeleteType === 'article') {
+      articlesStore.update(items => items.filter(a => a.id !== confirmDeleteId));
+      logAudit(currentUser?.username || 'humas', 'HAPUS_ARTIKEL', confirmDeleteLabel, 'Menghapus warta berita');
+    } else if (confirmDeleteType === 'document') {
+      documentsStore.update(items => items.filter(d => d.id !== confirmDeleteId));
+      logAudit(currentUser?.username || 'sekretariat', 'HAPUS_DOKUMEN', confirmDeleteLabel, 'Menghapus dokumen publik');
+    } else {
+      galleryStore.update(items => items.filter(g => g.id !== confirmDeleteId));
+      logAudit(currentUser?.username || 'humas', 'HAPUS_GALERI', confirmDeleteLabel, 'Menghapus foto galeri');
     }
-  });
-
-  function getStatusLabel(s: string) {
-    switch (s) {
-      case 'MENUNGGU_VERIFIKASI': return { text: 'Menunggu Verifikasi', bg: 'bg-amber-50 text-amber-900 border-amber-300' };
-      case 'DISPOSISI_BIDANG': return { text: 'Disposisi Bidang', bg: 'bg-blue-50 text-blue-900 border-blue-300' };
-      case 'PENINDAKAN_LAPANGAN': return { text: 'Penindakan Lapangan', bg: 'bg-purple-50 text-purple-900 border-purple-300' };
-      case 'SELESAI': return { text: 'Selesai & BAP', bg: 'bg-emerald-50 text-emerald-900 border-emerald-300' };
-      case 'DITOLAK': return { text: 'Ditolak', bg: 'bg-rose-50 text-rose-900 border-rose-300' };
-      default: return { text: s, bg: 'bg-gray-100 text-gray-800 border-gray-300' };
-    }
+    showToast(`Item "${confirmDeleteLabel}" telah dihapus.`);
+    confirmDeleteOpen = false;
   }
 </script>
 
@@ -446,937 +511,898 @@
   <title>Panel Operasional Satpol PP &amp; CMS Terpadu</title>
 </svelte:head>
 
-<div class="h-screen overflow-hidden bg-[#f4f5f8] flex flex-col lg:flex-row text-[#101116] font-sans antialiased">
+<DashboardShell
+  portalLabel="Satpol PP Sulsel"
+  portalTag="SIAP TERTIB & CMS"
+  {navItems}
+  bind:activeTab={currentTab}
+  pageTitle={tabMeta[currentTab].title}
+  pageDescription={tabMeta[currentTab].desc}
+  user={currentUser}
+  quickSwitchHref={currentUser?.role === 'SUPERADMIN_DISKOMINFO' ? '/superadmin/dashboard' : ''}
+  quickSwitchLabel="Panel Superadmin"
+>
+  <svelte:fragment slot="header-actions">
+    <a
+      href="/lapor"
+      target="_blank"
+      class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#f9f4e8] hover:bg-[#eee9db] text-[#1a120c] text-xs font-bold border border-[#eee9db] transition"
+    >
+      Halaman Lapor Publik
+    </a>
+  </svelte:fragment>
 
-  <!-- ============================================================== -->
-  <!-- RESPONSIVE SIDEBAR (Desktop: Fixed / Mobile: Off-canvas drawer) -->
-  <!-- ============================================================== -->
-
-  <!-- Mobile Backdrop Overlay -->
-  {#if sidebarOpen}
-    <div 
-      class="fixed inset-0 z-40 bg-black/60 lg:hidden backdrop-blur-sm transition-opacity"
-      on:click={() => sidebarOpen = false}
-      role="button"
-      tabindex="0"
-      on:keydown={(e) => e.key === 'Escape' && (sidebarOpen = false)}
-    ></div>
+  {#if toastMessage}
+    <div
+      role="status"
+      class="flex items-center justify-between gap-3 px-4 py-3 rounded-2xl border shadow-xs text-xs font-bold {toastType === 'success' ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : 'bg-[#f9f4e8] border-[#F08300]/40 text-[#1a120c]'}"
+    >
+      <div class="flex items-center gap-2">
+        <CheckCircle2 class="w-4 h-4 text-emerald-600 shrink-0" />
+        <span>{toastMessage}</span>
+      </div>
+      <button type="button" on:click={() => (toastMessage = '')} class="text-xs underline opacity-75 hover:opacity-100">
+        Tutup
+      </button>
+    </div>
   {/if}
 
-  <aside 
-    class={`fixed lg:static inset-y-0 left-0 z-50 h-screen w-72 shrink-0 bg-[#1a120c] text-white flex flex-col justify-between transition-transform duration-300 ease-in-out border-r border-[#2d2016] shadow-2xl lg:shadow-none ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
-  >
-    <!-- Sidebar Header -->
-    <div class="p-6 border-b border-[#2d2016]">
-      <div class="flex items-center gap-3">
-        <img 
-          src="/uploads/foto_website/1686928245logo_white.png" 
-          alt="Emblem Satpol PP" 
-          class="h-11 w-auto object-contain" 
-        />
-        <div>
-          <div class="text-[11px] font-bold text-[#F08300] uppercase tracking-wider">Satpol PP Prov. Sulsel</div>
-          <div class="text-sm font-extrabold text-white tracking-tight">Panel Pengendali</div>
+  <!-- TAB 1: IKHTISAR OPERASIONAL -->
+  {#if currentTab === 'overview'}
+    <div class="space-y-6">
+      <div class="grid grid-cols-2 lg:grid-cols-5 gap-4">
+        <div class="bg-white border border-[#eee9db] rounded-2xl p-5 shadow-xs">
+          <div class="text-[11px] font-bold text-[#3d261a]/75 uppercase">Total Aduan</div>
+          <div class="text-3xl font-black text-[#1a120c] mt-2">{totalCount}</div>
+          <div class="text-[11px] text-[#3d261a]/60 mt-1">Registrasi SIAP TERTIB</div>
+        </div>
+        <div class="bg-white border border-amber-200 rounded-2xl p-5 shadow-xs">
+          <div class="text-[11px] font-bold text-amber-800 uppercase">Menunggu Verifikasi</div>
+          <div class="text-3xl font-black text-amber-700 mt-2">{pendingCount}</div>
+          <div class="text-[11px] text-amber-700/80 mt-1">Perlu verifikasi awal</div>
+        </div>
+        <div class="bg-white border border-sky-200 rounded-2xl p-5 shadow-xs">
+          <div class="text-[11px] font-bold text-sky-800 uppercase">Disposisi Bidang</div>
+          <div class="text-3xl font-black text-sky-700 mt-2">{disposedCount}</div>
+          <div class="text-[11px] text-sky-700/80 mt-1">Diteruskan ke unit</div>
+        </div>
+        <div class="bg-white border border-orange-200 rounded-2xl p-5 shadow-xs">
+          <div class="text-[11px] font-bold text-[#F08300] uppercase">Penindakan Patroli</div>
+          <div class="text-3xl font-black text-[#F08300] mt-2">{inProgressCount}</div>
+          <div class="text-[11px] text-[#3d261a]/70 mt-1">Giat lapangan aktif</div>
+        </div>
+        <div class="bg-white border border-emerald-200 rounded-2xl p-5 shadow-xs col-span-2 lg:col-span-1">
+          <div class="text-[11px] font-bold text-emerald-800 uppercase">Selesai (BAP)</div>
+          <div class="text-3xl font-black text-emerald-700 mt-2">{completedCount}</div>
+          <div class="text-[11px] text-emerald-700/80 mt-1">Tuntas terdokumentasi</div>
         </div>
       </div>
-      <div class="mt-4 pt-3 border-t border-[#2d2016] text-[10px] text-[#9ca3af] uppercase tracking-widest font-semibold flex items-center justify-between">
-        <span>SOP Terpadu &amp; CMS</span>
-        <span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
-      </div>
-    </div>
 
-    <!-- Navigation Menu Items -->
-    <nav class="p-4 space-y-1.5 flex-1 overflow-y-auto">
-      <button 
-        class={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition ${currentTab === 'overview' ? 'bg-[#F08300] text-white shadow-md' : 'text-gray-300 hover:bg-[#2d2016] hover:text-white'}`}
-        on:click={() => { currentTab = 'overview'; sidebarOpen = false; }}
-      >
-        <span>Ikhtisar Operasional</span>
-        <span class="text-[10px] bg-black/20 px-2 py-0.5 rounded-md font-mono">{totalCount}</span>
-      </button>
-
-      <button 
-        class={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition ${currentTab === 'complaints' ? 'bg-[#F08300] text-white shadow-md' : 'text-gray-300 hover:bg-[#2d2016] hover:text-white'}`}
-        on:click={() => { currentTab = 'complaints'; sidebarOpen = false; }}
-      >
-        <span>Layanan SIAP TERTIB</span>
-        <span class="text-[10px] bg-amber-500/30 text-amber-300 px-2 py-0.5 rounded-md font-mono">{pendingCount} Baru</span>
-      </button>
-
-      <button 
-        class={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition ${currentTab === 'articles' ? 'bg-[#F08300] text-white shadow-md' : 'text-gray-300 hover:bg-[#2d2016] hover:text-white'}`}
-        on:click={() => { currentTab = 'articles'; sidebarOpen = false; }}
-      >
-        <span>CMS Berita &amp; Warta</span>
-        <span class="text-[10px] bg-black/20 px-2 py-0.5 rounded-md font-mono">{$articlesStore.length}</span>
-      </button>
-
-      <button 
-        class={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition ${currentTab === 'documents' ? 'bg-[#F08300] text-white shadow-md' : 'text-gray-300 hover:bg-[#2d2016] hover:text-white'}`}
-        on:click={() => { currentTab = 'documents'; sidebarOpen = false; }}
-      >
-        <span>CMS Dokumen Publik</span>
-        <span class="text-[10px] bg-black/20 px-2 py-0.5 rounded-md font-mono">{$documentsStore.length}</span>
-      </button>
-
-      <button 
-        class={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition ${currentTab === 'gallery' ? 'bg-[#F08300] text-white shadow-md' : 'text-gray-300 hover:bg-[#2d2016] hover:text-white'}`}
-        on:click={() => { currentTab = 'gallery'; sidebarOpen = false; }}
-      >
-        <span>CMS Galeri Kegiatan</span>
-        <span class="text-[10px] bg-black/20 px-2 py-0.5 rounded-md font-mono">{$galleryStore.length}</span>
-      </button>
-
-      <!-- Divider -->
-      <div class="pt-4 pb-2">
-        <div class="text-[10px] font-bold text-[#6f7775] uppercase tracking-widest px-4">Tautan Eksternal</div>
-      </div>
-
-      <a 
-        href="/superadmin/dashboard" 
-        class="block px-4 py-2.5 rounded-xl text-xs font-bold text-gray-300 hover:bg-[#2d2016] hover:text-[#F08300] transition"
-      >
-        Konsol Diskominfo (Superadmin) &rarr;
-      </a>
-
-      <a 
-        href="/" 
-        target="_blank"
-        class="block px-4 py-2.5 rounded-xl text-xs font-bold text-gray-300 hover:bg-[#2d2016] hover:text-[#F08300] transition"
-      >
-        Buka Portal Publik &rarr;
-      </a>
-    </nav>
-
-    <!-- Sidebar User Footer -->
-    <div class="p-4 bg-[#120b07] border-t border-[#2d2016]">
-      <div class="flex items-center justify-between">
-        <div class="flex-1 min-w-0 pr-2">
-          <div class="text-xs font-bold text-white truncate">{currentUser?.name || 'Petugas Satpol PP'}</div>
-          <div class="text-[10px] text-[#F08300] font-semibold truncate">{currentUser?.bidang || 'Penyelenggara Ketertiban'}</div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div class="bg-white border border-[#eee9db] rounded-2xl p-5 shadow-xs flex flex-col justify-between space-y-4">
+          <div class="space-y-1.5">
+            <div class="text-[11px] font-black text-[#F08300] uppercase tracking-wider">SOP SIAP TERTIB</div>
+            <h2 class="text-sm font-black text-[#1a120c]">Meja Verifikasi Aduan</h2>
+            <p class="text-xs text-[#3d261a]/75 leading-relaxed">
+              Ada <strong>{pendingCount} laporan</strong> baru yang menunggu pengecekan dan disposisi.
+            </p>
+          </div>
+          <button
+            type="button"
+            on:click={() => (currentTab = 'complaints')}
+            class="w-full py-2.5 px-4 rounded-xl bg-[#F08300] hover:bg-[#d97300] text-white text-xs font-bold transition"
+          >
+            Buka Meja Aduan
+          </button>
         </div>
-        <a 
-          href="/admin/login" 
-          class="bg-[#2d2016] hover:bg-rose-900/60 text-gray-300 hover:text-white text-[11px] font-bold px-2.5 py-1.5 rounded-lg border border-gray-700 transition"
-          title="Keluar / Ganti Akun"
-        >
-          Logout
-        </a>
+
+        <div class="bg-white border border-[#eee9db] rounded-2xl p-5 shadow-xs flex flex-col justify-between space-y-4">
+          <div class="space-y-1.5">
+            <div class="text-[11px] font-black text-[#3d261a] uppercase tracking-wider">Redaksi Humas</div>
+            <h2 class="text-sm font-black text-[#1a120c]">Tulis Warta Berita</h2>
+            <p class="text-xs text-[#3d261a]/75 leading-relaxed">
+              Publikasikan kegiatan patroli penertiban dan pengumuman resmi Satpol PP.
+            </p>
+          </div>
+          <button
+            type="button"
+            on:click={() => { currentTab = 'articles'; openNewArticleEditor(); }}
+            class="w-full py-2.5 px-4 rounded-xl bg-[#3d261a] hover:bg-[#241710] text-white text-xs font-bold transition"
+          >
+            Tulis Berita Baru
+          </button>
+        </div>
+
+        <div class="bg-white border border-[#eee9db] rounded-2xl p-5 shadow-xs flex flex-col justify-between space-y-4">
+          <div class="space-y-1.5">
+            <div class="text-[11px] font-black text-emerald-700 uppercase tracking-wider">Transparansi PPID</div>
+            <h2 class="text-sm font-black text-[#1a120c]">Unggah Dokumen Publik</h2>
+            <p class="text-xs text-[#3d261a]/75 leading-relaxed">
+              Tambahkan Renja, Renstra, DPA, atau peraturan daerah ke katalog publik.
+            </p>
+          </div>
+          <button
+            type="button"
+            on:click={() => { currentTab = 'documents'; openDocModal(); }}
+            class="w-full py-2.5 px-4 rounded-xl bg-[#1a120c] hover:bg-[#3d261a] text-white text-xs font-bold transition"
+          >
+            Unggah Dokumen PDF
+          </button>
+        </div>
+
+        <div class="bg-white border border-[#eee9db] rounded-2xl p-5 shadow-xs flex flex-col justify-between space-y-4">
+          <div class="space-y-1.5">
+            <div class="text-[11px] font-black text-[#F08300] uppercase tracking-wider">Kelembagaan Dinamis</div>
+            <h2 class="text-sm font-black text-[#1a120c]">Struktur Organisasi</h2>
+            <p class="text-xs text-[#3d261a]/75 leading-relaxed">
+              Kelola { $organizationStore.length } simpul jabatan dan ID Khusus unit (<code class="font-mono">ORG-*</code>).
+            </p>
+          </div>
+          <button
+            type="button"
+            on:click={() => (currentTab = 'organization')}
+            class="w-full py-2.5 px-4 rounded-xl bg-[#f9f4e8] hover:bg-[#eee9db] text-[#1a120c] border border-[#eee9db] text-xs font-bold transition"
+          >
+            Kelola Struktur SOTK
+          </button>
+        </div>
       </div>
     </div>
-  </aside>
+  {/if}
 
-  <!-- ============================================================== -->
-  <!-- MAIN CONTENT AREA -->
-  <!-- ============================================================== -->
-  <main class="flex-1 h-screen overflow-y-auto flex flex-col min-w-0">
-
-    <!-- Top Bar Navigation (Responsive) -->
-    <header class="bg-white border-b border-gray-200/80 px-4 sm:px-8 py-4 flex items-center justify-between sticky top-0 z-30 shadow-xs">
-      <div class="flex items-center gap-3">
-        <!-- Mobile Drawer Hamburger Toggle Button -->
-        <button 
-          class="lg:hidden p-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-[#101116] transition"
-          on:click={() => sidebarOpen = true}
-          aria-label="Buka Menu Sidebar"
+  <!-- TAB 2: MANAJEMEN ADUAN SIAP TERTIB (FIXED: REAL COMPLAINTS DATATABLE) -->
+  {#if currentTab === 'complaints'}
+    <DataTable
+      items={filteredComplaints}
+      searchFields={['ticket_code', 'reporter_name', 'regency_name', 'district_name', 'violation_type', 'address_detail']}
+      searchPlaceholder="Cari nomor tiket, kabupaten/kota, jenis pelanggaran (on-chain)..."
+      pageSize={10}
+      pageSizeOptions={[5, 10, 25, 50]}
+      title="Daftar Pengaduan Masyarakat SIAP TERTIB"
+      description="Identitas pelapor tetap disamarkan di tampilan daftar hingga dibuka pada log audit."
+      emptyMessage="Tidak ada aduan yang cocok dengan filter status atau kata kunci."
+    >
+      <div slot="header-left" class="mt-3 flex flex-wrap gap-1.5">
+        <button
+          type="button"
+          on:click={() => (statusFilter = 'ALL')}
+          class="px-3 py-1.5 rounded-xl text-[11px] font-bold transition {statusFilter === 'ALL' ? 'bg-[#1a120c] text-white' : 'bg-[#f9f4e8] text-[#3d261a] hover:bg-[#eee9db]'}"
         >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
+          Semua ({totalCount})
         </button>
-
-        <div>
-          <span class="text-[11px] font-bold text-[#F08300] uppercase tracking-wider">
-            Provinsi Sulawesi Selatan &bull; Praja Wibawa
-          </span>
-          <h2 class="text-lg md:text-xl font-extrabold text-[#101116] tracking-tight">
-            {#if currentTab === 'overview'}Ikhtisar Sistem &amp; Ringkasan
-            {:else if currentTab === 'complaints'}Manajemen Aduan Warga SIAP TERTIB
-            {:else if currentTab === 'articles'}Pengelolaan Warta &amp; Publikasi
-            {:else if currentTab === 'documents'}Tata Kelola Dokumen Publik
-            {:else if currentTab === 'gallery'}Manajemen Galeri Kegiatan
-            {/if}
-          </h2>
-        </div>
-      </div>
-
-      <div class="flex items-center gap-2.5">
-        <a 
-          href="/" 
-          target="_blank"
-          class="hidden sm:inline-flex items-center gap-1.5 bg-[#f9f4e8] hover:bg-[#eee9db] text-[#101116] font-bold text-xs uppercase px-4 py-2.5 rounded-lg border border-[#eee9db] transition"
+        <button
+          type="button"
+          on:click={() => (statusFilter = 'MENUNGGU_VERIFIKASI')}
+          class="px-3 py-1.5 rounded-xl text-[11px] font-bold transition {statusFilter === 'MENUNGGU_VERIFIKASI' ? 'bg-[#F08300] text-white' : 'bg-amber-50 text-amber-900 hover:bg-amber-100'}"
         >
-          <span>Portal Publik</span>
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-        </a>
-        <div class="bg-gray-100 border border-gray-200 px-3 py-1.5 rounded-lg text-right hidden md:block">
-          <div class="text-[10px] text-[#6f7775] font-semibold uppercase">Status Gateway</div>
-          <div class="text-xs font-bold text-emerald-700">Aktif (Port 8080)</div>
-        </div>
+          Verifikasi ({pendingCount})
+        </button>
+        <button
+          type="button"
+          on:click={() => (statusFilter = 'DISPOSISI_BIDANG')}
+          class="px-3 py-1.5 rounded-xl text-[11px] font-bold transition {statusFilter === 'DISPOSISI_BIDANG' ? 'bg-sky-700 text-white' : 'bg-sky-50 text-sky-900 hover:bg-sky-100'}"
+        >
+          Disposisi ({disposedCount})
+        </button>
+        <button
+          type="button"
+          on:click={() => (statusFilter = 'PENINDAKAN_LAPANGAN')}
+          class="px-3 py-1.5 rounded-xl text-[11px] font-bold transition {statusFilter === 'PENINDAKAN_LAPANGAN' ? 'bg-[#3d261a] text-white' : 'bg-orange-50 text-orange-900 hover:bg-orange-100'}"
+        >
+          Penindakan ({inProgressCount})
+        </button>
+        <button
+          type="button"
+          on:click={() => (statusFilter = 'SELESAI')}
+          class="px-3 py-1.5 rounded-xl text-[11px] font-bold transition {statusFilter === 'SELESAI' ? 'bg-emerald-700 text-white' : 'bg-emerald-50 text-emerald-900 hover:bg-emerald-100'}"
+        >
+          Selesai ({completedCount})
+        </button>
       </div>
-    </header>
 
-    <!-- Sub-page Content Wrapper -->
-    <div class="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl w-full mx-auto">
+      <tr slot="head">
+        <th class="px-4 py-3.5">Tiket &amp; Tanggal</th>
+        <th class="px-4 py-3.5">Pelapor (Masked)</th>
+        <th class="px-4 py-3.5">Lokasi &amp; Jenis Pelanggaran</th>
+        <th class="px-4 py-3.5">Status SOP</th>
+        <th class="px-4 py-3.5">Disposisi Unit</th>
+        <th class="px-4 py-3.5 text-right">Aksi</th>
+      </tr>
 
-      <!-- ============================================================== -->
-      <!-- TAB: OVERVIEW (IKHTISAR CEPAT) -->
-      <!-- ============================================================== -->
-      {#if currentTab === 'overview'}
-        <div class="space-y-6">
-          <!-- Metric Ribbon Cards -->
-          <div class="grid grid-cols-2 lg:grid-cols-5 gap-4">
-            <div class="bg-white border border-gray-200/90 rounded-2xl p-5 shadow-xs">
-              <div class="text-[11px] font-bold text-[#6f7775] uppercase">Total Aduan Masuk</div>
-              <div class="text-3xl font-extrabold text-[#101116] mt-2">{totalCount}</div>
-              <div class="text-[10px] text-gray-400 mt-1">Registrasi SIAP TERTIB</div>
-            </div>
-            <div class="bg-white border border-gray-200/90 rounded-2xl p-5 shadow-xs">
-              <div class="text-[11px] font-bold text-amber-700 uppercase">Menunggu Verifikasi</div>
-              <div class="text-3xl font-extrabold text-amber-700 mt-2">{pendingCount}</div>
-              <div class="text-[10px] text-amber-600 mt-1">Perlu dicek bukti foto</div>
-            </div>
-            <div class="bg-white border border-gray-200/90 rounded-2xl p-5 shadow-xs">
-              <div class="text-[11px] font-bold text-blue-700 uppercase">Disposisi Bidang</div>
-              <div class="text-3xl font-extrabold text-blue-700 mt-2">{disposedCount}</div>
-              <div class="text-[10px] text-blue-600 mt-1">Diteruskan ke PPNS/Pleton</div>
-            </div>
-            <div class="bg-white border border-gray-200/90 rounded-2xl p-5 shadow-xs">
-              <div class="text-[11px] font-bold text-purple-700 uppercase">Penindakan Patroli</div>
-              <div class="text-3xl font-extrabold text-purple-700 mt-2">{inProgressCount}</div>
-              <div class="text-[10px] text-purple-600 mt-1">Personel giat lapangan</div>
-            </div>
-            <div class="bg-white border border-gray-200/90 rounded-2xl p-5 shadow-xs col-span-2 lg:col-span-1">
-              <div class="text-[11px] font-bold text-emerald-700 uppercase">Selesai (BAP Terbit)</div>
-              <div class="text-3xl font-extrabold text-emerald-700 mt-2">{completedCount}</div>
-              <div class="text-[10px] text-emerald-600 mt-1">Tiket tuntas &amp; terdokumentasi</div>
-            </div>
+      <tr slot="row" let:item class="hover:bg-[#f9f4e8]/55 transition">
+        <td class="px-4 py-3.5 align-top whitespace-nowrap">
+          <div class="font-mono text-xs font-black text-[#1a120c]">{item.ticket_code}</div>
+          <div class="text-[11px] text-[#3d261a]/65 mt-0.5">
+            {new Date(item.created_at).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}
           </div>
+        </td>
 
-          <!-- Quick Action Panels -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-white border border-gray-200/90 rounded-2xl p-6 shadow-xs space-y-4">
-              <div class="text-xs font-bold text-[#F08300] uppercase tracking-wider">Aduan Mendesak</div>
-              <h3 class="text-base font-extrabold text-[#101116]">Tindak Lanjut SIAP TERTIB</h3>
-              <p class="text-xs text-[#6f7775] leading-relaxed">
-                Terdapat <strong>{pendingCount} laporan</strong> aduan masyarakat yang menunggu verifikasi keabsahan laporan.
-              </p>
-              <button 
-                on:click={() => currentTab = 'complaints'}
-                class="w-full bg-[#F08300] hover:bg-[#d97400] text-white font-bold text-xs uppercase py-3 rounded-xl transition"
-              >
-                Buka Meja Aduan &rarr;
-              </button>
-            </div>
-
-            <div class="bg-white border border-gray-200/90 rounded-2xl p-6 shadow-xs space-y-4">
-              <div class="text-xs font-bold text-blue-700 uppercase tracking-wider">Publikasi Humas</div>
-              <h3 class="text-base font-extrabold text-[#101116]">Tulis Artikel / Warta Baru</h3>
-              <p class="text-xs text-[#6f7775] leading-relaxed">
-                Publikasikan hasil giat patroli penertiban atau informasi penting dengan editor berita standar penerbitan resmi.
-              </p>
-              <button 
-                on:click={() => { currentTab = 'articles'; isWritingArticle = true; }}
-                class="w-full bg-[#3d261a] hover:bg-[#271810] text-white font-bold text-xs uppercase py-3 rounded-xl transition"
-              >
-                Mulai Menulis Berita &rarr;
-              </button>
-            </div>
-
-            <div class="bg-white border border-gray-200/90 rounded-2xl p-6 shadow-xs space-y-4">
-              <div class="text-xs font-bold text-emerald-700 uppercase tracking-wider">Transparansi Publik</div>
-              <h3 class="text-base font-extrabold text-[#101116]">Unggah Dokumen Perencanaan</h3>
-              <p class="text-xs text-[#6f7775] leading-relaxed">
-                Unggah dokumen Renja, Renstra, DPA, atau Peraturan Daerah untuk diakses terbuka oleh masyarakat.
-              </p>
-              <button 
-                on:click={() => { currentTab = 'documents'; showDocModal = true; }}
-                class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs uppercase py-3 rounded-xl transition"
-              >
-                Unggah Dokumen PDF &rarr;
-              </button>
-            </div>
+        <td class="px-4 py-3.5 align-top">
+          <div class="font-bold text-xs text-[#1a120c]">
+            {maskComplaintIdentity(item).name}
           </div>
-        </div>
-      {/if}
-
-      <!-- ============================================================== -->
-      <!-- TAB: COMPLAINTS (MANAJEMEN ADUAN SIAP TERTIB) -->
-      <!-- ============================================================== -->
-      {#if currentTab === 'complaints'}
-        <div class="space-y-6">
-          <!-- Filter & Search Controls -->
-          <div class="bg-white border border-gray-200/90 rounded-2xl p-5 shadow-xs flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4">
-            <div class="flex flex-wrap gap-2">
-              <button 
-                class={`px-3.5 py-2 text-xs font-bold uppercase rounded-lg transition ${statusFilter === 'ALL' ? 'bg-[#101116] text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-                on:click={() => statusFilter = 'ALL'}
-              >
-                Semua ({totalCount})
-              </button>
-              <button 
-                class={`px-3.5 py-2 text-xs font-bold uppercase rounded-lg transition ${statusFilter === 'MENUNGGU_VERIFIKASI' ? 'bg-amber-600 text-white' : 'bg-amber-50 text-amber-800 hover:bg-amber-100'}`}
-                on:click={() => statusFilter = 'MENUNGGU_VERIFIKASI'}
-              >
-                Verifikasi ({pendingCount})
-              </button>
-              <button 
-                class={`px-3.5 py-2 text-xs font-bold uppercase rounded-lg transition ${statusFilter === 'DISPOSISI_BIDANG' ? 'bg-blue-600 text-white' : 'bg-blue-50 text-blue-800 hover:bg-blue-100'}`}
-                on:click={() => statusFilter = 'DISPOSISI_BIDANG'}
-              >
-                Disposisi ({disposedCount})
-              </button>
-              <button 
-                class={`px-3.5 py-2 text-xs font-bold uppercase rounded-lg transition ${statusFilter === 'PENINDAKAN_LAPANGAN' ? 'bg-purple-600 text-white' : 'bg-purple-50 text-purple-800 hover:bg-purple-100'}`}
-                on:click={() => statusFilter = 'PENINDAKAN_LAPANGAN'}
-              >
-                Penindakan ({inProgressCount})
-              </button>
-              <button 
-                class={`px-3.5 py-2 text-xs font-bold uppercase rounded-lg transition ${statusFilter === 'SELESAI' ? 'bg-emerald-600 text-white' : 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100'}`}
-                on:click={() => statusFilter = 'SELESAI'}
-              >
-                Selesai ({completedCount})
-              </button>
-            </div>
-
-            <div class="w-full md:w-72">
-              <input 
-                type="text" 
-                bind:value={searchQuery}
-                placeholder="Cari nomor tiket, nama, atau lokasi..."
-                class="w-full border border-gray-300 rounded-lg px-3.5 py-2 text-xs focus:border-[#F08300] focus:ring-1 focus:ring-[#F08300] focus:outline-none"
-              />
-            </div>
+          <div class="text-[11px] font-mono text-[#3d261a]/70">
+            {maskComplaintIdentity(item).phone}
           </div>
-
-          <!-- Complaints Table -->
-          <div class="bg-white border border-gray-200/90 rounded-2xl shadow-xs overflow-hidden">
-            <DataTable
-              items={$documentsStore}
-              searchFields={['title', 'doc_number', 'category', 'year']}
-              searchPlaceholder="Cari nama berkas, nomor registrasi, atau tahun..."
-              pageSize={10}
-              pageSizeOptions={[5, 10, 25]}
-              title="Daftar Dokumen Publik Resmi"
-              description="Arsip dokumen perencanaan, anggaran, regulasi Perda, dan SOP"
-              emptyMessage="Tidak ada berkas dokumen yang cocok dengan kata kunci pencarian."
-            >
-              <svelte:fragment slot="head">
-                <tr>
-                  <th class="p-3.5">Nama Dokumen</th>
-                  <th class="p-3.5">No. Registrasi</th>
-                  <th class="p-3.5">Kategori</th>
-                  <th class="p-3.5">Tahun</th>
-                  <th class="p-3.5">Ukuran</th>
-                  <th class="p-3.5 text-right">Opsi</th>
-                </tr>
-              </svelte:fragment>
-
-              <svelte:fragment slot="row" let:item>
-                <tr class="hover:bg-stone-50/70 transition">
-                  <td class="p-3.5 font-bold text-[#1a120c]">{item.title}</td>
-                  <td class="p-3.5 font-mono text-[#6f7775]">{item.doc_number || '-'}</td>
-                  <td class="p-3.5">
-                    <span class="bg-[#f5ede4] text-[#3d261a] text-[10px] font-bold uppercase px-2 py-0.5 rounded-md border border-[#e8dbc9]">
-                      {item.category}
-                    </span>
-                  </td>
-                  <td class="p-3.5 font-semibold text-[#1a120c]">{item.year}</td>
-                  <td class="p-3.5 text-[#6f7775]">{item.file_size || '1.8 MB'}</td>
-                  <td class="p-3.5 text-right space-x-2">
-                    <a href={item.file_url} target="_blank" class="text-xs font-bold text-blue-700 hover:underline">Unduh</a>
-                    <button type="button" on:click={() => handleDeleteDocument(item.id)} class="text-xs font-bold text-rose-700 hover:underline">Hapus</button>
-                  </td>
-                </tr>
-              </svelte:fragment>
-            </DataTable>
-          </div>
-        </div>
-      {/if}
-
-      <!-- ============================================================== -->
-      <!-- TAB: ARTICLES (KOMPASIANA-GRADE CMS PUBLISHER) -->
-      <!-- ============================================================== -->
-      {#if currentTab === 'articles'}
-        <div class="space-y-6">
-          {#if isWritingArticle}
-            <!-- WRITING MODE (KOMPASIANA STYLE) -->
-            <div class="bg-white border border-gray-200/90 rounded-2xl p-6 md:p-8 shadow-xs space-y-6">
-              <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-gray-100 pb-4">
-                <div>
-                  <div class="text-[#F08300] font-bold text-xs uppercase tracking-wider">Redaksi &amp; Publikasi Warta</div>
-                  <h3 class="text-xl font-extrabold text-[#101116] mt-0.5">Editor Penulisan Berita Resmi</h3>
-                </div>
-                <div class="flex items-center gap-2">
-                  <button 
-                    on:click={() => isWritingArticle = false}
-                    class="px-4 py-2 border border-gray-300 text-gray-700 text-xs font-bold uppercase rounded-lg hover:bg-gray-100 transition"
-                  >
-                    Batal
-                  </button>
-                  <button 
-                    on:click={handlePublishArticle}
-                    class="bg-[#F08300] hover:bg-[#d97400] text-white text-xs font-bold uppercase px-6 py-2 rounded-lg transition shadow-sm"
-                  >
-                    Terbitkan Berita
-                  </button>
-                </div>
-              </div>
-
-              <!-- Article Editor Fields -->
-              <div class="space-y-5">
-                <!-- Title & Slug -->
-                <div>
-                  <label for="editor-article-title" class="block text-xs font-bold uppercase text-[#101116] mb-1">
-                    Judul Berita (Headline)
-                  </label>
-                  <input 
-                    id="editor-article-title"
-                    type="text" 
-                    value={articleTitle}
-                    on:input={handleTitleInput}
-                    placeholder="Masukkan judul berita yang informatif dan akurat..."
-                    class="w-full border border-gray-300 rounded-xl p-3 text-sm font-bold text-[#101116] focus:border-[#F08300] focus:ring-1 focus:ring-[#F08300] focus:outline-none"
-                  />
-                  <div class="flex justify-between items-center text-[11px] text-[#6f7775] mt-1.5">
-                    <span class="font-mono">Slug: /berita/{articleSlug || 'judul-berita'}</span>
-                    <span>{articleTitle.length} karakter</span>
-                  </div>
-                </div>
-
-                <!-- Metadata Row -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label for="editor-article-cat" class="block text-xs font-bold uppercase text-[#101116] mb-1">Kategori Warta</label>
-                    <select id="editor-article-cat" bind:value={articleCategory} class="w-full border border-gray-300 rounded-lg p-2.5 text-xs bg-white">
-                      <option value="Kegiatan">Kegiatan &amp; Patroli</option>
-                      <option value="Penertiban Aset">Penertiban Aset Daerah</option>
-                      <option value="Pengumuman">Pengumuman Resmi</option>
-                      <option value="Opini / Rilis">Rilis Humas Resmi</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label for="editor-article-author" class="block text-xs font-bold uppercase text-[#101116] mb-1">Penulis / Unit Peliput</label>
-                    <input id="editor-article-author" type="text" bind:value={articleAuthor} class="w-full border border-gray-300 rounded-lg p-2.5 text-xs" />
-                  </div>
-                </div>
-
-                <!-- Featured Image File Upload -->
-                <div>
-                  <label for="editor-article-thumbnail-file" class="block text-xs font-bold uppercase text-[#101116] mb-1">
-                    Foto Utama / Thumbnail (Upload dari Perangkat)
-                  </label>
-                  <div class="border-2 border-dashed border-gray-300 rounded-xl p-4 flex flex-col md:flex-row items-center gap-4 bg-gray-50/50">
-                    {#if articleThumbnailPreview}
-                      <img src={articleThumbnailPreview} alt="Preview" class="w-32 h-24 object-cover rounded-lg border border-gray-300 flex-shrink-0" />
-                    {:else}
-                      <div class="w-32 h-24 bg-gray-200 rounded-lg flex items-center justify-center text-[10px] text-gray-500 font-bold uppercase text-center p-2">
-                        Belum Ada Foto
-                      </div>
-                    {/if}
-                    <div class="space-y-1 text-xs">
-                      <input 
-                        id="editor-article-thumbnail-file"
-                        type="file" 
-                        accept="image/*" 
-                        on:change={handleArticleImageUpload} 
-                        class="text-xs text-gray-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-[#3d261a] file:text-white hover:file:bg-[#271810]" 
-                      />
-                      <div class="text-[11px] text-[#6f7775]">Format JPG, PNG, atau WebP disarankan beresolusi minimal 800x500px.</div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Lead Paragraph / Summary -->
-                <div>
-                  <label for="editor-article-summary" class="block text-xs font-bold uppercase text-[#101116] mb-1">
-                    Ringkasan / Lead Paragraph (Tampil di Kartu Indeks)
-                  </label>
-                  <textarea 
-                    id="editor-article-summary"
-                    bind:value={articleSummary} 
-                    rows="2" 
-                    placeholder="Tuliskan 1-2 kalimat pengantar utama..."
-                    class="w-full border border-gray-300 rounded-xl p-3 text-xs focus:border-[#F08300] focus:ring-1 focus:ring-[#F08300] focus:outline-none"
-                  ></textarea>
-                </div>
-
-                <!-- Rich Formatting Suite with Adaptive Lists -->
-                <div>
-                  <label for="editor-article-content" class="block text-xs font-bold uppercase text-[#101116] mb-1.5">
-                    Isi Berita Lengkap (Editor Redaksi Kompasiana-Grade)
-                  </label>
-                  <RichTextEditor 
-                    bind:content={articleContent} 
-                    placeholder="Mulai menulis naskah berita... Tekan Enter pada daftar nomor (1.) atau poin (-) untuk penomoran otomatis adaptif."
-                  />
-                </div>
-              </div>
-            </div>
-          {:else}
-            <!-- ARTICLES LIST VIEW -->
-            <DataTable
-              items={$articlesStore}
-              searchFields={['title', 'category', 'author_name', 'summary']}
-              searchPlaceholder="Cari judul warta berita, topik, kategori, atau penulis (on-chain)..."
-              pageSize={10}
-              pageSizeOptions={[5, 10, 25, 50]}
-              title="Daftar Warta Berita & Publikasi"
-              description="Kelola seluruh rilis pers, berita patroli, dan warta kegiatan resmi Satpol PP Sulsel"
-              emptyMessage="Tidak ada warta berita yang sesuai dengan filter pencarian."
-            >
-              <svelte:fragment slot="header-actions">
-                <button 
-                  type="button"
-                  on:click={() => isWritingArticle = true}
-                  class="bg-[#F08300] hover:bg-[#d97400] text-white text-xs font-bold uppercase px-4 py-2 rounded-lg transition shadow-xs flex items-center gap-1.5"
-                >
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                  </svg>
-                  <span>+ Tulis Artikel Baru</span>
-                </button>
-              </svelte:fragment>
-
-              <svelte:fragment slot="head">
-                <tr>
-                  <th class="p-3.5">Thumbnail</th>
-                  <th class="p-3.5">Judul Berita</th>
-                  <th class="p-3.5">Kategori</th>
-                  <th class="p-3.5">Penulis</th>
-                  <th class="p-3.5">Dibaca</th>
-                  <th class="p-3.5 text-right">Opsi</th>
-                </tr>
-              </svelte:fragment>
-
-              <svelte:fragment slot="row" let:item>
-                <tr class="hover:bg-stone-50/70 transition">
-                  <td class="p-3.5">
-                    <img src={item.thumbnail} alt={item.title} class="w-16 h-12 object-cover rounded-lg border border-stone-200" />
-                  </td>
-                  <td class="p-3.5 font-bold text-[#1a120c] max-w-sm">
-                    <a href={`/berita/${item.slug}`} target="_blank" class="hover:text-[#F08300] transition">
-                      {item.title}
-                    </a>
-                    <div class="text-[10px] text-[#6f7775] font-normal mt-0.5 font-mono">/berita/{item.slug}</div>
-                  </td>
-                  <td class="p-3.5">
-                    <span class="bg-[#f5ede4] text-[#3d261a] text-[10px] font-bold uppercase px-2 py-0.5 rounded-md border border-[#e8dbc9]">
-                      {item.category}
-                    </span>
-                  </td>
-                  <td class="p-3.5 text-[#6f7775]">{item.author_name}</td>
-                  <td class="p-3.5 font-semibold text-[#1a120c]">{item.view_count}x</td>
-                  <td class="p-3.5 text-right space-x-2">
-                    <a 
-                      href={`/berita/${item.slug}`} 
-                      target="_blank" 
-                      class="text-xs font-bold text-blue-700 hover:underline"
-                    >
-                      Lihat
-                    </a>
-                    <button 
-                      type="button"
-                      on:click={() => handleDeleteArticle(item.id)}
-                      class="text-xs font-bold text-rose-700 hover:underline"
-                    >
-                      Hapus
-                    </button>
-                  </td>
-                </tr>
-              </svelte:fragment>
-            </DataTable>
+          {#if item.is_anonymous}
+            <span class="inline-block mt-1 px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 text-[10px] font-bold">
+              Anonim Terlindungi
+            </span>
           {/if}
-        </div>
-      {/if}
+        </td>
 
-      <!-- ============================================================== -->
-      <!-- TAB: DOCUMENTS (REAL FILE UPLOADS CMS) -->
-      <!-- ============================================================== -->
-      {#if currentTab === 'documents'}
-        <div class="space-y-6">
-          <div class="bg-white border border-gray-200/90 rounded-2xl p-6 shadow-xs space-y-5">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-gray-100 pb-4">
-              <div>
-                <h3 class="text-base font-extrabold text-[#101116] uppercase tracking-wide">Transparansi Dokumen Publik</h3>
-                <p class="text-xs text-[#6f7775] mt-0.5">Kelola berkas Renja, Renstra, DPA, LAKIP, dan Peraturan Daerah resmi.</p>
-              </div>
-              <button 
-                on:click={() => showDocModal = true}
-                class="bg-[#F08300] hover:bg-[#d97400] text-white text-xs font-bold uppercase px-5 py-2.5 rounded-xl transition shadow-xs"
-              >
-                + Unggah Dokumen PDF
-              </button>
-            </div>
+        <td class="px-4 py-3.5 align-top max-w-xs">
+          <div class="font-bold text-xs text-[#1a120c]">{item.violation_type.replaceAll('_', ' ')}</div>
+          <div class="text-[11px] text-[#3d261a]/80 mt-0.5 flex items-center gap-1">
+            <MapPin class="w-3 h-3 text-[#F08300] shrink-0" />
+            <span class="truncate">{item.regency_name}{item.district_name ? `, ${item.district_name}` : ''}</span>
+          </div>
+        </td>
 
-            <!-- Upload Modal -->
-            {#if showDocModal}
-              <div class="bg-[#f9f4e8] border border-[#eee9db] rounded-2xl p-6 space-y-4">
-                <div class="text-xs font-bold text-[#101116] uppercase tracking-wider">Form Unggah Berkas Resmi</div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <!-- File Selector Input -->
-                  <div class="md:col-span-2">
-                    <label for="doc-file-input" class="block text-xs font-bold uppercase text-[#101116] mb-1">
-                      Pilih Berkas Dokumen (PDF, DOCX, XLSX)
-                    </label>
-                    <input 
-                      id="doc-file-input"
-                      type="file" 
-                      accept=".pdf,.doc,.docx,.xls,.xlsx"
-                      on:change={handleDocFileUpload}
-                      class="w-full text-xs text-gray-700 border border-gray-300 rounded-lg p-2 bg-white file:mr-3 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-bold file:bg-[#3d261a] file:text-white"
-                    />
-                    {#if uploadedFileName}
-                      <div class="text-[11px] text-emerald-700 font-semibold mt-1">
-                        Berkas siap: {uploadedFileName} ({docSize})
-                      </div>
-                    {/if}
-                  </div>
+        <td class="px-4 py-3.5 align-top whitespace-nowrap">
+          <StatusBadge status={item.status} size="sm" />
+        </td>
 
-                  <div>
-                    <label for="doc-title-input" class="block text-xs font-bold uppercase text-[#101116] mb-1">Nama / Judul Dokumen</label>
-                    <input id="doc-title-input" type="text" bind:value={docTitle} placeholder="Contoh: Rencana Kerja Satpol PP TA 2026" class="w-full border border-gray-300 rounded-lg p-2.5 text-xs bg-white" />
-                  </div>
+        <td class="px-4 py-3.5 align-top text-xs text-[#3d261a]">
+          {item.disposed_to || 'Belum didisposisikan'}
+        </td>
 
-                  <div>
-                    <label for="doc-number-input" class="block text-xs font-bold uppercase text-[#101116] mb-1">Nomor Registrasi / SK</label>
-                    <input id="doc-number-input" type="text" bind:value={docNumber} placeholder="Contoh: 050/112/SATPOL/2026" class="w-full border border-gray-300 rounded-lg p-2.5 text-xs bg-white" />
-                  </div>
+        <td class="px-4 py-3.5 align-top text-right whitespace-nowrap">
+          <button
+            type="button"
+            on:click={() => openComplaintDetail(item)}
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#F08300] hover:bg-[#d97300] text-white text-xs font-bold transition shadow-xs"
+          >
+            Tindak Lanjut
+          </button>
+        </td>
+      </tr>
+    </DataTable>
+  {/if}
 
-                  <div>
-                    <label for="doc-category-select" class="block text-xs font-bold uppercase text-[#101116] mb-1">Kategori Dokumen</label>
-                    <select id="doc-category-select" bind:value={docCategory} class="w-full border border-gray-300 rounded-lg p-2.5 text-xs bg-white">
-                      <option value="renja">Rencana Kerja (Renja)</option>
-                      <option value="renstra">Rencana Strategis (Renstra)</option>
-                      <option value="dpa">Dokumen Pelaksanaan Anggaran (DPA)</option>
-                      <option value="lakip">LAKIP / LKjIP</option>
-                      <option value="keuangan">Laporan Keuangan</option>
-                      <option value="perda">Peraturan Daerah (Perda)</option>
-                      <option value="sop">Standar Operasional (SOP)</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label for="doc-year-select" class="block text-xs font-bold uppercase text-[#101116] mb-1">Tahun Anggaran</label>
-                    <select id="doc-year-select" bind:value={docYear} class="w-full border border-gray-300 rounded-lg p-2.5 text-xs bg-white">
-                      <option value={2026}>2026</option>
-                      <option value={2025}>2025</option>
-                      <option value={2024}>2024</option>
-                      <option value={2023}>2023</option>
-                      <option value={2022}>2022</option>
-                      <option value={2021}>2021</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div class="flex justify-end gap-2 pt-2">
-                  <button on:click={() => showDocModal = false} class="px-4 py-2 border border-gray-300 rounded-lg text-xs font-bold text-gray-700 bg-white">Batal</button>
-                  <button on:click={handleSaveDocument} class="px-5 py-2 bg-[#F08300] text-white text-xs font-bold uppercase rounded-lg hover:bg-[#d97400]">Simpan Dokumen</button>
-                </div>
-              </div>
-            {/if}
-
-            <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs">
-                <thead class="bg-gray-50 border-b border-gray-200 text-[#6f7775] uppercase text-[10px] tracking-wider">
-                  <tr>
-                    <th class="p-3.5">Nama Dokumen</th>
-                    <th class="p-3.5">No. Registrasi</th>
-                    <th class="p-3.5">Kategori</th>
-                    <th class="p-3.5">Tahun</th>
-                    <th class="p-3.5">Ukuran</th>
-                    <th class="p-3.5 text-right">Opsi</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-100">
-                  {#each $documentsStore as doc}
-                    <tr class="hover:bg-gray-50/70 transition">
-                      <td class="p-3.5 font-bold text-[#101116]">{doc.title}</td>
-                      <td class="p-3.5 font-mono text-[#6f7775]">{doc.doc_number || '-'}</td>
-                      <td class="p-3.5">
-                        <span class="bg-[#f9f4e8] text-[#101116] text-[10px] font-bold uppercase px-2 py-0.5 rounded border border-[#eee9db]">
-                          {doc.category}
-                        </span>
-                      </td>
-                      <td class="p-3.5 font-semibold text-[#101116]">{doc.year}</td>
-                      <td class="p-3.5 text-[#6f7775]">{doc.file_size}</td>
-                      <td class="p-3.5 text-right space-x-2">
-                        <a href={doc.file_url} target="_blank" class="text-xs font-bold text-blue-700 hover:underline">Unduh</a>
-                        <button on:click={() => handleDeleteDocument(doc.id)} class="text-xs font-bold text-rose-700 hover:underline">Hapus</button>
-                      </td>
-                    </tr>
-                  {/each}
-                </tbody>
-              </table>
-            </div>
+  <!-- TAB 3: CMS BERITA -->
+  {#if currentTab === 'articles'}
+    {#if isWritingArticle}
+      <div class="bg-white border border-[#eee9db] rounded-2xl p-6 md:p-8 shadow-xs space-y-6">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-[#eee9db] pb-4">
+          <div>
+            <div class="text-[#F08300] font-bold text-xs uppercase tracking-wider">Redaksi &amp; Publikasi Warta</div>
+            <h2 class="text-lg font-black text-[#1a120c] mt-0.5">
+              {editingArticleId ? 'Edit Warta Berita' : 'Editor Penulisan Berita Resmi'}
+            </h2>
+          </div>
+          <div class="flex items-center gap-2">
+            <button
+              type="button"
+              on:click={() => (isWritingArticle = false)}
+              class="px-4 py-2 border border-[#eee9db] text-[#3d261a] text-xs font-bold rounded-xl hover:bg-[#f9f4e8] transition"
+            >
+              Batal
+            </button>
+            <button
+              type="button"
+              on:click={handlePublishArticle}
+              class="bg-[#F08300] hover:bg-[#d97300] text-white text-xs font-bold px-5 py-2 rounded-xl transition shadow-sm"
+            >
+              {editingArticleId ? 'Simpan Perubahan' : 'Terbitkan Berita'}
+            </button>
           </div>
         </div>
-      {/if}
 
-      <!-- ============================================================== -->
-      <!-- TAB: GALLERY (CMS FOTO DOKUMENTASI KEGIATAN) -->
-      <!-- ============================================================== -->
-      {#if currentTab === 'gallery'}
-        <div class="space-y-6">
-          <div class="bg-white border border-gray-200/90 rounded-2xl p-6 shadow-xs space-y-5">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-gray-100 pb-4">
-              <div>
-                <h3 class="text-base font-extrabold text-[#101116] uppercase tracking-wide">CMS Galeri Multimedia Dokumentasi</h3>
-                <p class="text-xs text-[#6f7775] mt-0.5">Kelola foto kegiatan apel, operasi penertiban, dan koordinasi yang tampil pada publik.</p>
-              </div>
-              <button 
-                on:click={() => showGalleryModal = true}
-                class="bg-[#F08300] hover:bg-[#d97400] text-white text-xs font-bold uppercase px-5 py-2.5 rounded-xl transition shadow-xs"
-              >
-                + Tambah Foto Galeri
-              </button>
-            </div>
+        {#if articleError}
+          <div role="alert" class="p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs font-bold">
+            {articleError}
+          </div>
+        {/if}
 
-            <!-- Upload Modal -->
-            {#if showGalleryModal}
-              <div class="bg-[#f9f4e8] border border-[#eee9db] rounded-2xl p-6 space-y-4">
-                <div class="text-xs font-bold text-[#101116] uppercase tracking-wider">Form Tambah Foto Kegiatan</div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <!-- File Selector -->
-                  <div class="md:col-span-2">
-                    <label for="gallery-file-input" class="block text-xs font-bold uppercase text-[#101116] mb-1">
-                      Pilih Foto dari Perangkat
-                    </label>
-                    <input 
-                      id="gallery-file-input"
-                      type="file" 
-                      accept="image/*"
-                      on:change={handleGalleryImageUpload}
-                      class="w-full text-xs text-gray-700 border border-gray-300 rounded-lg p-2 bg-white file:mr-3 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-bold file:bg-[#3d261a] file:text-white"
-                    />
-                    {#if galleryPreview}
-                      <img src={galleryPreview} alt="Preview Foto" class="mt-2 w-48 h-32 object-cover rounded-xl border border-gray-300" />
-                    {/if}
-                  </div>
-
-                  <div>
-                    <label for="gallery-title-input" class="block text-xs font-bold uppercase text-[#101116] mb-1">Judul / Keterangan Giat</label>
-                    <input id="gallery-title-input" type="text" bind:value={galleryTitle} placeholder="Contoh: Apel Kesiapsiagaan Anggota Satpol PP" class="w-full border border-gray-300 rounded-lg p-2.5 text-xs bg-white" />
-                  </div>
-
-                  <div>
-                    <label for="gallery-category-select" class="block text-xs font-bold uppercase text-[#101116] mb-1">Kategori Dokumentasi</label>
-                    <select id="gallery-category-select" bind:value={galleryCategory} class="w-full border border-gray-300 rounded-lg p-2.5 text-xs bg-white">
-                      <option value="Penertiban">Operasi &amp; Penertiban</option>
-                      <option value="Apel & Upacara">Apel &amp; Upacara Resmi</option>
-                      <option value="Koordinasi">Koordinasi &amp; Sosialisasi</option>
-                      <option value="Kegiatan">Giat Harian</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div class="flex justify-end gap-2 pt-2">
-                  <button on:click={() => showGalleryModal = false} class="px-4 py-2 border border-gray-300 rounded-lg text-xs font-bold text-gray-700 bg-white">Batal</button>
-                  <button on:click={handleSaveGallery} class="px-5 py-2 bg-[#F08300] text-white text-xs font-bold uppercase rounded-lg hover:bg-[#d97400]">Simpan ke Galeri</button>
-                </div>
-              </div>
-            {/if}
-
-            <!-- Gallery Cards Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {#each $galleryStore as item}
-                <div class="border border-gray-200 rounded-xl overflow-hidden bg-white shadow-xs group flex flex-col justify-between">
-                  <div>
-                    <div class="relative h-40 bg-gray-100 overflow-hidden">
-                      <img src={item.image_url} alt={item.title} class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
-                      <span class="absolute top-2 left-2 bg-[#101116]/85 text-[#F08300] font-bold text-[9px] uppercase px-2 py-0.5 rounded">
-                        {item.category}
-                      </span>
-                    </div>
-                    <div class="p-3">
-                      <div class="text-[10px] text-[#6f7775]">{item.date}</div>
-                      <h4 class="text-xs font-bold text-[#101116] line-clamp-2 mt-0.5">{item.title}</h4>
-                    </div>
-                  </div>
-                  <div class="p-3 pt-0 border-t border-gray-50 flex justify-end">
-                    <button 
-                      on:click={() => handleDeleteGallery(item.id)}
-                      class="text-[11px] font-bold text-rose-700 hover:underline"
-                    >
-                      Hapus Foto
-                    </button>
-                  </div>
-                </div>
-              {/each}
+        <div class="space-y-5">
+          <div>
+            <label for="editor-article-title" class="block text-xs font-bold uppercase text-[#1a120c] mb-1.5">
+              Judul Berita (Headline) *
+            </label>
+            <input
+              id="editor-article-title"
+              type="text"
+              value={articleTitle}
+              on:input={handleTitleInput}
+              required
+              placeholder="Masukkan judul berita yang informatif dan akurat..."
+              class="w-full border border-[#eee9db] rounded-xl p-3 text-sm font-bold text-[#1a120c] focus:border-[#F08300] focus:outline-none"
+            />
+            <div class="flex justify-between items-center text-[11px] text-[#3d261a]/65 mt-1.5">
+              <span class="font-mono">Slug: /berita/{articleSlug || 'judul-berita'}</span>
+              <span>{articleTitle.length} karakter</span>
             </div>
           </div>
-        </div>
-      {/if}
 
-    </div>
-  </main>
-</div>
-
-<!-- ============================================================== -->
-<!-- SOP COMPLAINT HANDLING DRAWER / MODAL -->
-<!-- ============================================================== -->
-{#if isEditingComplaint && selectedComplaint}
-  <div 
-    class="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4 backdrop-blur-sm"
-    role="dialog"
-    aria-modal="true"
-  >
-    <div class="bg-white rounded-2xl max-w-2xl w-full border border-gray-300 shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
-      <!-- Modal Header -->
-      <div class="bg-[#101116] text-white p-5 border-b-2 border-[#F08300] flex justify-between items-center">
-        <div>
-          <div class="text-[10px] text-[#F08300] font-bold uppercase tracking-wider">Tindak Lanjut SOP SIAP TERTIB</div>
-          <h3 class="text-base font-bold mt-0.5">Tiket #{selectedComplaint.ticket_code}</h3>
-        </div>
-        <button 
-          on:click={() => isEditingComplaint = false}
-          class="text-gray-400 hover:text-white font-bold text-lg px-2 rounded-lg"
-          aria-label="Tutup form"
-        >
-          &times;
-        </button>
-      </div>
-
-      <!-- Modal Body -->
-      <div class="p-6 overflow-y-auto space-y-5 text-xs">
-        <!-- Reporter & Location Card -->
-        <div class="bg-gray-50 border border-gray-200 rounded-xl p-4 space-y-3">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <span class="text-[#6f7775] uppercase text-[10px] font-bold block mb-1">Identitas Pelapor:</span>
-              {#if selectedComplaint.is_anonymous}
-                {#if unmaskRequested}
-                  <!-- Unmasked officer view -->
-                  <div class="bg-amber-50/70 border border-amber-200 rounded-lg p-2.5 space-y-1">
-                    <div class="flex items-center justify-between">
-                      <span class="text-[10px] font-bold text-amber-900 uppercase">Data Terbuka (Akses Petugas)</span>
-                      <span class="text-[9px] bg-amber-200 text-amber-900 px-1.5 py-0.5 rounded font-bold">Audit Aktif</span>
-                    </div>
-                    <div class="font-bold text-[#101116] text-xs">{selectedComplaint.reporter_name}</div>
-                    <div class="text-[11px] font-mono text-[#101116]">NIK: {selectedComplaint.reporter_nik || '-'}</div>
-                    <div class="text-[11px] text-[#101116]">Telp: {selectedComplaint.reporter_phone || '-'}</div>
-                    <div class="text-[10px] text-[#6f7775] italic pt-1 border-t border-amber-200/60">
-                      Pelepasan masking telah tercatat dalam sistem audit forensik.
-                    </div>
-                  </div>
-                {:else}
-                  <!-- Masked default view -->
-                  <div class="bg-gray-100 border border-gray-200 rounded-lg p-2.5 space-y-1">
-                    <div class="font-bold text-[#101116]">{selectedComplaint.masked_name || 'Ah*** P*** (Anonim Terlindungi)'}</div>
-                    <div class="text-[11px] font-mono text-[#6f7775]">NIK: {selectedComplaint.masked_nik || '7371**********12'}</div>
-                    <div class="text-[11px] text-[#6f7775]">Telp: {selectedComplaint.masked_phone || '0812****8901'}</div>
-                    <button 
-                      type="button" 
-                      on:click={handleUnmaskIdentity} 
-                      class="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-bold uppercase rounded-lg transition"
-                    >
-                      Buka Masking Identitas (Hak Akses Petugas)
-                    </button>
-                  </div>
-                {/if}
-              {:else}
-                <div class="font-bold text-[#101116]">{selectedComplaint.reporter_name}</div>
-                <div class="text-[11px] text-[#6f7775]">NIK: {selectedComplaint.reporter_nik || '-'}</div>
-                <div class="text-[11px] text-[#6f7775]">Telp: {selectedComplaint.reporter_phone || '-'}</div>
-              {/if}
+              <label for="editor-article-cat" class="block text-xs font-bold uppercase text-[#1a120c] mb-1.5">Kategori Warta</label>
+              <select id="editor-article-cat" bind:value={articleCategory} class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs bg-white">
+                <option value="Kegiatan">Kegiatan &amp; Patroli</option>
+                <option value="Penertiban Aset">Penertiban Aset Daerah</option>
+                <option value="Pengumuman">Pengumuman Resmi</option>
+                <option value="Opini / Rilis">Rilis Humas Resmi</option>
+              </select>
             </div>
-
             <div>
-              <span class="text-[#6f7775] uppercase text-[10px] font-bold block mb-1">Wilayah &amp; Waktu:</span>
-              <div class="font-bold text-[#101116]">{selectedComplaint.regency_name}</div>
-              <div class="text-[11px] text-[#6f7775]">{selectedComplaint.district_name}, {selectedComplaint.village_name}</div>
-              <div class="text-[11px] text-[#6f7775]">Waktu: {new Date(selectedComplaint.created_at).toLocaleDateString('id-ID')}</div>
+              <label for="editor-article-author" class="block text-xs font-bold uppercase text-[#1a120c] mb-1.5">Penulis / Unit Peliput</label>
+              <input id="editor-article-author" type="text" bind:value={articleAuthor} class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs" />
             </div>
           </div>
 
-          <div class="pt-2 border-t border-gray-200">
-            <span class="text-[#6f7775] uppercase text-[10px] font-bold">Alamat Detail Kejadian:</span>
-            <div class="text-[#101116] font-medium mt-0.5">{selectedComplaint.address_detail}</div>
-          </div>
-
-          <!-- Evidence Photo (Strictly Images Only) -->
-          {#if selectedComplaint.evidence_image_url}
-            <div class="pt-3 border-t border-gray-200">
-              <span class="text-[#6f7775] uppercase text-[10px] font-bold block mb-1.5">Bukti Foto Pelanggaran Lapangan:</span>
-              <div>
-                <a href={selectedComplaint.evidence_image_url} target="_blank" class="inline-block group">
-                  <img 
-                    src={selectedComplaint.evidence_image_url} 
-                    alt="Bukti Foto Aduan SIAP TERTIB" 
-                    class="w-56 h-36 object-cover rounded-xl border border-gray-300 group-hover:opacity-90 transition shadow-xs" 
-                  />
-                  <span class="text-[10px] text-blue-700 font-semibold block mt-1 hover:underline">Lihat Foto Ukuran Penuh &rarr;</span>
-                </a>
-              </div>
-            </div>
-          {/if}
-        </div>
-
-        <!-- Violation & Description -->
-        <div>
-          <span class="text-[#6f7775] uppercase text-[10px] font-bold">Uraian Pelanggaran yang Dilaporkan:</span>
-          <div class="font-bold text-sm text-[#101116] mt-0.5">{selectedComplaint.violation_type}</div>
-          <div class="p-3 bg-white border border-gray-200 rounded-lg mt-1 text-[#2b2f3f] leading-relaxed">
-            {selectedComplaint.description}
-          </div>
-        </div>
-
-        <!-- SOP Status Transition Controls -->
-        <div class="space-y-3 pt-3 border-t border-gray-200">
-          <div class="font-bold text-xs uppercase text-[#101116]">Perbarui Progres SOP Penanganan:</div>
+          <FileUploader
+            label="Foto Utama / Thumbnail Berita"
+            description="Unggah gambar beresolusi baik (JPG, PNG, WebP) untuk kartu berita portal."
+            accept="image/*"
+            previewShape="banner"
+            value={articleThumbnail}
+            fileName={articleFileName}
+            on:change={handleArticleThumbChange}
+            on:clear={() => {
+              articleThumbnail = '/uploads/foto_berita/1768182343WhatsApp Image 2026-01-12 at 08.08.43.jpeg';
+              articleFileName = '';
+            }}
+          />
 
           <div>
-            <label for="complaint-status-select" class="block text-[11px] font-bold uppercase text-[#6f7775] mb-1">Status Prosedur</label>
-            <select id="complaint-status-select" bind:value={editStatus} class="w-full border border-gray-300 rounded-lg p-2.5 text-xs bg-white font-bold">
-              <option value="MENUNGGU_VERIFIKASI">1. MENUNGGU VERIFIKASI (Pemeriksaan Awal)</option>
-              <option value="DISPOSISI_BIDANG">2. DISPOSISI BIDANG (Diteruskan ke Unit Teknis)</option>
-              <option value="PENINDAKAN_LAPANGAN">3. PENINDAKAN LAPANGAN (Patroli / Surat Peringatan)</option>
-              <option value="SELESAI">4. SELESAI (Penyusunan BAP &amp; Penutupan Aduan)</option>
-              <option value="DITOLAK">DITOLAK (Laporan Tidak Sesuai Kewenangan / Hoaks)</option>
+            <label for="editor-article-summary" class="block text-xs font-bold uppercase text-[#1a120c] mb-1.5">
+              Ringkasan / Lead Paragraph *
+            </label>
+            <textarea
+              id="editor-article-summary"
+              bind:value={articleSummary}
+              rows="2"
+              placeholder="Tuliskan 1-2 kalimat pengantar utama..."
+              class="w-full border border-[#eee9db] rounded-xl p-3 text-xs focus:border-[#F08300] focus:outline-none"
+            ></textarea>
+          </div>
+
+          <div>
+            <label for="editor-article-content" class="block text-xs font-bold uppercase text-[#1a120c] mb-1.5">
+              Isi Berita Lengkap
+            </label>
+            <RichTextEditor
+              bind:content={articleContent}
+              placeholder="Mulai menulis naskah berita... Tekan Enter pada daftar nomor (1.) atau poin (-) untuk penomoran otomatis."
+            />
+          </div>
+        </div>
+      </div>
+    {:else}
+      <DataTable
+        items={$articlesStore}
+        searchFields={['title', 'category', 'author_name', 'summary']}
+        searchPlaceholder="Cari judul warta berita, kategori, atau penulis (on-chain)..."
+        pageSize={8}
+        pageSizeOptions={[5, 8, 15, 30]}
+        title="Daftar Warta Berita & Publikasi"
+        description="Kelola rilis pers, laporan patroli, dan berita kegiatan resmi Satpol PP Sulsel."
+        emptyMessage="Tidak ada warta berita yang sesuai dengan kata kunci pencarian."
+      >
+        <svelte:fragment slot="header-actions">
+          <button
+            type="button"
+            on:click={openNewArticleEditor}
+            class="inline-flex items-center gap-1.5 bg-[#F08300] hover:bg-[#d97300] text-white text-xs font-bold px-4 py-2 rounded-xl transition shadow-xs"
+          >
+            <Plus class="w-4 h-4" />
+            Tulis Berita Baru
+          </button>
+        </svelte:fragment>
+
+        <tr slot="head">
+          <th class="px-4 py-3.5">Thumbnail</th>
+          <th class="px-4 py-3.5">Judul Berita</th>
+          <th class="px-4 py-3.5">Kategori</th>
+          <th class="px-4 py-3.5">Penulis</th>
+          <th class="px-4 py-3.5">Dibaca</th>
+          <th class="px-4 py-3.5 text-right">Aksi</th>
+        </tr>
+
+        <tr slot="row" let:item class="hover:bg-[#f9f4e8]/55 transition">
+          <td class="px-4 py-3.5">
+            <img src={item.thumbnail} alt={item.title} class="w-16 h-12 object-cover rounded-xl border border-[#eee9db]" />
+          </td>
+          <td class="px-4 py-3.5 font-bold text-[#1a120c] max-w-sm">
+            <a href={`/berita/${item.slug}`} target="_blank" class="hover:text-[#F08300] transition line-clamp-2">
+              {item.title}
+            </a>
+            <div class="text-[10px] text-[#3d261a]/60 font-normal mt-0.5 font-mono">/berita/{item.slug}</div>
+          </td>
+          <td class="px-4 py-3.5">
+            <span class="bg-[#f9f4e8] text-[#3d261a] text-[10px] font-bold uppercase px-2.5 py-1 rounded-lg border border-[#eee9db]">
+              {item.category}
+            </span>
+          </td>
+          <td class="px-4 py-3.5 text-xs text-[#3d261a]/75">{item.author_name}</td>
+          <td class="px-4 py-3.5 font-bold text-xs text-[#1a120c]">{item.view_count}x</td>
+          <td class="px-4 py-3.5 text-right whitespace-nowrap">
+            <div class="inline-flex items-center gap-1.5">
+              <button
+                type="button"
+                on:click={() => openEditArticle(item)}
+                class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-[#f9f4e8] hover:bg-[#eee9db] text-[#1a120c] text-xs font-bold border border-[#eee9db] transition"
+              >
+                <Edit3 class="w-3.5 h-3.5" />
+                Edit
+              </button>
+              <button
+                type="button"
+                on:click={() => requestDelete('article', item.id, item.title)}
+                aria-label="Hapus berita"
+                class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-700 text-xs font-bold border border-red-200 transition"
+              >
+                <Trash2 class="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </td>
+        </tr>
+      </DataTable>
+    {/if}
+  {/if}
+
+  <!-- TAB 4: CMS DOKUMEN PUBLIK (DATATABLE + MODAL) -->
+  {#if currentTab === 'documents'}
+    <DataTable
+      items={$documentsStore}
+      searchFields={['title', 'doc_number', 'category', 'year']}
+      searchPlaceholder="Cari judul berkas, nomor registrasi, kategori, atau tahun (on-chain)..."
+      pageSize={10}
+      pageSizeOptions={[5, 10, 25]}
+      title="Katalog Dokumen Transparansi Publik"
+      description="Kelola berkas Renja, Renstra, DPA, LAKIP, dan Peraturan Daerah."
+      emptyMessage="Tidak ada berkas dokumen yang sesuai dengan kata kunci."
+    >
+      <svelte:fragment slot="header-actions">
+        <button
+          type="button"
+          on:click={openDocModal}
+          class="inline-flex items-center gap-1.5 bg-[#F08300] hover:bg-[#d97300] text-white text-xs font-bold px-4 py-2 rounded-xl transition shadow-xs"
+        >
+          <Plus class="w-4 h-4" />
+          Unggah Dokumen
+        </button>
+      </svelte:fragment>
+
+      <tr slot="head">
+        <th class="px-4 py-3.5">Nama Dokumen</th>
+        <th class="px-4 py-3.5">No. Registrasi</th>
+        <th class="px-4 py-3.5">Kategori</th>
+        <th class="px-4 py-3.5">Tahun</th>
+        <th class="px-4 py-3.5">Ukuran</th>
+        <th class="px-4 py-3.5 text-right">Aksi</th>
+      </tr>
+
+      <tr slot="row" let:item class="hover:bg-[#f9f4e8]/55 transition">
+        <td class="px-4 py-3.5 font-bold text-xs text-[#1a120c]">{item.title}</td>
+        <td class="px-4 py-3.5 font-mono text-xs text-[#3d261a]/75">{item.doc_number || '-'}</td>
+        <td class="px-4 py-3.5">
+          <span class="bg-[#f9f4e8] text-[#3d261a] text-[10px] font-bold uppercase px-2.5 py-1 rounded-lg border border-[#eee9db]">
+            {item.category}
+          </span>
+        </td>
+        <td class="px-4 py-3.5 font-bold text-xs text-[#1a120c]">{item.year}</td>
+        <td class="px-4 py-3.5 text-xs text-[#3d261a]/75">{item.file_size}</td>
+        <td class="px-4 py-3.5 text-right whitespace-nowrap">
+          <div class="inline-flex items-center gap-1.5">
+            <a
+              href={item.file_url}
+              target="_blank"
+              class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-[#f9f4e8] hover:bg-[#eee9db] text-[#1a120c] text-xs font-bold border border-[#eee9db] transition"
+            >
+              <Download class="w-3.5 h-3.5" />
+              Unduh
+            </a>
+            <button
+              type="button"
+              on:click={() => requestDelete('document', item.id, item.title)}
+              aria-label="Hapus dokumen"
+              class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-700 text-xs font-bold border border-red-200 transition"
+            >
+              <Trash2 class="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </td>
+      </tr>
+    </DataTable>
+  {/if}
+
+  <!-- TAB 5: CMS GALERI MULTIMEDIA -->
+  {#if currentTab === 'gallery'}
+    <div class="space-y-5">
+      <div class="bg-white border border-[#eee9db] rounded-2xl p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-xs">
+        <div>
+          <h2 class="text-sm md:text-base font-black text-[#1a120c]">Galeri Multimedia Dokumentasi</h2>
+          <p class="text-xs text-[#3d261a]/75 mt-0.5">Kelola foto kegiatan apel, operasi penertiban, dan koordinasi lapangan.</p>
+        </div>
+        <button
+          type="button"
+          on:click={openGalleryModal}
+          class="inline-flex items-center gap-2 bg-[#F08300] hover:bg-[#d97300] text-white text-xs font-bold px-4 py-2.5 rounded-xl transition shadow-xs shrink-0"
+        >
+          <Plus class="w-4 h-4" />
+          Tambah Foto Galeri
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        {#each $galleryStore as item}
+          <article class="bg-white border border-[#eee9db] rounded-2xl overflow-hidden shadow-xs group flex flex-col justify-between">
+            <div>
+              <div class="relative h-44 bg-[#f9f4e8] overflow-hidden">
+                <img
+                  src={item.image_url}
+                  alt={item.title}
+                  class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                />
+                <span class="absolute top-3 left-3 bg-[#1a120c]/85 text-[#F08300] font-bold text-[10px] uppercase px-2.5 py-1 rounded-lg">
+                  {item.category}
+                </span>
+              </div>
+              <div class="p-4">
+                <div class="text-[11px] text-[#3d261a]/65">{item.date}</div>
+                <h3 class="text-xs font-black text-[#1a120c] line-clamp-2 min-h-[2.25rem] mt-1">{item.title}</h3>
+              </div>
+            </div>
+            <div class="px-4 py-3 border-t border-[#eee9db] bg-[#f9f4e8]/40 flex justify-end">
+              <button
+                type="button"
+                on:click={() => requestDelete('gallery', item.id, item.title)}
+                class="inline-flex items-center gap-1 text-xs font-bold text-red-700 hover:underline"
+              >
+                <Trash2 class="w-3.5 h-3.5" />
+                Hapus Foto
+              </button>
+            </div>
+          </article>
+        {/each}
+      </div>
+    </div>
+  {/if}
+
+  <!-- TAB 6: STRUKTUR ORGANISASI DINAMIS -->
+  {#if currentTab === 'organization'}
+    <OrganizationManager actorName={currentUser?.username || 'admin'} />
+  {/if}
+</DashboardShell>
+
+<!-- MODAL 1: TINDAK LANJUT SOP PENGADUAN SIAP TERTIB -->
+<Modal
+  bind:open={isEditingComplaint}
+  title={selectedComplaint ? `Tindak Lanjut Tiket #${selectedComplaint.ticket_code}` : 'Detail Tiket'}
+  subtitle="Verifikasi bukti, disposisi bidang, dan kirim pembaruan email ke pelapor."
+  size="xl"
+>
+  {#if selectedComplaint}
+    {@const masked = maskComplaintIdentity(selectedComplaint)}
+    {@const evidenceUrl = selectedComplaint.evidence_image_url || selectedComplaint.evidence_photos || ''}
+    <div class="space-y-5 text-xs">
+      <!-- Identitas & Lokasi -->
+      <div class="bg-[#f9f4e8]/75 border border-[#eee9db] rounded-2xl p-4 space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <span class="text-[#3d261a]/70 uppercase text-[10px] font-bold block mb-1.5">Identitas Pelapor</span>
+            {#if selectedComplaint.is_anonymous}
+              {#if unmaskRequested}
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 space-y-1">
+                  <div class="flex items-center justify-between gap-2">
+                    <span class="text-[10px] font-black text-amber-900 uppercase">Data Terbuka (Audit Aktif)</span>
+                    <span class="text-[10px] bg-amber-200 text-amber-900 px-2 py-0.5 rounded-lg font-bold flex items-center gap-1">
+                      <EyeOff class="w-3 h-3" /> Tercatat
+                    </span>
+                  </div>
+                  <div class="font-black text-[#1a120c]">{selectedComplaint.reporter_name}</div>
+                  <div class="font-mono text-[11px] text-[#3d261a]">NIK: {selectedComplaint.reporter_nik || '-'}</div>
+                  <div class="text-[11px] text-[#3d261a]">Telp: {selectedComplaint.reporter_phone || '-'}</div>
+                  <div class="text-[11px] text-[#3d261a] flex items-center gap-1">
+                    <Mail class="w-3 h-3 text-[#F08300]" /> {selectedComplaint.reporter_email || 'Tidak dilampirkan'}
+                  </div>
+                </div>
+              {:else}
+                <div class="bg-white border border-[#eee9db] rounded-xl p-3 space-y-1.5">
+                  <div class="font-black text-[#1a120c]">{masked.name}</div>
+                  <div class="text-[11px] font-mono text-[#3d261a]/75">NIK: {masked.nik}</div>
+                  <div class="text-[11px] text-[#3d261a]/75">Telp: {masked.phone}</div>
+                  <div class="text-[11px] text-[#3d261a]/75">Email: {masked.email || '-'}</div>
+                  <button
+                    type="button"
+                    on:click={handleUnmaskIdentity}
+                    class="mt-1 inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#F08300] hover:bg-[#d97300] text-white text-[11px] font-bold rounded-xl transition"
+                  >
+                    <Eye class="w-3.5 h-3.5" />
+                    Buka Masking (Audit Petugas)
+                  </button>
+                </div>
+              {/if}
+            {:else}
+              <div class="bg-white border border-[#eee9db] rounded-xl p-3 space-y-1">
+                <div class="font-black text-[#1a120c]">{selectedComplaint.reporter_name}</div>
+                <div class="font-mono text-[11px] text-[#3d261a]/80">NIK: {selectedComplaint.reporter_nik || '-'}</div>
+                <div class="text-[11px] text-[#3d261a]/80">Telp: {selectedComplaint.reporter_phone || '-'}</div>
+                <div class="text-[11px] text-[#3d261a]/80 flex items-center gap-1">
+                  <Mail class="w-3 h-3 text-[#F08300]" /> {selectedComplaint.reporter_email || 'Tidak dilampirkan'}
+                </div>
+              </div>
+            {/if}
+          </div>
+
+          <div class="bg-white border border-[#eee9db] rounded-xl p-3 space-y-1">
+            <span class="text-[#3d261a]/70 uppercase text-[10px] font-bold block mb-1">Wilayah &amp; Waktu Laporan</span>
+            <div class="font-black text-[#1a120c]">{selectedComplaint.regency_name}</div>
+            <div class="text-[11px] text-[#3d261a]/80">{selectedComplaint.district_name}, {selectedComplaint.village_name}</div>
+            <div class="text-[11px] text-[#3d261a]/70">
+              Dikirim: {new Date(selectedComplaint.created_at).toLocaleString('id-ID')}
+            </div>
+            <div class="pt-2">
+              <StatusBadge status={selectedComplaint.status} size="sm" />
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-[#eee9db]">
+          <span class="text-[#3d261a]/70 uppercase text-[10px] font-bold">Alamat Kejadian</span>
+          <div class="text-[#1a120c] font-semibold mt-0.5">{selectedComplaint.address_detail}</div>
+        </div>
+
+        {#if evidenceUrl}
+          <div class="pt-3 border-t border-[#eee9db]">
+            <span class="text-[#3d261a]/70 uppercase text-[10px] font-bold block mb-1.5">Bukti Foto Lapangan</span>
+            <a href={evidenceUrl} target="_blank" class="inline-block group">
+              <img
+                src={evidenceUrl}
+                alt="Bukti Foto Aduan"
+                class="w-60 h-36 object-cover rounded-xl border border-[#eee9db] group-hover:opacity-90 transition shadow-xs"
+              />
+              <span class="text-[11px] text-[#F08300] font-bold block mt-1 group-hover:underline">Buka Foto Ukuran Penuh &rarr;</span>
+            </a>
+          </div>
+        {/if}
+      </div>
+
+      <div>
+        <span class="text-[#3d261a]/70 uppercase text-[10px] font-bold">Kategori: {selectedComplaint.violation_type}</span>
+        <div class="p-3.5 bg-white border border-[#eee9db] rounded-xl mt-1 text-[#3d261a] leading-relaxed">
+          {selectedComplaint.description}
+        </div>
+      </div>
+
+      <fieldset class="space-y-4 pt-3 border-t border-[#eee9db]">
+        <legend class="text-xs font-black uppercase tracking-wider text-[#1a120c]">Pembaruan Status SOP &amp; Notifikasi Email</legend>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label for="complaint-status-select" class="block text-[11px] font-bold text-[#3d261a] mb-1.5">Status Prosedur</label>
+            <select id="complaint-status-select" bind:value={editStatus} class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs bg-white font-bold">
+              <option value="MENUNGGU_VERIFIKASI">1. Menunggu Verifikasi</option>
+              <option value="DISPOSISI_BIDANG">2. Disposisi Bidang</option>
+              <option value="PENINDAKAN_LAPANGAN">3. Penindakan Lapangan</option>
+              <option value="SELESAI">4. Selesai &amp; BAP Terbit</option>
+              <option value="DITOLAK">Ditolak (Tidak Sesuai Kewenangan)</option>
             </select>
           </div>
 
           <div>
-            <label for="complaint-disposition-input" class="block text-[11px] font-bold uppercase text-[#6f7775] mb-1">Disposisi Unit Kerja / Pleton</label>
-            <input 
+            <label for="complaint-disposition-input" class="block text-[11px] font-bold text-[#3d261a] mb-1.5">Disposisi Unit Kerja</label>
+            <input
               id="complaint-disposition-input"
-              type="text" 
-              bind:value={editDisposedTo} 
-              placeholder="Contoh: Bidang Ketenteraman dan Ketertiban Umum (Pleton 2 Ops)"
-              class="w-full border border-gray-300 rounded-lg p-2.5 text-xs"
+              type="text"
+              list="sop-org-units"
+              bind:value={editDisposedTo}
+              placeholder="Pilih atau ketik unit/pleton..."
+              class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs bg-white"
             />
-          </div>
-
-          <div>
-            <label for="complaint-bap-notes" class="block text-[11px] font-bold uppercase text-[#6f7775] mb-1">Catatan Tindakan Lapangan / Berita Acara (BAP)</label>
-            <textarea 
-              id="complaint-bap-notes"
-              bind:value={editActionNotes} 
-              rows="3" 
-              placeholder="Tuliskan nomor Berita Acara, hasil penertiban, barang bukti yang diamankan, atau alasan penolakan..."
-              class="w-full border border-gray-300 rounded-lg p-2.5 text-xs"
-            ></textarea>
+            <datalist id="sop-org-units">
+              {#each dispositionOptions as opt}
+                <option value={opt}></option>
+              {/each}
+            </datalist>
           </div>
         </div>
-      </div>
 
-      <!-- Modal Footer -->
-      <div class="p-4 bg-gray-50 border-t border-gray-200 flex justify-end gap-2">
-        <button 
-          on:click={() => isEditingComplaint = false}
-          class="px-4 py-2 border border-gray-300 rounded-lg text-xs font-bold text-gray-700 bg-white hover:bg-gray-100"
-        >
-          Tutup
-        </button>
-        <button 
-          on:click={saveComplaintUpdate}
-          class="px-5 py-2 bg-[#F08300] hover:bg-[#d97400] text-white text-xs font-bold uppercase rounded-lg transition"
-        >
-          Simpan Pembaruan SOP
-        </button>
+        <div>
+          <label for="complaint-bap-notes" class="block text-[11px] font-bold text-[#3d261a] mb-1.5">Catatan Tindakan / Berita Acara (BAP)</label>
+          <textarea
+            id="complaint-bap-notes"
+            bind:value={editActionNotes}
+            rows="3"
+            placeholder="Catat hasil verifikasi, penertiban lapangan, atau alasan penolakan..."
+            class="w-full border border-[#eee9db] rounded-xl p-3 text-xs"
+          ></textarea>
+        </div>
+      </fieldset>
+    </div>
+  {/if}
+
+  <svelte:fragment slot="footer" let:handleClose>
+    <button
+      type="button"
+      on:click={handleClose}
+      class="px-4 py-2 rounded-xl border border-[#eee9db] bg-white hover:bg-[#f9f4e8] text-xs font-bold text-[#3d261a] transition"
+    >
+      Tutup
+    </button>
+    <button
+      type="button"
+      on:click={saveComplaintUpdate}
+      disabled={isSavingComplaint}
+      class="px-5 py-2 rounded-xl bg-[#F08300] hover:bg-[#d97300] disabled:opacity-60 text-white text-xs font-bold transition shadow-sm"
+    >
+      {isSavingComplaint ? 'Menyimpan...' : 'Simpan & Kirim Notifikasi'}
+    </button>
+  </svelte:fragment>
+</Modal>
+
+<!-- MODAL 2: UNGGAH DOKUMEN PUBLIK -->
+<Modal
+  bind:open={showDocModal}
+  title="Unggah Dokumen Transparansi Publik"
+  subtitle="Berkas yang ditambahkan langsung tersedia pada katalog Dokumen Publik."
+  size="md"
+>
+  <form id="doc-upload-form" on:submit|preventDefault={handleSaveDocument} class="space-y-4">
+    {#if docError}
+      <div role="alert" class="p-3 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs font-bold">
+        {docError}
+      </div>
+    {/if}
+
+    <FileUploader
+      label="Berkas Dokumen Resmi"
+      description="Pilih file PDF, Word, atau Excel dari perangkat Anda."
+      accept=".pdf,.doc,.docx,.xls,.xlsx"
+      previewShape="banner"
+      fileName={uploadedFileName}
+      on:change={handleDocFileChange}
+      on:clear={() => {
+        uploadedFileName = '';
+        docFileUrl = '/uploads/dokumen/dokumen_resmi.pdf';
+      }}
+    />
+
+    <div>
+      <label for="doc-title-input" class="block text-xs font-bold text-[#1a120c] mb-1">Nama / Judul Dokumen *</label>
+      <input id="doc-title-input" type="text" required bind:value={docTitle} placeholder="Contoh: Rencana Kerja Satpol PP TA 2026" class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs bg-white" />
+      <p class="field-error">Judul dokumen wajib diisi.</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <label for="doc-number-input" class="block text-xs font-bold text-[#1a120c] mb-1">Nomor SK / Registrasi</label>
+        <input id="doc-number-input" type="text" bind:value={docNumber} placeholder="050/112/SATPOL/2026" class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs bg-white" />
+      </div>
+      <div>
+        <label for="doc-year-select" class="block text-xs font-bold text-[#1a120c] mb-1">Tahun Anggaran</label>
+        <select id="doc-year-select" bind:value={docYear} class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs bg-white">
+          <option value={2026}>2026</option>
+          <option value={2025}>2025</option>
+          <option value={2024}>2024</option>
+          <option value={2023}>2023</option>
+          <option value={2022}>2022</option>
+        </select>
       </div>
     </div>
-  </div>
-{/if}
+
+    <div>
+      <label for="doc-category-select" class="block text-xs font-bold text-[#1a120c] mb-1">Kategori Dokumen</label>
+      <select id="doc-category-select" bind:value={docCategory} class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs bg-white">
+        <option value="renja">Rencana Kerja (Renja)</option>
+        <option value="renstra">Rencana Strategis (Renstra)</option>
+        <option value="dpa">Dokumen Pelaksanaan Anggaran (DPA)</option>
+        <option value="lakip">LAKIP / LKjIP</option>
+        <option value="keuangan">Laporan Keuangan</option>
+        <option value="rpjmd">RPJMD</option>
+        <option value="perda">Peraturan Daerah (Perda)</option>
+        <option value="sop">Standar Operasional (SOP)</option>
+      </select>
+    </div>
+  </form>
+
+  <svelte:fragment slot="footer" let:handleClose>
+    <button
+      type="button"
+      on:click={handleClose}
+      class="px-4 py-2 rounded-xl border border-[#eee9db] bg-white hover:bg-[#f9f4e8] text-xs font-bold text-[#3d261a] transition"
+    >
+      Batal
+    </button>
+    <button
+      type="submit"
+      form="doc-upload-form"
+      class="px-5 py-2 rounded-xl bg-[#F08300] hover:bg-[#d97300] text-white text-xs font-bold transition shadow-sm"
+    >
+      Simpan Dokumen
+    </button>
+  </svelte:fragment>
+</Modal>
+
+<!-- MODAL 3: TAMBAH FOTO GALERI -->
+<Modal
+  bind:open={showGalleryModal}
+  title="Tambah Foto Dokumentasi Galeri"
+  subtitle="Foto baru akan langsung tampil pada halaman Galeri dan preview Beranda."
+  size="md"
+>
+  <form id="gallery-upload-form" on:submit|preventDefault={handleSaveGallery} class="space-y-4">
+    {#if galleryError}
+      <div role="alert" class="p-3 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs font-bold">
+        {galleryError}
+      </div>
+    {/if}
+
+    <FileUploader
+      label="Pilih Foto Dokumentasi"
+      description="Format JPG, PNG, atau WebP."
+      accept="image/*"
+      previewShape="banner"
+      value={galleryImageUrl}
+      fileName={galleryFileName}
+      on:change={handleGalleryFileChange}
+      on:clear={() => {
+        galleryFileName = '';
+        galleryImageUrl = '/uploads/foto_galeri/1687082076352158666_3553275628273619_3927930681691724075_n.jpg';
+      }}
+    />
+
+    <div>
+      <label for="gallery-title-input" class="block text-xs font-bold text-[#1a120c] mb-1">Judul / Keterangan Kegiatan *</label>
+      <input id="gallery-title-input" type="text" required bind:value={galleryTitle} placeholder="Contoh: Apel Kesiapsiagaan Anggota Satpol PP" class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs bg-white" />
+      <p class="field-error">Judul kegiatan wajib diisi.</p>
+    </div>
+
+    <div>
+      <label for="gallery-category-select" class="block text-xs font-bold text-[#1a120c] mb-1">Kategori Dokumentasi</label>
+      <select id="gallery-category-select" bind:value={galleryCategory} class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs bg-white">
+        <option value="Penertiban">Operasi &amp; Penertiban</option>
+        <option value="Apel & Upacara">Apel &amp; Upacara Resmi</option>
+        <option value="Koordinasi">Koordinasi &amp; Sosialisasi</option>
+        <option value="Kegiatan">Giat Harian</option>
+      </select>
+    </div>
+  </form>
+
+  <svelte:fragment slot="footer" let:handleClose>
+    <button
+      type="button"
+      on:click={handleClose}
+      class="px-4 py-2 rounded-xl border border-[#eee9db] bg-white hover:bg-[#f9f4e8] text-xs font-bold text-[#3d261a] transition"
+    >
+      Batal
+    </button>
+    <button
+      type="submit"
+      form="gallery-upload-form"
+      class="px-5 py-2 rounded-xl bg-[#F08300] hover:bg-[#d97300] text-white text-xs font-bold transition shadow-sm"
+    >
+      Simpan ke Galeri
+    </button>
+  </svelte:fragment>
+</Modal>
+
+<!-- MODAL 4: KONFIRMASI HAPUS ITEM CMS -->
+<Modal
+  bind:open={confirmDeleteOpen}
+  title="Konfirmasi Hapus Data"
+  subtitle="Tindakan ini akan menghapus item dari portal publik."
+  size="sm"
+>
+  <p class="text-xs text-[#3d261a] leading-relaxed">
+    Yakin ingin menghapus <strong>{confirmDeleteLabel}</strong>? Penghapusan ini akan dicatat di log audit sistem.
+  </p>
+
+  <svelte:fragment slot="footer" let:handleClose>
+    <button
+      type="button"
+      on:click={handleClose}
+      class="px-4 py-2 rounded-xl border border-[#eee9db] bg-white hover:bg-[#f9f4e8] text-xs font-bold text-[#3d261a] transition"
+    >
+      Batal
+    </button>
+    <button
+      type="button"
+      on:click={executeDelete}
+      class="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition"
+    >
+      Ya, Hapus
+    </button>
+  </svelte:fragment>
+</Modal>

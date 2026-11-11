@@ -68,7 +68,7 @@
   <div class="max-w-6xl mx-auto">
     <div class="text-[#F08300] font-bold text-xs uppercase tracking-widest">Warta Praja Wibawa</div>
     <h1 class="text-3xl font-extrabold text-[#1a120c] tracking-tight mt-1">Kabar &amp; Informasi Terkini</h1>
-    <div class="w-12 h-1 bg-[#F08300] mt-3"></div>
+    <div class="w-12 h-1 bg-[#F08300] mt-3 rounded-full"></div>
     <p class="text-xs text-[#6f7775] mt-2 max-w-2xl">
       Publikasi resmi seputar giat operasional, penegakan Peraturan Daerah, pembinaan ketertiban umum, dan pelindungan masyarakat di 24 Kabupaten/Kota se-Sulawesi Selatan.
     </p>
@@ -91,17 +91,17 @@
     </div>
 
     <!-- Reactive On-Chain Search Input (Poin 11) -->
-    <div class="relative w-full md:w-80">
+    <search class="relative w-full md:w-80">
       <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-stone-400">
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
       </div>
       <input
-        type="text"
+        type="search"
         bind:value={searchQuery}
         placeholder="Cari judul berita atau topik (on-chain)..."
-        class="w-full pl-9 pr-8 py-2 text-xs bg-white text-[#1a120c] border border-stone-300 rounded-lg placeholder-stone-400 focus:outline-none focus:border-[#F08300] focus:ring-1 focus:ring-[#F08300] transition"
+        class="w-full pl-9 pr-8 py-2 text-xs bg-white text-[#1a120c] border border-stone-300 rounded-xl placeholder-stone-400 focus:outline-none focus:border-[#F08300] focus:ring-1 focus:ring-[#F08300] transition"
       />
       {#if searchQuery}
         <button
@@ -115,14 +115,14 @@
           </svg>
         </button>
       {/if}
-    </div>
+    </search>
   </div>
 
   <!-- Articles Grid -->
   {#if paginatedArticles.length > 0}
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       {#each paginatedArticles as article}
-        <article class="bg-white border border-[#eee9db] rounded-xl overflow-hidden flex flex-col justify-between hover:shadow-lg transition">
+        <article class="bg-white border border-[#eee9db] rounded-2xl overflow-hidden flex flex-col justify-between h-full hover:shadow-lg transition">
           <div>
             <div class="relative h-48 overflow-hidden bg-stone-100">
               <img 
@@ -132,7 +132,7 @@
                 loading="lazy"
                 onerror="this.src='/uploads/foto_berita/1768182343WhatsApp Image 2026-01-12 at 08.08.43.jpeg'"
               />
-              <span class="absolute top-3 left-3 bg-[#1a120c]/85 text-[#F08300] font-bold text-[10px] uppercase px-2.5 py-1 tracking-wider border-l-2 border-[#F08300] rounded-sm">
+              <span class="absolute top-3 left-3 bg-[#1a120c]/85 text-[#F08300] font-bold text-[10px] uppercase px-2.5 py-1 tracking-wider border-l-2 border-[#F08300] rounded-lg">
                 {article.category}
               </span>
             </div>
@@ -141,14 +141,14 @@
               <div class="flex items-center gap-2 text-[11px] text-[#6f7775] mb-2 font-semibold">
                 <span>{formatDate(article.published_at)}</span>
                 <span>&bull;</span>
-                <span>{article.author_name}</span>
+                <span class="truncate">{article.author_name}</span>
               </div>
 
-              <h2 class="text-sm font-bold text-[#1a120c] line-clamp-2 leading-snug hover:text-[#F08300] transition">
+              <h2 class="text-sm font-bold text-[#1a120c] line-clamp-2 min-h-[2.5rem] leading-snug hover:text-[#F08300] transition">
                 <a href={`/berita/${article.slug}`}>{article.title}</a>
               </h2>
 
-              <p class="text-xs text-[#6f7775] mt-2 line-clamp-3 leading-relaxed">
+              <p class="text-xs text-[#6f7775] mt-2 line-clamp-3 min-h-[3.5rem] leading-relaxed">
                 {article.summary}
               </p>
             </div>

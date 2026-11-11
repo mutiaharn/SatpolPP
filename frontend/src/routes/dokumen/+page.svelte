@@ -49,7 +49,7 @@
   <div class="max-w-6xl mx-auto">
     <div class="text-[#F08300] font-bold text-xs uppercase tracking-widest">Transparansi Penyelenggaraan Negara</div>
     <h1 class="text-3xl font-extrabold text-[#1a120c] tracking-tight mt-1">Dokumen &amp; Regulasi Publik Resmi</h1>
-    <div class="w-12 h-1 bg-[#F08300] mt-3"></div>
+    <div class="w-12 h-1 bg-[#F08300] mt-3 rounded-full"></div>
     <p class="text-xs text-[#6f7775] mt-2 max-w-2xl">
       Akses berkas perencanaan, penganggaran tahunan, laporan akuntabilitas kinerja (LAKIP/LKjIP), serta peraturan daerah ketertiban umum Satpol PP Prov. Sulsel.
     </p>

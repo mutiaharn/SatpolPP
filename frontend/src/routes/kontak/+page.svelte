@@ -34,7 +34,7 @@
   <div class="max-w-6xl mx-auto">
     <div class="text-[#F08300] font-bold text-xs uppercase tracking-widest">Pusat Informasi &amp; Koordinasi</div>
     <h1 class="text-3xl font-extrabold text-[#101116] tracking-tight mt-1">Kontak &amp; Alamat Resmi</h1>
-    <div class="w-12 h-1 bg-[#F08300] mt-3"></div>
+    <div class="w-12 h-1 bg-[#F08300] mt-3 rounded-full"></div>
     <p class="text-xs text-[#6f7775] mt-2 max-w-2xl">
       Hubungi markas komando Satpol PP Provinsi Sulawesi Selatan untuk keperluan dinas, koordinasi kedinasan, atau tindak lanjut aduan ketertiban umum.
     </p>
@@ -55,7 +55,7 @@
 
       <div class="bg-white border border-[#eee9db] p-6 shadow-xs space-y-3 rounded-2xl">
         <div class="text-[#F08300] font-bold text-xs uppercase tracking-wider">Telepon &amp; Surel</div>
-        <div class="space-y-2 text-xs text-[#2b2f3f]">
+        <div class="space-y-2 text-xs text-[#3d261a]">
           <div>
             <div class="text-[10px] text-[#6f7775] uppercase font-bold">Telepon Kantor / Sekretariat:</div>
             <div class="font-bold text-[#101116] mt-0.5">0411-453105</div>

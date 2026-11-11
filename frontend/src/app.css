@@ -8,11 +8,31 @@
   html {
     scroll-behavior: smooth;
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-    color: #101116;
+    color: #1a120c;
   }
 
   body {
     background-color: #ffffff;
+  }
+
+  /* Native top-layer <dialog> scroll containment (prevent background scroll chaining) */
+  dialog:modal {
+    overscroll-behavior: contain;
+  }
+
+  dialog::backdrop {
+    overflow: hidden;
+    overscroll-behavior: contain;
+    background-color: rgba(18, 11, 7, 0.65);
+    backdrop-filter: blur(4px);
+  }
+
+  /* Validate only after user interaction or submission attempt */
+  input:user-invalid,
+  textarea:user-invalid,
+  select:user-invalid {
+    border-color: #dc2626;
+    background-color: #fef2f2;
   }
 }
 
@@ -22,12 +42,12 @@
   height: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #f5efe6;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 4px;
+  background: #c9b9a3;
+  border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #9f8a6e;
 }

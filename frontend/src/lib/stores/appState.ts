@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import type { Article, Complaint, GalleryItem, PublicDocument, Regency, SiteSettings, User } from '$lib/types';
+import type { Article, Complaint, GalleryItem, OrganizationNode, PublicDocument, Regency, SiteSettings, User } from '$lib/types';
 
 export interface AuditEntry {
   id: number;
@@ -467,3 +467,88 @@ usersStore.subscribe(val => saveStored('satpol_users', val));
 
 export const auditLogsStore = writable<AuditEntry[]>(getStored('satpol_audit_logs', defaultAuditLogs));
 auditLogsStore.subscribe(val => saveStored('satpol_audit_logs', val));
+
+
+// Struktur Organisasi Dinamis (SOTK) Satpol PP Prov. Sulsel
+export const defaultOrganization: OrganizationNode[] = [
+  {
+    id: 1,
+    org_code: 'ORG-KST-01',
+    parent_code: null,
+    position_title: 'Kepala Satuan Polisi Pamong Praja',
+    official_name: 'Andi Arwin Azis S.STP., M.M',
+    rank: 'Eselon IIa',
+    description: 'Memimpin perumusan kebijakan, pengawasan operasional trantibum di 24 kabupaten/kota, serta koordinasi ketenteraman wilayah bersama Forkopimda Sulawesi Selatan.',
+    sub_units: [],
+    photo_url: '/uploads/foto_pimpinan/pimpinan_cutout_hd.png',
+    level: 1,
+    sort_order: 1
+  },
+  {
+    id: 2,
+    org_code: 'ORG-SEK-01',
+    parent_code: 'ORG-KST-01',
+    position_title: 'Sekretariat',
+    official_name: 'Sekretaris Satpol PP Sulsel',
+    rank: 'Eselon IIIa',
+    description: 'Mengoordinasikan urusan perencanaan program, pengelolaan keuangan anggaran, dan tata usaha kepegawaian.',
+    sub_units: ['Sub Bagian Umum, Kepegawaian dan Hukum', 'Sub Bagian Program dan Pelaporan', 'Sub Bagian Keuangan dan Pengelolaan Aset'],
+    level: 2,
+    sort_order: 1
+  },
+  {
+    id: 3,
+    org_code: 'ORG-BID-01',
+    parent_code: 'ORG-KST-01',
+    position_title: 'Bidang Penegakan Peraturan Daerah',
+    official_name: 'Kabid Penegakan Perda',
+    rank: 'Eselon IIIb',
+    description: 'Memimpin penindakan yustisial dan non-yustisial serta penyidikan pelanggaran peraturan daerah oleh PPNS.',
+    sub_units: ['Seksi Pengawasan dan Pembinaan Penegakan Perda', 'Seksi Penindakan, Penyidikan dan PPNS Daerah'],
+    level: 2,
+    sort_order: 2
+  },
+  {
+    id: 4,
+    org_code: 'ORG-BID-02',
+    parent_code: 'ORG-KST-01',
+    position_title: 'Bidang Ketenteraman dan Ketertiban Umum',
+    official_name: 'Kabid Trantibum',
+    rank: 'Eselon IIIb',
+    description: 'Mengendalikan operasi patroli ketertiban umum, penertiban fasilitas publik, dan pengawalan pejabat negara.',
+    sub_units: ['Seksi Operasi dan Pengendalian Ketertiban', 'Seksi Pengamanan, Pengawalan dan Patroli Wilayah'],
+    level: 2,
+    sort_order: 3
+  },
+  {
+    id: 5,
+    org_code: 'ORG-BID-03',
+    parent_code: 'ORG-KST-01',
+    position_title: 'Bidang Pelindungan Masyarakat dan Damkar',
+    official_name: 'Kabid Linmas & Damkar',
+    rank: 'Eselon IIIb',
+    description: 'Menyelenggarakan pembinaan teknis anggota Satlinmas dan koordinasi penanganan kedaruratan kebakaran daerah.',
+    sub_units: ['Seksi Satuan Pelindungan Masyarakat (Satlinmas)', 'Seksi Kesiapsiagaan, Kebakaran dan Bencana'],
+    level: 2,
+    sort_order: 4
+  }
+];
+
+export const organizationStore = writable<OrganizationNode[]>(getStored('satpol_organization', defaultOrganization));
+organizationStore.subscribe(val => saveStored('satpol_organization', val));
+
+/** Helper pencatatan audit trail agar tidak duplikasi kode di setiap halaman */
+export function logAudit(userName: string, action: string, resource: string, details: string) {
+  auditLogsStore.update(logs => [
+    {
+      id: Date.now() + Math.floor(Math.random() * 1000),
+      user_name: userName || 'sistem',
+      action,
+      resource,
+      details,
+      timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19),
+      ip_address: '127.0.0.1'
+    },
+    ...logs
+  ]);
+}

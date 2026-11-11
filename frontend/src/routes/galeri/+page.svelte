@@ -32,7 +32,7 @@
   <div class="max-w-6xl mx-auto">
     <div class="text-[#F08300] font-bold text-xs uppercase tracking-widest">Dokumentasi Multimedia</div>
     <h1 class="text-3xl font-extrabold text-[#1a120c] tracking-tight mt-1">Galeri Kegiatan &amp; Penugasan</h1>
-    <div class="w-12 h-1 bg-[#F08300] mt-3"></div>
+    <div class="w-12 h-1 bg-[#F08300] mt-3 rounded-full"></div>
     <p class="text-xs text-[#6f7775] mt-2 max-w-2xl">
       Rekam jejak visual pengabdian personel Satpol PP Provinsi Sulawesi Selatan dalam mengawal penegakan Peraturan Daerah, menjaga ketenteraman masyarakat, serta apel kesiapsiagaan korps Praja Wibawa.
     </p>

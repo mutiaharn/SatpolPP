@@ -17,12 +17,12 @@ func MaskNIK(nik string) string {
 	return "7371**********12"
 }
 
-// MaskName masks confidential citizen Name, showing initial and last char with protected label
-// e.g. "Ahmad Pratama" -> "Ah*** P*** (Anonim Terlindungi)"
+// MaskName masks confidential citizen Name, showing initial and protected label
+// e.g. "Ahmad Pratama" -> "Ah*** P*** (Identitas Terlindungi)"
 func MaskName(name string) string {
 	clean := strings.TrimSpace(name)
 	if clean == "" {
-		return "Warga (Anonim Terlindungi)"
+		return "Warga (Identitas Terlindungi)"
 	}
 
 	parts := strings.Fields(clean)
@@ -36,7 +36,7 @@ func MaskName(name string) string {
 		}
 	}
 
-	return strings.Join(maskedParts, " ") + " (Anonim Terlindungi)"
+	return strings.Join(maskedParts, " ") + " (Identitas Terlindungi)"
 }
 
 // MaskPhone masks phone numbers, keeping prefix and last 3 digits
@@ -50,4 +50,27 @@ func MaskPhone(phone string) string {
 		return clean[:3] + strings.Repeat("*", len(clean)-5) + clean[len(clean)-2:]
 	}
 	return "0812****8901"
+}
+
+// MaskEmail hides part of email local name while preserving domain
+// e.g. ahmad.fauzan@gmail.com -> ah***@gmail.com
+func MaskEmail(email string) string {
+	clean := strings.TrimSpace(email)
+	if clean == "" {
+		return ""
+	}
+	parts := strings.SplitN(clean, "@", 2)
+	if len(parts) != 2 || parts[0] == "" {
+		return "***"
+	}
+	local := []rune(parts[0])
+	if len(local) <= 2 {
+		return string(local[0]) + "***@" + parts[1]
+	}
+	return string(local[:2]) + "***@" + parts[1]
+}
+
+// MaskReporterIdentity masks all confidential reporter fields for public endpoints
+func MaskReporterIdentity(name, nik, phone, email string) (string, string, string, string) {
+	return MaskName(name), MaskNIK(nik), MaskPhone(phone), MaskEmail(email)
 }
