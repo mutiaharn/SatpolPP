@@ -338,7 +338,7 @@
           class="inline-flex items-center gap-2 bg-gradient-to-r from-[#F08300] to-[#d97400] hover:from-[#d97400] hover:to-[#c66500] text-white text-xs font-bold uppercase px-6 py-3.5 rounded-xl transition duration-200 shadow-[0_10px_28px_rgba(240,131,0,0.22)] hover:-translate-y-0.5 ds-press"
         >
           <span>Visi &amp; Misi Instansi</span>
-          <ArrowRight class="w-4 h-4 text-[#F08300]" />
+          <ArrowRight class="w-4 h-4 text-white/90" />
         </a>
         <a 
           href="/profil/struktur" 
