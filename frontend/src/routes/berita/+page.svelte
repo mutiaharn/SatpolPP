@@ -1,7 +1,7 @@
 <script lang="ts">
   import { articlesStore } from '$lib/stores/appState';
   import type { Article } from '$lib/types';
-  import { ChevronRight, Newspaper } from 'lucide-svelte';
+  import { ChevronRight, Newspaper, Search, X } from 'lucide-svelte';
 
   let selectedCategory = '';
   let searchQuery = '';
@@ -15,19 +15,19 @@
     { id: 'Pengumuman', label: 'Pengumuman Resmi' }
   ];
 
-  // Reactive on-chain search filter (Poin 11)
+  // Search langsung saat pengguna mengetik, mencakup seluruh informasi utama berita.
+  $: normalizedSearch = searchQuery.trim().toLocaleLowerCase('id-ID');
   $: filteredArticles = $articlesStore.filter(a => {
     const matchCat = !selectedCategory || a.category.toLowerCase() === selectedCategory.toLowerCase();
-    const matchSearch = !searchQuery || 
-      a.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-      a.summary.toLowerCase().includes(searchQuery.toLowerCase());
+    const searchableText = [
+      a.title,
+      a.summary,
+      a.category,
+      a.author_name
+    ].filter(Boolean).join(' ').toLocaleLowerCase('id-ID');
+    const matchSearch = !normalizedSearch || searchableText.includes(normalizedSearch);
     return matchCat && matchSearch;
   });
-
-  // Reset to page 1 on filter or search change
-  $: if (searchQuery !== undefined || selectedCategory) {
-    currentPage = 1;
-  }
 
   // Pagination calculation (Poin 10)
   $: totalArticles = filteredArticles.length;
@@ -58,6 +58,7 @@
 
   function clearSearch() {
     searchQuery = '';
+    currentPage = 1;
   }
 </script>
 
@@ -93,7 +94,7 @@
         <button
           type="button"
           class={`px-4 py-2 text-xs font-bold uppercase transition duration-200 rounded-xl ds-press ${selectedCategory === cat.id ? 'ds-pill-active' : 'ds-pill-inactive'}`}
-          on:click={() => selectedCategory = cat.id}
+          on:click={() => { selectedCategory = cat.id; currentPage = 1; }}
         >
           {cat.label}
         </button>
@@ -103,15 +104,15 @@
     <!-- Reactive On-Chain Search Input -->
     <search class="relative w-full md:w-80">
       <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
+        <Search class="w-4 h-4" />
       </div>
       <input
         type="search"
         bind:value={searchQuery}
-        placeholder="Cari judul berita atau topik..."
-        class="w-full pl-9 pr-8 py-2 text-xs ds-glass-input text-slate-900 rounded-xl placeholder-slate-400 focus:outline-none transition font-light"
+        on:input={() => { currentPage = 1; }}
+        aria-label="Cari berita berdasarkan judul, isi, kategori, atau penulis"
+        placeholder="Cari judul, isi berita, kategori, atau penulis..."
+        class="w-full pl-10 pr-10 py-3 text-xs ds-glass-input text-slate-900 rounded-xl placeholder-slate-400 focus:outline-none transition font-medium"
       />
       {#if searchQuery}
         <button
@@ -120,12 +121,23 @@
           class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400 hover:text-slate-600 ds-press"
           aria-label="Bersihkan pencarian"
         >
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
+          <X class="w-4 h-4" />
         </button>
       {/if}
     </search>
+  </div>
+
+  <div class="flex flex-wrap items-center justify-between gap-2 px-1 text-xs text-slate-500" aria-live="polite">
+    <span>
+      {#if searchQuery.trim()}
+        Hasil pencarian untuk <strong class="font-semibold text-slate-700">“{searchQuery.trim()}”</strong>
+      {:else if selectedCategory}
+        Kategori: <strong class="font-semibold text-slate-700">{selectedCategory}</strong>
+      {:else}
+        Jelajahi seluruh publikasi Satpol PP Sulawesi Selatan
+      {/if}
+    </span>
+    <span class="font-semibold text-slate-600">{totalArticles} berita ditemukan</span>
   </div>
 
   <!-- Articles Grid -->
@@ -222,8 +234,8 @@
       {/if}
     </div>
   {:else}
-    <div class="bg-white border border-[#eee9db] rounded-xl p-12 text-center text-stone-400 space-y-2">
-      <p class="text-xs font-semibold text-stone-600">Tidak ada artikel berita yang sesuai dengan kriteria pencarian Anda.</p>
+    <div class="bg-[#eef1f4] border border-[#dce2e8] rounded-2xl p-12 text-center text-slate-500 space-y-2">
+      <p class="text-xs font-semibold text-slate-700">Tidak ada berita yang sesuai dengan pencarian atau filter Anda.</p>
       {#if searchQuery}
         <button
           type="button"

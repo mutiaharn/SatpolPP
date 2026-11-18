@@ -11,6 +11,8 @@
     --satpol-navy: #070e1c;
     --satpol-accent: #f08300;
     --satpol-azure: #246bfd;
+    --satpol-soft-gray: #eef1f4;
+    --satpol-soft-gray-border: #dce2e8;
 
     /* Specular Glassmorphism Tokens (Tamalate Sovereign & Praja Fusion) */
     --ds-glass-bg: rgba(255, 255, 255, 0.68);
@@ -43,9 +45,9 @@
   body {
     background-color: #f8fafc;
     background-image: 
-      radial-gradient(ellipse 90% 60% at 15% -5%, rgba(36, 107, 253, 0.07), transparent 60%),
+      radial-gradient(ellipse 90% 60% at 15% -5%, rgba(148, 163, 184, 0.14), transparent 60%),
       radial-gradient(ellipse 80% 55% at 85% 25%, rgba(240, 131, 0, 0.06), transparent 60%),
-      radial-gradient(ellipse 70% 50% at 10% 70%, rgba(56, 189, 248, 0.05), transparent 60%),
+      radial-gradient(ellipse 70% 50% at 10% 70%, rgba(203, 213, 225, 0.28), transparent 60%),
       radial-gradient(ellipse 75% 55% at 90% 95%, rgba(240, 131, 0, 0.05), transparent 60%);
     background-attachment: fixed;
     color: #0f172a;
@@ -184,7 +186,7 @@
   background: rgba(255, 255, 255, 0.85);
   border-color: rgba(255, 255, 255, 1);
   box-shadow: 0 20px 48px -10px rgba(15, 23, 42, 0.12),
-              0 0 24px -4px rgba(36, 107, 253, 0.10),
+              0 0 24px -4px rgba(148, 163, 184, 0.16),
               var(--ds-glass-highlight);
 }
 
@@ -238,9 +240,9 @@
 /* Ambient Canvas Glow & Underneath Mesh Blobs */
 .ds-ambient-glow {
   background-image: 
-    radial-gradient(1100px 600px at 5% -5%, rgba(36, 107, 253, 0.09), transparent 60%),
+    radial-gradient(1100px 600px at 5% -5%, rgba(148, 163, 184, 0.16), transparent 60%),
     radial-gradient(900px 520px at 95% 5%, rgba(240, 131, 0, 0.08), transparent 55%),
-    radial-gradient(850px 500px at 50% 50%, rgba(14, 165, 233, 0.05), transparent 65%);
+    radial-gradient(850px 500px at 50% 50%, rgba(203, 213, 225, 0.30), transparent 65%);
 }
 
 /* Fallback for System Settings: Reduced Transparency */

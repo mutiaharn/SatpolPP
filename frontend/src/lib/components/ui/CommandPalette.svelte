@@ -75,7 +75,7 @@
     type: 'berita' as const,
     category: a.category || 'Berita',
     title: a.title,
-    description: a.summary || '',
+    description: [a.summary, a.author_name].filter(Boolean).join(' · '),
     href: `/berita/${a.slug}`
   }));
 
