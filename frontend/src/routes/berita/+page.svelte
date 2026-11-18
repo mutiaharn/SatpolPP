@@ -58,6 +58,7 @@
 
   function clearSearch() {
     searchQuery = '';
+    currentPage = 1;
   }
 </script>
 
