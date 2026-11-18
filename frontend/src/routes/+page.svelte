@@ -15,13 +15,52 @@
     ChevronRight,
     Users,
     Shield,
-    FileCheck2
+    FileCheck2,
+    Zap,
+    Radio,
+    Lock,
+    Eye,
+    AlertTriangle,
+    QrCode,
+    ArrowUpRight,
+    Compass,
+    Layers,
+    Check
   } from 'lucide-svelte';
 
   let currentSlide = 0;
   let showLightbox = false;
   let selectedGalleryIndex = 0;
   let quickTrackCode = '';
+  let activeSiapTab: 'lapor' | 'lacak' | 'privasi' = 'lapor';
+  let quickCategory: 'trantibum' | 'perda' | 'aset' | 'linmas' = 'trantibum';
+
+  const categoryDetails = {
+    trantibum: {
+      name: 'Ketenteraman & Ketertiban Umum',
+      desc: 'Penertiban kebisingan, PKL liar pada zona steril, unjuk rasa tanpa izin, atau gangguan fasilitas umum di 24 kab/kota.',
+      badge: 'Prioritas Trantibum',
+      sla: 'Respon ≤ 2 Jam'
+    },
+    perda: {
+      name: 'Penegakan Perda & Perkada',
+      desc: 'Pelanggaran izin mendirikan bangunan, reklame komersial ilegal, peredaran miras tanpa izin, dan perda lingkungan hidup.',
+      badge: 'Regulasi Daerah',
+      sla: 'Validasi ≤ 4 Jam'
+    },
+    aset: {
+      name: 'Pengamanan Aset Pemerintah Daerah',
+      desc: 'Penguasaan lahan milik daerah tanpa hak, perusakan sarana fasilitas dinas, dan pengamanan gedung inventaris pemprov.',
+      badge: 'Aset Sulsel',
+      sla: 'SLA H+1'
+    },
+    linmas: {
+      name: 'Pelindungan Masyarakat & Damkar',
+      desc: 'Bantuan darurat bencana lingkungan, potensi gesekan sosial warga, serta penguatan pos kamling satlinmas desa/kelurahan.',
+      badge: 'Siaga Warga',
+      sla: 'Siaga 24 Jam'
+    }
+  };
 
   $: previewGallery = $galleryStore.slice(0, 4);
 
@@ -338,140 +377,471 @@
   </div>
 </section>
 
-<!-- 4. Layanan SIAP TERTIB (Revisi 2.3: Call to Action Kreatif & Tidak Monoton) -->
-<section id="layanan-siaptertib" class="scroll-mt-24 py-16 md:py-20 px-4 bg-[#f8fafc] border-b border-slate-200/80">
-  <div class="max-w-7xl mx-auto">
-    <!-- Living Workflow Hub Container -->
-    <div class="ds-glass-strong rounded-3xl p-8 md:p-12 border border-slate-200 shadow-2xl relative overflow-hidden">
-      <!-- Glow ambient in the card -->
-      <div class="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[#f08300]/10 blur-3xl pointer-events-none"></div>
-      <div class="absolute -bottom-24 -left-24 w-80 h-80 rounded-full bg-[#246bfd]/10 blur-3xl pointer-events-none"></div>
+<!-- 4. Layanan SIAP TERTIB (Overhaul: Spatial VisionOS / iOS Futuristic Glass Hub) -->
+<section id="layanan-siaptertib" class="scroll-mt-28 md:scroll-mt-32 py-16 md:py-24 px-4 relative overflow-hidden bg-gradient-to-b from-[#f8fafc] via-[#f1f6fe] to-[#f8fafc] border-b border-slate-200/80">
+  
+  <!-- Ambient Spatial Glow Orbs -->
+  <div class="absolute top-1/3 left-1/4 -translate-y-1/2 -translate-x-1/2 w-[550px] h-[550px] rounded-full bg-[#246bfd]/12 blur-[130px] pointer-events-none"></div>
+  <div class="absolute bottom-1/3 right-1/4 -translate-y-1/2 translate-x-1/2 w-[500px] h-[500px] rounded-full bg-[#F08300]/10 blur-[120px] pointer-events-none"></div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
-        <!-- Left: Interactive CTA & Quick Ticket Tracker -->
-        <div class="lg:col-span-7 space-y-5">
-          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-orange-100 text-[#F08300] font-bold text-xs uppercase tracking-widest border border-orange-200">
-            <span class="w-2 h-2 rounded-full bg-[#F08300] animate-pulse"></span>
-            <span>Saluran Pengaduan Terpadu</span>
-          </div>
+  <div class="max-w-7xl mx-auto relative z-10 space-y-10">
 
-          <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#071936] tracking-tight leading-tight">
-            SIAP TERTIB &bull; Ruang Partisipasi Warga Sulsel
-          </h2>
+    <!-- Top Dynamic Island Capsule & Section Title -->
+    <div class="text-center max-w-3xl mx-auto space-y-3">
+      <!-- Dynamic Island Pill -->
+      <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200/80 shadow-glass text-xs font-semibold text-slate-700">
+        <span class="flex h-2 w-2 relative">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+        </span>
+        <span class="text-[#071936] font-bold text-[11px] uppercase tracking-wider">SIAP TERTIB • Respons Cepat Trantibum</span>
+        <span class="text-slate-300">&bull;</span>
+        <span class="text-emerald-600 font-mono text-[11px] font-bold">24 Kab/Kota Siaga</span>
+      </div>
 
-          <p class="text-xs md:text-sm text-slate-600 leading-relaxed max-w-xl">
-            Laporkan pelanggaran Peraturan Daerah, gangguan ketertiban umum, atau penyerobotan aset daerah secara resmi. Identitas pelapor dienkripsi otomatis, lengkap dengan resi pelacakan tiket transparan dan tembusan email.
-          </p>
+      <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-[#071936] tracking-tight leading-tight">
+        Partisipasi Warga.<br class="hidden sm:inline" />
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#246bfd] via-[#1d4ed8] to-[#f08300]">
+          Transparansi Komando.
+        </span>
+      </h2>
 
-          <!-- Interactive Quick Ticket Input (Lacak Instan dari Beranda) -->
-          <div class="bg-white p-2 rounded-2xl border border-slate-200 shadow-sm max-w-lg">
-            <form on:submit|preventDefault={handleQuickTrack} class="flex items-center gap-2">
-              <div class="pl-3 text-slate-400">
-                <Search class="w-4 h-4" />
-              </div>
-              <input
-                type="text"
-                bind:value={quickTrackCode}
-                placeholder="Masukkan Nomor Tiket (misal: ST-2026-0001)..."
-                class="w-full text-xs sm:text-sm bg-transparent border-0 focus:outline-none focus:ring-0 text-slate-800 placeholder-slate-400"
-              />
-              <button
-                type="submit"
-                class="bg-[#070e1c] hover:bg-slate-800 text-white font-bold text-xs px-4 py-2.5 rounded-xl shrink-0 transition"
-              >
-                Cek Tiket
-              </button>
-            </form>
-          </div>
+      <p class="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto leading-relaxed">
+        Saluran resmi pengaduan pelanggaran Perda dan ketenteraman umum. Identitas dienkripsi secara kriptografis dengan pemantauan resi transparan hingga Berita Acara Pemeriksaan (BAP).
+      </p>
 
-          <!-- Direct Action Buttons -->
-          <div class="flex flex-wrap items-center gap-3 pt-2">
-            <a
-              href="/lapor"
-              class="inline-flex items-center gap-2 bg-gradient-to-r from-[#F08300] to-[#e07000] hover:from-[#d97400] hover:to-[#c66500] text-white font-bold text-xs uppercase px-6 py-3.5 rounded-xl transition shadow-glass-gold hover:-translate-y-0.5"
-            >
-              <Send class="w-4 h-4" />
-              <span>Buat Laporan Baru</span>
-            </a>
-            <a
-              href="/lacak"
-              class="inline-flex items-center gap-2 bg-slate-100 hover:bg-slate-200/80 text-slate-700 font-bold text-xs uppercase px-6 py-3.5 rounded-xl border border-slate-200 transition"
-            >
-              <span>Panduan Pelaporan</span>
-            </a>
-          </div>
-        </div>
+      <!-- iOS Segmented Glass Tab Bar -->
+      <div class="pt-2 flex justify-center">
+        <div class="inline-flex p-1.5 bg-slate-200/60 backdrop-blur-xl rounded-2xl border border-slate-300/60 shadow-inner gap-1">
+          <button
+            type="button"
+            on:click={() => activeSiapTab = 'lapor'}
+            class="px-4 sm:px-6 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 flex items-center gap-2 {activeSiapTab === 'lapor' ? 'bg-white text-[#071936] shadow-sm ring-1 ring-black/5 font-extrabold scale-100' : 'text-slate-600 hover:text-slate-900'}"
+          >
+            <Zap class="w-3.5 h-3.5 text-[#F08300]" />
+            <span>Lapor Aduan Cepat</span>
+          </button>
 
-        <!-- Right: Connected 4-Step Interactive Timeline -->
-        <div class="lg:col-span-5 bg-gradient-to-b from-[#070e1c] to-[#0f223d] text-white rounded-2xl p-6 sm:p-7 shadow-xl border border-white/10 relative">
-          <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-5">
-            <div class="flex items-center gap-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span class="text-xs font-bold uppercase tracking-wider text-slate-200">Alur Standar Tindak Lanjut</span>
-            </div>
-            <span class="text-[11px] font-mono text-[#F08300] font-semibold">SOP 24/7</span>
-          </div>
+          <button
+            type="button"
+            on:click={() => activeSiapTab = 'lacak'}
+            class="px-4 sm:px-6 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 flex items-center gap-2 {activeSiapTab === 'lacak' ? 'bg-white text-[#071936] shadow-sm ring-1 ring-black/5 font-extrabold scale-100' : 'text-slate-600 hover:text-slate-900'}"
+          >
+            <Search class="w-3.5 h-3.5 text-[#246bfd]" />
+            <span>Lacak Tiket Resi</span>
+          </button>
 
-          <div class="space-y-4 relative">
-            <!-- Step 1 -->
-            <div class="flex items-start gap-3.5">
-              <div class="w-7 h-7 rounded-full bg-[#246bfd] text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-xs mt-0.5">
-                1
-              </div>
-              <div class="flex-1">
-                <div class="text-xs font-bold text-white flex items-center justify-between">
-                  <span>Verifikasi &amp; Masking</span>
-                  <span class="text-[10px] text-slate-400 font-normal">&le; 2 Jam</span>
-                </div>
-                <p class="text-[11px] text-slate-300 mt-0.5">Pemeriksaan bukti foto dan enkripsi data pribadi pelapor.</p>
-              </div>
-            </div>
-
-            <!-- Step 2 -->
-            <div class="flex items-start gap-3.5">
-              <div class="w-7 h-7 rounded-full bg-[#F08300] text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-xs mt-0.5">
-                2
-              </div>
-              <div class="flex-1">
-                <div class="text-xs font-bold text-white flex items-center justify-between">
-                  <span>Disposisi Cepat</span>
-                  <span class="text-[10px] text-slate-400 font-normal">&le; 4 Jam</span>
-                </div>
-                <p class="text-[11px] text-slate-300 mt-0.5">Penerusan ke bidang teknis (Trantibum, Perda, atau Linmas).</p>
-              </div>
-            </div>
-
-            <!-- Step 3 -->
-            <div class="flex items-start gap-3.5">
-              <div class="w-7 h-7 rounded-full bg-amber-500 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-xs mt-0.5">
-                3
-              </div>
-              <div class="flex-1">
-                <div class="text-xs font-bold text-white flex items-center justify-between">
-                  <span>Patroli &amp; Penindakan</span>
-                  <span class="text-[10px] text-slate-400 font-normal">SLA H+1</span>
-                </div>
-                <p class="text-[11px] text-slate-300 mt-0.5">Operasi lapangan persuasif &amp; penerbitan surat peringatan resmi.</p>
-              </div>
-            </div>
-
-            <!-- Step 4 -->
-            <div class="flex items-start gap-3.5">
-              <div class="w-7 h-7 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-xs mt-0.5">
-                4
-              </div>
-              <div class="flex-1">
-                <div class="text-xs font-bold text-white flex items-center justify-between">
-                  <span>Penyelesaian &amp; BAP</span>
-                  <span class="text-[10px] text-emerald-400 font-semibold">Tuntas</span>
-                </div>
-                <p class="text-[11px] text-slate-300 mt-0.5">Dokumentasi hasil dan update status transparan ke email warga.</p>
-              </div>
-            </div>
-          </div>
+          <button
+            type="button"
+            on:click={() => activeSiapTab = 'privasi'}
+            class="px-4 sm:px-6 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 flex items-center gap-2 {activeSiapTab === 'privasi' ? 'bg-white text-[#071936] shadow-sm ring-1 ring-black/5 font-extrabold scale-100' : 'text-slate-600 hover:text-slate-900'}"
+          >
+            <ShieldCheck class="w-3.5 h-3.5 text-emerald-600" />
+            <span>Jaminan Privasi</span>
+          </button>
         </div>
       </div>
     </div>
+
+    <!-- Spatial Interactive Dual Wings -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+
+      <!-- =========================================================================
+           LEFT WING: DYNAMIC iOS ACTION CONSOLE
+           ========================================================================= -->
+      <div class="lg:col-span-7 bg-white/90 backdrop-blur-2xl rounded-3xl p-6 sm:p-8 border border-white/80 shadow-glass-hover flex flex-col justify-between relative overflow-hidden transition-all duration-300">
+        
+        <!-- Corner Ambient Glow -->
+        <div class="absolute -top-16 -left-16 w-48 h-48 rounded-full bg-[#246bfd]/10 blur-2xl pointer-events-none"></div>
+
+        <div class="relative z-10 space-y-6">
+
+          <!-- TAB 1: LAPOR ADUAN CEPAT -->
+          {#if activeSiapTab === 'lapor'}
+            <div class="space-y-5 animate-in fade-in duration-200">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="text-base sm:text-lg font-extrabold text-[#071936]">Pilih Kategori Pelanggaran</h3>
+                  <p class="text-xs text-slate-500 mt-0.5">Pilih bidang penanganan untuk penugasan regu piket yang tepat.</p>
+                </div>
+                <span class="text-[10px] font-bold uppercase tracking-wider bg-orange-100 text-[#F08300] px-2.5 py-1 rounded-full">
+                  Form Terpadu
+                </span>
+              </div>
+
+              <!-- 4 iOS Squircle Category Pills -->
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                <button
+                  type="button"
+                  on:click={() => quickCategory = 'trantibum'}
+                  class="p-3 rounded-2xl text-left border transition-all duration-200 flex flex-col justify-between {quickCategory === 'trantibum' ? 'bg-orange-50/80 border-[#F08300] shadow-sm ring-2 ring-[#F08300]/20' : 'bg-slate-50/80 border-slate-200 hover:bg-slate-100/70'}"
+                >
+                  <div class="w-8 h-8 rounded-xl bg-orange-100 text-[#F08300] flex items-center justify-center font-bold text-sm mb-2">
+                    🚨
+                  </div>
+                  <div>
+                    <div class="font-extrabold text-xs text-[#071936]">Trantibum</div>
+                    <div class="text-[10px] text-slate-500 mt-0.5">Ketertiban Umum</div>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  on:click={() => quickCategory = 'perda'}
+                  class="p-3 rounded-2xl text-left border transition-all duration-200 flex flex-col justify-between {quickCategory === 'perda' ? 'bg-blue-50/80 border-[#246bfd] shadow-sm ring-2 ring-[#246bfd]/20' : 'bg-slate-50/80 border-slate-200 hover:bg-slate-100/70'}"
+                >
+                  <div class="w-8 h-8 rounded-xl bg-blue-100 text-[#246bfd] flex items-center justify-center font-bold text-sm mb-2">
+                    🏛️
+                  </div>
+                  <div>
+                    <div class="font-extrabold text-xs text-[#071936]">Perda Sulsel</div>
+                    <div class="text-[10px] text-slate-500 mt-0.5">Regulasi Daerah</div>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  on:click={() => quickCategory = 'aset'}
+                  class="p-3 rounded-2xl text-left border transition-all duration-200 flex flex-col justify-between {quickCategory === 'aset' ? 'bg-amber-50/80 border-amber-500 shadow-sm ring-2 ring-amber-500/20' : 'bg-slate-50/80 border-slate-200 hover:bg-slate-100/70'}"
+                >
+                  <div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-sm mb-2">
+                    📍
+                  </div>
+                  <div>
+                    <div class="font-extrabold text-xs text-[#071936]">Aset Daerah</div>
+                    <div class="text-[10px] text-slate-500 mt-0.5">Fasilitas Dinas</div>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  on:click={() => quickCategory = 'linmas'}
+                  class="p-3 rounded-2xl text-left border transition-all duration-200 flex flex-col justify-between {quickCategory === 'linmas' ? 'bg-emerald-50/80 border-emerald-600 shadow-sm ring-2 ring-emerald-600/20' : 'bg-slate-50/80 border-slate-200 hover:bg-slate-100/70'}"
+                >
+                  <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm mb-2">
+                    🛡️
+                  </div>
+                  <div>
+                    <div class="font-extrabold text-xs text-[#071936]">Satlinmas</div>
+                    <div class="text-[10px] text-slate-500 mt-0.5">Pelindungan</div>
+                  </div>
+                </button>
+              </div>
+
+              <!-- Selected Category Info Box (iOS Dynamic Pill) -->
+              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-start justify-between gap-4">
+                <div class="space-y-1">
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold text-[#071936]">{categoryDetails[quickCategory].name}</span>
+                    <span class="text-[10px] font-semibold text-blue-700 bg-blue-100/60 px-2 py-0.5 rounded-full">{categoryDetails[quickCategory].badge}</span>
+                  </div>
+                  <p class="text-xs text-slate-600 leading-relaxed">
+                    {categoryDetails[quickCategory].desc}
+                  </p>
+                </div>
+                <div class="shrink-0 text-right">
+                  <span class="text-[10px] font-mono font-bold text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-lg block">
+                    {categoryDetails[quickCategory].sla}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Action Controls -->
+              <div class="pt-2 flex flex-wrap items-center gap-3">
+                <a
+                  href={`/lapor?category=${quickCategory}`}
+                  class="inline-flex items-center gap-2 bg-[#F08300] hover:bg-[#d97400] active:scale-[0.98] text-white font-bold text-xs uppercase px-7 py-4 rounded-2xl transition shadow-glass-gold hover:shadow-lg"
+                >
+                  <Send class="w-4 h-4" />
+                  <span>Buka Formulir Laporan Resmi &rarr;</span>
+                </a>
+
+                <button
+                  type="button"
+                  on:click={() => activeSiapTab = 'lacak'}
+                  class="inline-flex items-center gap-1.5 px-4 py-3.5 rounded-2xl bg-slate-100 hover:bg-slate-200/70 text-slate-700 text-xs font-bold uppercase border border-slate-200 transition"
+                >
+                  <Search class="w-3.5 h-3.5 text-slate-500" />
+                  <span>Lacak Tiket Anda</span>
+                </button>
+              </div>
+            </div>
+
+          <!-- TAB 2: LACAK RESI & KRONOLOGI TIKET -->
+          {:else if activeSiapTab === 'lacak'}
+            <div class="space-y-5 animate-in fade-in duration-200">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="text-base sm:text-lg font-extrabold text-[#071936]">Pelacakan Status Aduan Realtime</h3>
+                  <p class="text-xs text-slate-500 mt-0.5">Periksa posisi tindak lanjut tiket pengaduan oleh regu patroli.</p>
+                </div>
+                <span class="text-[10px] font-bold uppercase tracking-wider bg-blue-100 text-[#246bfd] px-2.5 py-1 rounded-full">
+                  Live Radar
+                </span>
+              </div>
+
+              <!-- Futuristic Search Input Capsule -->
+              <div class="bg-slate-50 p-2.5 rounded-2xl border border-slate-200 shadow-inner">
+                <form on:submit|preventDefault={handleQuickTrack} class="flex items-center gap-2">
+                  <div class="pl-3 text-slate-400">
+                    <Search class="w-4 h-4 text-blue-600" />
+                  </div>
+                  <input
+                    type="text"
+                    bind:value={quickTrackCode}
+                    placeholder="Masukkan Nomor Tiket (misal: ST-2026-0001)..."
+                    class="w-full text-xs sm:text-sm bg-transparent border-0 focus:outline-none focus:ring-0 text-slate-800 placeholder-slate-400"
+                  />
+                  {#if quickTrackCode}
+                    <button
+                      type="button"
+                      on:click={() => quickTrackCode = ''}
+                      class="text-xs text-slate-400 hover:text-slate-600 px-1"
+                    >
+                      Batal
+                    </button>
+                  {/if}
+                  <button
+                    type="submit"
+                    class="bg-[#071936] hover:bg-slate-800 text-white font-bold text-xs uppercase px-5 py-3 rounded-xl shrink-0 transition active:scale-[0.98] shadow-sm flex items-center gap-1.5"
+                  >
+                    <span>Lacak Tiket</span>
+                    <ArrowRight class="w-3.5 h-3.5" />
+                  </button>
+                </form>
+              </div>
+
+              <!-- Quick Test Preset Chip -->
+              <div class="flex items-center gap-2 text-xs text-slate-500">
+                <span class="text-[11px]">Uji Coba Cepat:</span>
+                <button
+                  type="button"
+                  on:click={() => quickTrackCode = 'ST-2026-0001'}
+                  class="px-2.5 py-1 rounded-lg bg-blue-50 text-[#246bfd] font-mono text-[11px] font-bold border border-blue-200/60 hover:bg-blue-100 transition"
+                >
+                  ST-2026-0001
+                </button>
+                <button
+                  type="button"
+                  on:click={() => quickTrackCode = 'TRB-202611-SAMPLE'}
+                  class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-mono text-[11px] font-medium border border-slate-200 hover:bg-slate-200/70 transition"
+                >
+                  TRB-202611-SAMPLE
+                </button>
+              </div>
+
+              <!-- Live Simulation Preview Card -->
+              <div class="p-4 rounded-2xl bg-gradient-to-r from-blue-50/70 to-indigo-50/50 border border-blue-100 space-y-2">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="font-bold text-[#071936] flex items-center gap-1.5">
+                    <Radio class="w-3.5 h-3.5 text-emerald-600 animate-pulse" />
+                    <span>Simulasi Alur Tindak Lanjut:</span>
+                  </span>
+                  <span class="text-[10px] font-mono text-blue-700 font-bold bg-white px-2 py-0.5 rounded border border-blue-200">
+                    Proses 75% • Lapangan
+                  </span>
+                </div>
+                <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                  <div class="bg-gradient-to-r from-blue-500 to-emerald-500 h-full rounded-full w-3/4"></div>
+                </div>
+                <div class="flex justify-between text-[10px] text-slate-500 pt-0.5">
+                  <span>1. Terdaftar</span>
+                  <span>2. Disposisi</span>
+                  <span class="font-bold text-[#071936]">3. Patroli Aktif</span>
+                  <span>4. BAP</span>
+                </div>
+              </div>
+            </div>
+
+          <!-- TAB 3: JAMINAN PERLINDUNGAN PRIVASI -->
+          {:else}
+            <div class="space-y-4 animate-in fade-in duration-200">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="text-base sm:text-lg font-extrabold text-[#071936]">Jaminan Hukum &amp; Perlindungan Saksi</h3>
+                  <p class="text-xs text-slate-500 mt-0.5">Standar operasional pelindungan warga pelapor sesuai Permendagri &amp; Perda Sulsel.</p>
+                </div>
+                <span class="text-[10px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-full">
+                  100% Aman
+                </span>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+                <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5">
+                  <div class="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs">
+                    <Lock class="w-3.5 h-3.5" />
+                  </div>
+                  <div class="font-bold text-xs text-[#071936]">Enkripsi Identitas</div>
+                  <p class="text-[11px] text-slate-500 leading-relaxed">
+                    Nama, NIK, dan kontak pelapor di-masking kriptografis pada basis data resmi.
+                  </p>
+                </div>
+
+                <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5">
+                  <div class="w-7 h-7 rounded-lg bg-blue-100 text-[#246bfd] flex items-center justify-center font-bold text-xs">
+                    <CheckCircle2 class="w-3.5 h-3.5" />
+                  </div>
+                  <div class="font-bold text-xs text-[#071936]">100% Bebas Biaya</div>
+                  <p class="text-[11px] text-slate-500 leading-relaxed">
+                    Tidak ada pungutan apapun dalam seluruh tahapan penanganan pengaduan.
+                  </p>
+                </div>
+
+                <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5">
+                  <div class="w-7 h-7 rounded-lg bg-amber-100 text-[#F08300] flex items-center justify-center font-bold text-xs">
+                    <FileText class="w-3.5 h-3.5" />
+                  </div>
+                  <div class="font-bold text-xs text-[#071936]">Berita Acara Sah</div>
+                  <p class="text-[11px] text-slate-500 leading-relaxed">
+                    Hasil operasi dituangkan dalam BAP resmi yang dapat dipertanggungjawabkan.
+                  </p>
+                </div>
+              </div>
+
+              <div class="pt-2">
+                <a
+                  href="/lapor"
+                  class="inline-flex items-center gap-2 bg-[#071936] hover:bg-slate-800 text-white font-bold text-xs uppercase px-6 py-3.5 rounded-2xl transition shadow-md"
+                >
+                  <span>Mulai Laporkan Sekarang</span>
+                  <ArrowRight class="w-4 h-4" />
+                </a>
+              </div>
+            </div>
+          {/if}
+
+        </div>
+
+        <!-- Left Wing Bottom Guarantee Badges -->
+        <div class="pt-6 mt-6 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 text-[11px] text-slate-400">
+          <div class="flex items-center gap-2">
+            <ShieldCheck class="w-4 h-4 text-emerald-600" />
+            <span class="font-medium text-slate-600">Perlindungan Saksi &amp; Pelapor Terjamin</span>
+          </div>
+          <span class="font-mono text-slate-400">SIAP TERTIB Sulsel v2.4</span>
+        </div>
+      </div>
+
+      <!-- =========================================================================
+           RIGHT WING: HOLOGRAPHIC 4-STAGE OPERATIONAL PIPELINE (iOS Stepper)
+           ========================================================================= -->
+      <div class="lg:col-span-5 bg-gradient-to-b from-[#071329] via-[#0b1e3e] to-[#040812] text-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-white/10 relative overflow-hidden flex flex-col justify-between">
+        
+        <!-- Radiant Orb Behind Stepper -->
+        <div class="absolute top-0 right-0 w-64 h-64 rounded-full bg-[#246bfd]/15 blur-3xl pointer-events-none"></div>
+
+        <div class="relative z-10 space-y-6">
+          <!-- Stepper Header -->
+          <div class="flex items-center justify-between pb-4 border-b border-white/10">
+            <div class="space-y-0.5">
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span class="text-xs font-black uppercase tracking-wider text-slate-100">Alur Operasional Lapangan</span>
+              </div>
+              <p class="text-[11px] text-slate-400 font-light">Standar penanganan berjenjang 4 tahap</p>
+            </div>
+            <span class="text-[10px] font-mono font-bold text-[#F08300] bg-white/10 px-2.5 py-1 rounded-full border border-white/10">
+              SOP 24/7
+            </span>
+          </div>
+
+          <!-- Connected 4-Node Holographic Stepper (iOS Style) -->
+          <div class="space-y-3.5 relative">
+            
+            <!-- Connecting Glowing Vertical Line -->
+            <div class="absolute left-4 top-4 bottom-4 w-0.5 bg-gradient-to-b from-[#246bfd] via-[#F08300] to-emerald-400 opacity-30"></div>
+
+            <!-- Stage 01 -->
+            <div class="relative flex items-start gap-3.5 p-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition backdrop-blur-sm group">
+              <div class="w-8 h-8 rounded-xl bg-[#246bfd] text-white font-mono font-bold text-xs flex items-center justify-center shrink-0 shadow-md ring-2 ring-[#246bfd]/40">
+                01
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="font-extrabold text-xs text-white group-hover:text-blue-300 transition">Verifikasi &amp; Masking</span>
+                  <span class="text-[10px] font-mono text-blue-300 bg-blue-500/20 px-2 py-0.5 rounded-full border border-blue-400/30">
+                    &le; 2 Jam
+                  </span>
+                </div>
+                <p class="text-[11px] text-slate-300 mt-0.5 leading-snug">
+                  Validasi berkas &amp; bukti foto oleh petugas piket, identitas pelapor langsung di-masking.
+                </p>
+              </div>
+            </div>
+
+            <!-- Stage 02 -->
+            <div class="relative flex items-start gap-3.5 p-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition backdrop-blur-sm group">
+              <div class="w-8 h-8 rounded-xl bg-[#F08300] text-white font-mono font-bold text-xs flex items-center justify-center shrink-0 shadow-md ring-2 ring-[#F08300]/40">
+                02
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="font-extrabold text-xs text-white group-hover:text-amber-300 transition">Disposisi Wilayah</span>
+                  <span class="text-[10px] font-mono text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded-full border border-amber-400/30">
+                    &le; 4 Jam
+                  </span>
+                </div>
+                <p class="text-[11px] text-slate-300 mt-0.5 leading-snug">
+                  Penerusan perintah tugas ke bidang teknis (Trantibum, Perda, atau Pengamanan Aset).
+                </p>
+              </div>
+            </div>
+
+            <!-- Stage 03 -->
+            <div class="relative flex items-start gap-3.5 p-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition backdrop-blur-sm group">
+              <div class="w-8 h-8 rounded-xl bg-amber-500 text-white font-mono font-bold text-xs flex items-center justify-center shrink-0 shadow-md ring-2 ring-amber-500/40">
+                03
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="font-extrabold text-xs text-white group-hover:text-amber-300 transition">Patroli &amp; Penindakan</span>
+                  <span class="text-[10px] font-mono text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded-full border border-amber-400/30">
+                    SLA H+1
+                  </span>
+                </div>
+                <p class="text-[11px] text-slate-300 mt-0.5 leading-snug">
+                  Giat lapangan persuasif, penghentian pelanggaran, &amp; penerbitan surat peringatan resmi.
+                </p>
+              </div>
+            </div>
+
+            <!-- Stage 04 -->
+            <div class="relative flex items-start gap-3.5 p-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition backdrop-blur-sm group">
+              <div class="w-8 h-8 rounded-xl bg-emerald-500 text-white font-mono font-bold text-xs flex items-center justify-center shrink-0 shadow-md ring-2 ring-emerald-500/40">
+                04
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="font-extrabold text-xs text-white group-hover:text-emerald-300 transition">Penyelesaian &amp; BAP</span>
+                  <span class="text-[10px] font-mono text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded-full border border-emerald-400/30">
+                    Tuntas
+                  </span>
+                </div>
+                <p class="text-[11px] text-slate-300 mt-0.5 leading-snug">
+                  Penyusunan Berita Acara Pemeriksaan &amp; pemutakhiran status transparan ke email warga.
+                </p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Right Wing Bottom Live Beacon -->
+        <div class="pt-5 mt-5 border-t border-white/10 flex items-center justify-between text-[11px] text-slate-300">
+          <div class="flex items-center gap-2">
+            <Radio class="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
+            <span class="font-semibold text-white">139 Personel Piket Lapangan Siaga</span>
+          </div>
+          <a href="/lapor" class="text-[#F08300] hover:underline font-bold uppercase text-[10px] flex items-center gap-1">
+            <span>Buka Aduan</span>
+            <span>&rarr;</span>
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+
   </div>
 </section>
 
