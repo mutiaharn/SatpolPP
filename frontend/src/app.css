@@ -1,21 +1,33 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --satpol-canvas: #f8fafc;
+    --satpol-surface: #ffffff;
+    --satpol-navy: #0b172a;
+    --satpol-accent: #f08300;
+    --satpol-azure: #246bfd;
+    --satpol-glass-border: rgba(255, 255, 255, 0.7);
+    --satpol-glass-bg: rgba(255, 255, 255, 0.78);
+    --satpol-glass-dark: rgba(11, 23, 42, 0.85);
+  }
+
   html {
     scroll-behavior: smooth;
-    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-    color: #1a120c;
+    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+    color: #0f172a;
   }
 
   body {
-    background-color: #ffffff;
+    background-color: #f8fafc;
+    color: #0f172a;
   }
 
-  /* Native top-layer <dialog> scroll containment (prevent background scroll chaining) */
+  /* Native top-layer <dialog> scroll containment */
   dialog:modal {
     overscroll-behavior: contain;
   }
@@ -23,8 +35,9 @@
   dialog::backdrop {
     overflow: hidden;
     overscroll-behavior: contain;
-    background-color: rgba(18, 11, 7, 0.65);
-    backdrop-filter: blur(4px);
+    background-color: rgba(7, 14, 26, 0.65);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
 
   /* Validate only after user interaction or submission attempt */
@@ -36,18 +49,67 @@
   }
 }
 
+/* ==========================================================================
+   TAMALATE DESIGN SYSTEM - SOVEREIGN GLASS & SPECULAR UTILITIES
+   ========================================================================== */
+.ds-glass {
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 0 8px 30px -4px rgba(15, 23, 42, 0.06), 0 2px 6px rgba(15, 23, 42, 0.02);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  backdrop-filter: blur(16px) saturate(160%);
+}
+
+.ds-glass-strong {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 14px 38px -6px rgba(15, 23, 42, 0.08), 0 4px 10px rgba(15, 23, 42, 0.03);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+}
+
+.ds-glass-dark {
+  background: rgba(11, 23, 42, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.45);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  backdrop-filter: blur(18px) saturate(180%);
+}
+
+.ds-glass-gold {
+  background: linear-gradient(135deg, rgba(240, 131, 0, 0.08) 0%, rgba(255, 255, 255, 0.9) 100%);
+  border: 1px solid rgba(240, 131, 0, 0.25);
+  box-shadow: 0 10px 32px -4px rgba(240, 131, 0, 0.15);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+
+.ds-specular-top {
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.8);
+}
+
+.ds-specular-dark {
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
+}
+
+.ds-ambient-glow {
+  background-image: 
+    radial-gradient(800px 400px at 10% 0%, rgba(36, 107, 253, 0.08), transparent 60%),
+    radial-gradient(700px 380px at 90% 0%, rgba(240, 131, 0, 0.07), transparent 55%);
+}
+
 /* Custom scrollbar for modern subtle appearance */
 ::-webkit-scrollbar {
   width: 7px;
   height: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: #f5efe6;
+  background: #f1f5f9;
 }
 ::-webkit-scrollbar-thumb {
-  background: #c9b9a3;
+  background: #cbd5e1;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #9f8a6e;
+  background: #94a3b8;
 }

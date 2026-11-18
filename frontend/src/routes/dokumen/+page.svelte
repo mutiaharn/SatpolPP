@@ -45,24 +45,24 @@
   <title>Dokumen Publik &amp; Transparansi Kinerja | Satpol PP Prov. Sulsel</title>
 </svelte:head>
 
-<div class="bg-[#f9f4e8] border-b border-[#eee9db] py-10 px-4">
-  <div class="max-w-6xl mx-auto">
+<div class="bg-gradient-to-b from-[#070e1c] to-[#0f223d] text-white py-12 px-4 relative overflow-hidden ds-specular-dark">
+  <div class="absolute top-0 right-10 w-96 h-96 rounded-full bg-[#f08300]/10 blur-3xl pointer-events-none"></div>
+  <div class="max-w-6xl mx-auto relative z-10">
     <div class="text-[#F08300] font-bold text-xs uppercase tracking-widest">Transparansi Penyelenggaraan Negara</div>
-    <h1 class="text-3xl font-extrabold text-[#1a120c] tracking-tight mt-1">Dokumen &amp; Regulasi Publik Resmi</h1>
-    <div class="w-12 h-1 bg-[#F08300] mt-3 rounded-full"></div>
-    <p class="text-xs text-[#6f7775] mt-2 max-w-2xl">
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mt-1">Dokumen &amp; Regulasi Publik Resmi</h1>
+    <p class="text-xs sm:text-sm text-slate-300 mt-2 max-w-2xl font-light">
       Akses berkas perencanaan, penganggaran tahunan, laporan akuntabilitas kinerja (LAKIP/LKjIP), serta peraturan daerah ketertiban umum Satpol PP Prov. Sulsel.
     </p>
   </div>
 </div>
 
 <div class="py-10 px-4 max-w-6xl mx-auto space-y-6">
-  <!-- Category Filter Pills -->
-  <div class="flex flex-wrap gap-2 bg-white p-4 sm:p-5 border border-[#eee9db] rounded-xl shadow-xs">
+  <!-- Category Filter Pills (Tamalate Pill Style) -->
+  <div class="flex flex-wrap gap-2 ds-glass p-4 sm:p-5 border border-slate-200/80 rounded-2xl shadow-glass">
     {#each categories as cat}
       <button 
         type="button"
-        class={`px-3.5 py-2 text-xs font-bold uppercase transition rounded-lg ${selectedCategory === cat.id ? 'bg-[#3d261a] text-white shadow-xs' : 'bg-stone-50 border border-stone-200 text-[#1a120c] hover:bg-stone-100'}`}
+        class={`px-3.5 py-2 text-xs font-bold uppercase transition rounded-xl ${selectedCategory === cat.id ? 'bg-[#070e1c] text-white shadow-sm ring-2 ring-[#246bfd]/30' : 'bg-slate-100/80 border border-slate-200 text-slate-700 hover:bg-slate-200/70'}`}
         on:click={() => selectedCategory = cat.id}
       >
         {cat.label}
