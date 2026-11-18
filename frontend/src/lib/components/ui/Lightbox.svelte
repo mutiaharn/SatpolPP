@@ -62,30 +62,30 @@
   bind:this={dialogEl}
   aria-label={currentItem ? `Penampil Galeri: ${currentItem.title}` : 'Penampil Galeri Foto'}
   on:close={handleNativeClose}
-  class="m-0 max-w-none max-h-none w-screen h-screen bg-[#120b07]/95 text-white p-3 sm:p-6 select-none open:flex flex-col justify-between border-0"
+  class="m-0 max-w-none max-h-none w-screen h-screen bg-[#070e1c]/88 backdrop-blur-2xl text-white p-3 sm:p-6 select-none open:flex flex-col justify-between border-0 ds-specular-dark"
 >
   {#if currentItem}
-    <!-- Top Bar -->
+    <!-- Top Bar (Frosted Obsidian Glass Pill) -->
     <div class="flex items-center justify-between text-white border-b border-white/10 pb-3 shrink-0">
       <div class="flex items-center gap-3 truncate pr-4">
-        <span class="bg-[#F08300] text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full">
+        <span class="bg-[#F08300] text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-xs">
           {currentItem.category || 'Dokumentasi'}
         </span>
-        <span class="text-xs text-stone-300 font-medium truncate">
+        <span class="text-xs text-slate-200 font-medium truncate font-light">
           {currentItem.title}
         </span>
       </div>
 
       <div class="flex items-center gap-3 shrink-0">
         {#if items.length > 1}
-          <span class="text-xs font-mono text-stone-400">
+          <span class="text-xs font-mono text-slate-400 ds-glass-dark px-2.5 py-1 rounded-full border border-white/10">
             {currentIndex + 1} / {items.length}
           </span>
         {/if}
         <button
           type="button"
           on:click={handleClose}
-          class="p-2 text-stone-300 hover:text-white hover:bg-white/10 rounded-full transition"
+          class="p-2 text-slate-300 hover:text-white ds-glass-dark hover:bg-white/15 rounded-full border border-white/15 transition ds-press"
           aria-label="Tutup penampil galeri"
         >
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -101,7 +101,7 @@
         <button
           type="button"
           on:click={handlePrev}
-          class="absolute left-2 sm:left-4 z-10 p-3 rounded-full bg-black/50 hover:bg-black/80 text-white/80 hover:text-white backdrop-blur-sm border border-white/20 transition transform hover:scale-110"
+          class="absolute left-2 sm:left-4 z-10 p-3.5 rounded-full ds-glass-dark hover:bg-white/20 text-white/90 hover:text-white backdrop-blur-xl border border-white/25 transition transform hover:scale-105 ds-press shadow-2xl"
           aria-label="Foto Sebelumnya"
         >
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -113,14 +113,14 @@
       <img
         src={currentItem.image_url}
         alt={currentItem.title}
-        class="max-w-full max-h-[74vh] object-contain rounded-xl shadow-2xl transition duration-200"
+        class="max-w-full max-h-[74vh] object-contain rounded-2xl shadow-2xl transition duration-200 border border-white/15"
       />
 
       {#if items.length > 1}
         <button
           type="button"
           on:click={handleNext}
-          class="absolute right-2 sm:right-4 z-10 p-3 rounded-full bg-black/50 hover:bg-black/80 text-white/80 hover:text-white backdrop-blur-sm border border-white/20 transition transform hover:scale-110"
+          class="absolute right-2 sm:right-4 z-10 p-3.5 rounded-full ds-glass-dark hover:bg-white/20 text-white/90 hover:text-white backdrop-blur-xl border border-white/25 transition transform hover:scale-105 ds-press shadow-2xl"
           aria-label="Foto Selanjutnya"
         >
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">

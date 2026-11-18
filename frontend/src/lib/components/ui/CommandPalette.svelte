@@ -157,39 +157,39 @@
   <!-- Backdrop -->
   <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-noninteractive-element-interactions -->
   <div
-    class="fixed inset-0 z-50 bg-[#070e1c]/60 backdrop-blur-md flex items-start justify-center pt-16 sm:pt-24 px-4 transition-opacity animate-in fade-in duration-200"
+    class="fixed inset-0 z-50 bg-[#070e1c]/60 backdrop-blur-xl flex items-start justify-center pt-16 sm:pt-24 px-4 transition-opacity animate-in fade-in duration-200"
     role="presentation"
     on:click|self={close}
   >
-    <!-- Modal Container (Sovereign Porcelain Glassmorphism) -->
-    <div class="w-full max-w-2xl bg-white/95 rounded-2xl shadow-2xl border border-white/80 overflow-hidden text-[#0f172a] transform transition-all animate-in zoom-in-95 duration-200">
+    <!-- Modal Container (Sovereign Specular Frosted Glass) -->
+    <div class="w-full max-w-2xl ds-glass-strong rounded-3xl shadow-2xl border border-white/95 overflow-hidden text-[#0f172a] transform transition-all animate-in zoom-in-95 duration-200 ds-specular-top">
       <!-- Search Input Bar -->
-      <div class="relative flex items-center px-4 py-3.5 border-b border-slate-100 bg-slate-50/70">
+      <div class="relative flex items-center px-4 py-3.5 border-b border-white/80 bg-white/40 backdrop-blur-md">
         <Search class="w-5 h-5 text-slate-400 shrink-0 ml-1" />
         <input
           bind:this={inputEl}
           bind:value={query}
           type="text"
           placeholder="Cari berita, regulasi, dokumen publik, atau layanan..."
-          class="w-full px-3 py-1.5 bg-transparent border-0 text-sm md:text-base text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-0"
+          class="w-full px-3 py-1.5 bg-transparent border-0 text-sm md:text-base text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-0 font-light"
         />
         {#if query}
           <button
             type="button"
             on:click={() => query = ''}
-            class="p-1 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-200/60 transition"
+            class="p-1 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-900/5 transition ds-press"
             aria-label="Hapus pencarian"
           >
             <X class="w-4 h-4" />
           </button>
         {/if}
-        <div class="hidden sm:flex items-center gap-1 text-[11px] font-mono text-slate-400 bg-white px-2 py-0.5 rounded-md border border-slate-200 ml-2 shadow-xs">
+        <div class="hidden sm:flex items-center gap-1 text-[11px] font-mono text-slate-400 bg-white/80 px-2 py-0.5 rounded-md border border-white/80 ml-2 shadow-2xs">
           <span>ESC</span>
         </div>
       </div>
 
       <!-- Result List -->
-      <div class="max-h-[60vh] overflow-y-auto p-2 divide-y divide-slate-100/60">
+      <div class="max-h-[60vh] overflow-y-auto p-2 divide-y divide-white/60">
         {#if filteredResults.length > 0}
           <div class="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 flex justify-between items-center">
             <span>Hasil Pencarian ({filteredResults.length})</span>
@@ -202,7 +202,7 @@
                 type="button"
                 on:click={() => navigate(item.href)}
                 on:mouseenter={() => selectedIndex = idx}
-                class="w-full text-left px-3.5 py-2.5 rounded-xl flex items-start gap-3 transition-colors {selectedIndex === idx ? 'bg-[#f4f8ff] text-[#071936] ring-1 ring-[#246bfd]/25' : 'hover:bg-slate-50 text-slate-700'}"
+                class="w-full text-left px-3.5 py-2.5 rounded-xl flex items-start gap-3 transition-colors duration-150 {selectedIndex === idx ? 'bg-white/80 text-[#071936] ring-1 ring-[#246bfd]/30 shadow-xs' : 'hover:bg-white/50 text-slate-700'}"
               >
                 <!-- Icon by Type -->
                 <div class="mt-0.5 p-2 rounded-lg shrink-0 {item.type === 'berita' ? 'bg-blue-50 text-[#246bfd]' : item.type === 'dokumen' ? 'bg-amber-50 text-[#f08300]' : item.type === 'layanan' ? 'bg-emerald-50 text-emerald-600' : 'bg-purple-50 text-purple-600'}">
@@ -227,7 +227,7 @@
                       {item.title}
                     </h4>
                   </div>
-                  <p class="text-[11px] text-slate-500 line-clamp-1 mt-0.5">
+                  <p class="text-[11px] text-slate-500 line-clamp-1 mt-0.5 font-light">
                     {item.description}
                   </p>
                 </div>
@@ -248,10 +248,10 @@
       </div>
 
       <!-- Footer Help Bar -->
-      <div class="px-4 py-2.5 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+      <div class="px-4 py-2.5 bg-white/40 backdrop-blur-md border-t border-white/80 flex items-center justify-between text-[11px] text-slate-400">
         <div class="flex items-center gap-3">
-          <span class="inline-flex items-center gap-1"><kbd class="bg-white px-1.5 py-0.5 rounded border border-slate-200 text-[10px] font-mono shadow-2xs">&uarr;&darr;</kbd> Navigasi</span>
-          <span class="inline-flex items-center gap-1"><kbd class="bg-white px-1.5 py-0.5 rounded border border-slate-200 text-[10px] font-mono shadow-2xs">&crarr;</kbd> Pilih</span>
+          <span class="inline-flex items-center gap-1"><kbd class="bg-white/80 px-1.5 py-0.5 rounded border border-white/80 text-[10px] font-mono shadow-2xs">&uarr;&darr;</kbd> Navigasi</span>
+          <span class="inline-flex items-center gap-1"><kbd class="bg-white/80 px-1.5 py-0.5 rounded border border-white/80 text-[10px] font-mono shadow-2xs">&crarr;</kbd> Pilih</span>
         </div>
         <span class="font-medium text-[#f08300]">Sistem Pencarian Satpol PP Sulsel</span>
       </div>

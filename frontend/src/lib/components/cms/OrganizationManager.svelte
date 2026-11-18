@@ -217,25 +217,25 @@
       <th class="px-5 py-3.5 text-right">Aksi</th>
     </tr>
 
-    <tr slot="row" let:item class="hover:bg-[#f9f4e8]/55 transition">
+    <tr slot="row" let:item class="hover:bg-slate-50/80 transition">
       <td class="px-5 py-4 align-top whitespace-nowrap">
-        <span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-[#1a120c] text-[#F08300] font-mono text-xs font-black tracking-wide">
+        <span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-[#0b172a] text-[#F08300] font-mono text-xs font-bold tracking-wide">
           {item.org_code}
         </span>
-        <div class="text-[10px] font-bold text-[#3d261a]/70 mt-1">
+        <div class="text-[10px] font-bold text-slate-500 mt-1">
           Level {item.level} • Urutan {item.sort_order}
         </div>
       </td>
 
       <td class="px-5 py-4 align-top max-w-xs">
-        <div class="text-xs font-black text-[#1a120c]">{item.position_title}</div>
+        <div class="text-xs font-bold text-slate-900">{item.position_title}</div>
         {#if item.description}
-          <p class="text-[11px] text-[#3d261a]/75 line-clamp-2 mt-1">{item.description}</p>
+          <p class="text-[11px] text-slate-500 line-clamp-2 mt-1 font-light">{item.description}</p>
         {/if}
         {#if item.sub_units && item.sub_units.length > 0}
           <div class="mt-2 flex flex-wrap gap-1">
             {#each item.sub_units as sub}
-              <span class="inline-block px-2 py-0.5 rounded-lg bg-[#f9f4e8] border border-[#eee9db] text-[10px] font-medium text-[#3d261a]">
+              <span class="inline-block px-2 py-0.5 rounded-lg bg-slate-100 border border-slate-200 text-[10px] font-medium text-slate-700">
                 {sub}
               </span>
             {/each}
@@ -246,23 +246,23 @@
       <td class="px-5 py-4 align-top">
         <div class="flex items-center gap-2.5">
           {#if item.photo_url}
-            <img src={item.photo_url} alt={item.official_name} class="w-9 h-9 rounded-xl object-cover border border-[#eee9db] shrink-0" />
+            <img src={item.photo_url} alt={item.official_name} class="w-9 h-9 rounded-xl object-cover border border-slate-200 shrink-0" />
           {:else}
-            <div class="w-9 h-9 rounded-xl bg-[#f9f4e8] border border-[#eee9db] text-[#3d261a] flex items-center justify-center shrink-0">
+            <div class="w-9 h-9 rounded-xl bg-slate-100 border border-slate-200 text-slate-600 flex items-center justify-center shrink-0">
               <Users class="w-4 h-4" />
             </div>
           {/if}
           <div>
-            <div class="text-xs font-bold text-[#1a120c]">{item.official_name}</div>
-            <div class="text-[11px] text-[#3d261a]/70">
+            <div class="text-xs font-bold text-slate-900">{item.official_name}</div>
+            <div class="text-[11px] text-slate-500">
               {item.rank || 'Struktural'}{item.nip ? ` • NIP ${item.nip}` : ''}
             </div>
           </div>
         </div>
       </td>
 
-      <td class="px-5 py-4 align-top text-xs text-[#3d261a]">
-        <span class="inline-block px-2.5 py-1 rounded-xl bg-[#f9f4e8] border border-[#eee9db] font-medium">
+      <td class="px-5 py-4 align-top text-xs text-slate-700">
+        <span class="inline-block px-2.5 py-1 rounded-xl bg-slate-100 border border-slate-200 font-medium">
           {findParentTitle(item.parent_code)}
         </span>
       </td>
@@ -273,7 +273,7 @@
             type="button"
             on:click={() => openEditModal(item)}
             title="Edit unit {item.org_code}"
-            class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-[#f9f4e8] hover:bg-[#eee9db] text-[#1a120c] text-xs font-bold border border-[#eee9db] transition"
+            class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold border border-slate-200 transition"
           >
             <Edit3 class="w-3.5 h-3.5" />
             Edit

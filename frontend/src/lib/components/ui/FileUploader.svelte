@@ -81,17 +81,17 @@
 <div class="space-y-2">
   {#if label}
     <div class="flex items-center justify-between">
-      <span class="text-xs font-bold text-[#1a120c] flex items-center gap-1">
+      <span class="text-xs font-bold text-slate-800 flex items-center gap-1">
         {label}
         {#if required}
-          <span class="text-red-500">*</span>
+          <span class="text-rose-500">*</span>
         {/if}
       </span>
       {#if value}
         <button
           type="button"
           on:click={handleRemove}
-          class="text-[11px] font-semibold text-red-600 hover:text-red-700 flex items-center gap-1 transition"
+          class="text-[11px] font-semibold text-rose-600 hover:text-rose-700 flex items-center gap-1 transition"
         >
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -113,9 +113,9 @@
   />
 
   {#if value}
-    <!-- Image Preview Thumbnail State (Shadcn style) -->
-    <div class="relative bg-[#faf7f2] border-2 border-[#e8dbc9] rounded-xl overflow-hidden group shadow-xs">
-      <div class={`w-full overflow-hidden flex items-center justify-center bg-stone-900/5 ${previewShape === 'banner' ? 'h-52' : 'h-40'}`}>
+    <!-- Image Preview Thumbnail State -->
+    <div class="relative ds-glass border border-slate-200/80 rounded-2xl overflow-hidden group shadow-2xs">
+      <div class={`w-full overflow-hidden flex items-center justify-center bg-slate-900/5 ${previewShape === 'banner' ? 'h-52' : 'h-40'}`}>
         <img
           src={value}
           alt="Thumbnail Preview"
@@ -124,8 +124,8 @@
       </div>
 
       <!-- Action Overlay Bar -->
-      <div class="p-3 bg-white border-t border-[#eee9db] flex flex-wrap items-center justify-between gap-2 text-xs">
-        <div class="flex items-center gap-2 truncate text-stone-600">
+      <div class="p-3 bg-white border-t border-slate-200/80 flex flex-wrap items-center justify-between gap-2 text-xs">
+        <div class="flex items-center gap-2 truncate text-slate-600">
           <svg class="w-4 h-4 text-[#F08300] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
@@ -136,14 +136,14 @@
           <button
             type="button"
             on:click={triggerBrowse}
-            class="px-2.5 py-1 text-[11px] font-semibold bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-md transition"
+            class="px-2.5 py-1 text-[11px] font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition"
           >
             Ganti Foto
           </button>
           <button
             type="button"
             on:click={handleRemove}
-            class="p-1 text-stone-400 hover:text-red-600 hover:bg-red-50 rounded-md transition"
+            class="p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition"
             title="Hapus"
             aria-label="Hapus foto"
           >
@@ -162,24 +162,24 @@
       on:dragleave={handleDragLeave}
       on:drop={handleDrop}
       on:click={triggerBrowse}
-      class={`w-full border-2 border-dashed rounded-xl p-6 sm:p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-all duration-200 select-none ${
+      class={`w-full border-2 border-dashed rounded-2xl p-6 sm:p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-all duration-200 select-none ${
         isDragging
-          ? 'border-[#F08300] bg-[#f9f4e8] scale-[1.01] shadow-inner'
-          : 'border-stone-300 hover:border-[#F08300] bg-stone-50/60 hover:bg-[#faf7f2]/50'
+          ? 'border-[#246bfd] bg-blue-50/50 scale-[1.01] shadow-inner'
+          : 'border-slate-300 hover:border-[#246bfd] bg-slate-50/70 hover:bg-blue-50/20'
       }`}
     >
-      <div class={`w-12 h-12 rounded-full flex items-center justify-center mb-3 transition ${
-        isDragging ? 'bg-[#F08300] text-white scale-110' : 'bg-stone-100 text-[#8c6b45]'
+      <div class={`w-12 h-12 rounded-2xl flex items-center justify-center mb-3 transition ${
+        isDragging ? 'bg-[#246bfd] text-white scale-110 shadow-glass-azure' : 'bg-slate-100 text-slate-500'
       }`}>
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
         </svg>
       </div>
 
-      <div class="text-xs font-semibold text-[#1a120c] mb-1">
-        <span class="text-[#F08300] underline">Klik untuk mengunggah</span> atau drag & drop file ke sini
+      <div class="text-xs font-semibold text-slate-900 mb-1">
+        <span class="text-[#246bfd] underline">Klik untuk mengunggah</span> atau drag &amp; drop file ke sini
       </div>
-      <p class="text-[11px] text-[#6f7775] max-w-sm">
+      <p class="text-[11px] text-slate-500 max-w-sm font-light">
         {description}
       </p>
     </button>

@@ -1,4 +1,4 @@
-<script lang="ts">
+﻿<script lang="ts">
   import { onMount } from 'svelte';
   import {
     LayoutDashboard,
@@ -260,39 +260,39 @@
       if (line.startsWith('## ')) {
         if (inOl) { html += '</ol>'; inOl = false; }
         if (inUl) { html += '</ul>'; inUl = false; }
-        html += `<h2 class="text-xl font-extrabold text-[#1a120c] mt-5 mb-2">${formatInline(line.slice(3))}</h2>`;
+        html += `<h2 class="text-xl font-extrabold text-slate-900 mt-5 mb-2">${formatInline(line.slice(3))}</h2>`;
         continue;
       }
       if (line.startsWith('### ')) {
         if (inOl) { html += '</ol>'; inOl = false; }
         if (inUl) { html += '</ul>'; inUl = false; }
-        html += `<h3 class="text-base font-bold text-[#1a120c] mt-4 mb-1.5">${formatInline(line.slice(4))}</h3>`;
+        html += `<h3 class="text-base font-bold text-slate-900 mt-4 mb-1.5">${formatInline(line.slice(4))}</h3>`;
         continue;
       }
       if (line.startsWith('> ')) {
         if (inOl) { html += '</ol>'; inOl = false; }
         if (inUl) { html += '</ul>'; inUl = false; }
-        html += `<blockquote class="border-l-4 border-[#F08300] pl-4 italic text-[#3d261a] my-3 bg-[#f9f4e8] py-2 rounded-r-xl">${formatInline(line.slice(2))}</blockquote>`;
+        html += `<blockquote class="border-l-4 border-[#F08300] pl-4 italic text-slate-700 my-3 bg-slate-100 py-2 rounded-r-xl">${formatInline(line.slice(2))}</blockquote>`;
         continue;
       }
       const numMatch = line.match(/^\s*(\d+)\.\s+(.*)$/);
       if (numMatch) {
         if (inUl) { html += '</ul>'; inUl = false; }
-        if (!inOl) { html += '<ol class="list-decimal pl-5 space-y-1 my-2 text-xs text-[#3d261a]">'; inOl = true; }
+        if (!inOl) { html += '<ol class="list-decimal pl-5 space-y-1 my-2 text-xs text-slate-700">'; inOl = true; }
         html += `<li>${formatInline(numMatch[2])}</li>`;
         continue;
       }
       const bulletMatch = line.match(/^\s*[-*]\s+(.*)$/);
       if (bulletMatch) {
         if (inOl) { html += '</ol>'; inOl = false; }
-        if (!inUl) { html += '<ul class="list-disc pl-5 space-y-1 my-2 text-xs text-[#3d261a]">'; inUl = true; }
+        if (!inUl) { html += '<ul class="list-disc pl-5 space-y-1 my-2 text-xs text-slate-700">'; inUl = true; }
         html += `<li>${formatInline(bulletMatch[1])}</li>`;
         continue;
       }
       if (inOl) { html += '</ol>'; inOl = false; }
       if (inUl) { html += '</ul>'; inUl = false; }
       if (line.trim() !== '') {
-        html += `<p class="text-xs text-[#3d261a] leading-relaxed my-2.5">${formatInline(line)}</p>`;
+        html += `<p class="text-xs text-slate-700 leading-relaxed my-2.5">${formatInline(line)}</p>`;
       }
     }
     if (inOl) html += '</ol>';
@@ -526,7 +526,7 @@
     <a
       href="/lapor"
       target="_blank"
-      class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#f9f4e8] hover:bg-[#eee9db] text-[#1a120c] text-xs font-bold border border-[#eee9db] transition"
+      class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-bold border border-slate-200 transition"
     >
       Halaman Lapor Publik
     </a>
@@ -535,7 +535,7 @@
   {#if toastMessage}
     <div
       role="status"
-      class="flex items-center justify-between gap-3 px-4 py-3 rounded-2xl border shadow-xs text-xs font-bold {toastType === 'success' ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : 'bg-[#f9f4e8] border-[#F08300]/40 text-[#1a120c]'}"
+      class="flex items-center justify-between gap-3 px-4 py-3 rounded-2xl border shadow-xs text-xs font-bold {toastType === 'success' ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : 'bg-slate-100 border-[#F08300]/40 text-slate-900'}"
     >
       <div class="flex items-center gap-2">
         <CheckCircle2 class="w-4 h-4 text-emerald-600 shrink-0" />
@@ -551,27 +551,27 @@
   {#if currentTab === 'overview'}
     <div class="space-y-6">
       <div class="grid grid-cols-2 lg:grid-cols-5 gap-4">
-        <div class="bg-white border border-[#eee9db] rounded-2xl p-5 shadow-xs">
-          <div class="text-[11px] font-bold text-[#3d261a]/75 uppercase">Total Aduan</div>
-          <div class="text-3xl font-black text-[#1a120c] mt-2">{totalCount}</div>
-          <div class="text-[11px] text-[#3d261a]/60 mt-1">Registrasi SIAP TERTIB</div>
+        <div class="ds-glass-card rounded-2xl p-5 border border-white/80 ds-specular-top ds-hover-lift">
+          <div class="text-[11px] font-bold text-slate-700/75 uppercase">Total Aduan</div>
+          <div class="text-3xl font-black text-slate-900 mt-2">{totalCount}</div>
+          <div class="text-[11px] text-slate-700/60 mt-1">Registrasi SIAP TERTIB</div>
         </div>
-        <div class="bg-white border border-amber-200 rounded-2xl p-5 shadow-xs">
+        <div class="ds-glass-card rounded-2xl p-5 border border-amber-300/40 ds-specular-top ds-hover-lift">
           <div class="text-[11px] font-bold text-amber-800 uppercase">Menunggu Verifikasi</div>
           <div class="text-3xl font-black text-amber-700 mt-2">{pendingCount}</div>
           <div class="text-[11px] text-amber-700/80 mt-1">Perlu verifikasi awal</div>
         </div>
-        <div class="bg-white border border-sky-200 rounded-2xl p-5 shadow-xs">
+        <div class="ds-glass-card rounded-2xl p-5 border border-sky-300/40 ds-specular-top ds-hover-lift">
           <div class="text-[11px] font-bold text-sky-800 uppercase">Disposisi Bidang</div>
           <div class="text-3xl font-black text-sky-700 mt-2">{disposedCount}</div>
           <div class="text-[11px] text-sky-700/80 mt-1">Diteruskan ke unit</div>
         </div>
-        <div class="bg-white border border-orange-200 rounded-2xl p-5 shadow-xs">
+        <div class="ds-glass-card rounded-2xl p-5 border border-orange-300/40 ds-specular-top ds-hover-lift">
           <div class="text-[11px] font-bold text-[#F08300] uppercase">Penindakan Patroli</div>
           <div class="text-3xl font-black text-[#F08300] mt-2">{inProgressCount}</div>
-          <div class="text-[11px] text-[#3d261a]/70 mt-1">Giat lapangan aktif</div>
+          <div class="text-[11px] text-slate-700/70 mt-1">Giat lapangan aktif</div>
         </div>
-        <div class="bg-white border border-emerald-200 rounded-2xl p-5 shadow-xs col-span-2 lg:col-span-1">
+        <div class="ds-glass-card rounded-2xl p-5 border border-emerald-300/40 ds-specular-top ds-hover-lift col-span-2 lg:col-span-1">
           <div class="text-[11px] font-bold text-emerald-800 uppercase">Selesai (BAP)</div>
           <div class="text-3xl font-black text-emerald-700 mt-2">{completedCount}</div>
           <div class="text-[11px] text-emerald-700/80 mt-1">Tuntas terdokumentasi</div>
@@ -579,69 +579,69 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-        <div class="bg-white border border-[#eee9db] rounded-2xl p-5 shadow-xs flex flex-col justify-between space-y-4">
+        <div class="ds-glass-card rounded-2xl p-5 border border-white/80 ds-specular-top ds-hover-lift flex flex-col justify-between space-y-4">
           <div class="space-y-1.5">
             <div class="text-[11px] font-black text-[#F08300] uppercase tracking-wider">SOP SIAP TERTIB</div>
-            <h2 class="text-sm font-black text-[#1a120c]">Meja Verifikasi Aduan</h2>
-            <p class="text-xs text-[#3d261a]/75 leading-relaxed">
+            <h2 class="text-sm font-black text-slate-900">Meja Verifikasi Aduan</h2>
+            <p class="text-xs text-slate-700/75 leading-relaxed">
               Ada <strong>{pendingCount} laporan</strong> baru yang menunggu pengecekan dan disposisi.
             </p>
           </div>
           <button
             type="button"
             on:click={() => (currentTab = 'complaints')}
-            class="w-full py-2.5 px-4 rounded-xl bg-[#F08300] hover:bg-[#d97300] text-white text-xs font-bold transition"
+            class="w-full py-2.5 px-4 rounded-xl bg-[#F08300] hover:bg-[#d97300] ds-hover-lift ds-press text-white text-xs font-bold transition shadow-xs ds-specular-top cursor-pointer"
           >
             Buka Meja Aduan
           </button>
         </div>
 
-        <div class="bg-white border border-[#eee9db] rounded-2xl p-5 shadow-xs flex flex-col justify-between space-y-4">
+        <div class="ds-glass-card rounded-2xl p-5 border border-white/80 ds-specular-top ds-hover-lift flex flex-col justify-between space-y-4">
           <div class="space-y-1.5">
-            <div class="text-[11px] font-black text-[#3d261a] uppercase tracking-wider">Redaksi Humas</div>
-            <h2 class="text-sm font-black text-[#1a120c]">Tulis Warta Berita</h2>
-            <p class="text-xs text-[#3d261a]/75 leading-relaxed">
+            <div class="text-[11px] font-black text-slate-700 uppercase tracking-wider">Redaksi Humas</div>
+            <h2 class="text-sm font-black text-slate-900">Tulis Warta Berita</h2>
+            <p class="text-xs text-slate-700/75 leading-relaxed">
               Publikasikan kegiatan patroli penertiban dan pengumuman resmi Satpol PP.
             </p>
           </div>
           <button
             type="button"
             on:click={() => { currentTab = 'articles'; openNewArticleEditor(); }}
-            class="w-full py-2.5 px-4 rounded-xl bg-[#3d261a] hover:bg-[#241710] text-white text-xs font-bold transition"
+            class="w-full py-2.5 px-4 rounded-xl bg-[#0b172a] hover:bg-slate-800 ds-hover-lift ds-press text-white text-xs font-bold transition shadow-xs ds-specular-top cursor-pointer"
           >
             Tulis Berita Baru
           </button>
         </div>
 
-        <div class="bg-white border border-[#eee9db] rounded-2xl p-5 shadow-xs flex flex-col justify-between space-y-4">
+        <div class="ds-glass-card rounded-2xl p-5 border border-white/80 ds-specular-top ds-hover-lift flex flex-col justify-between space-y-4">
           <div class="space-y-1.5">
             <div class="text-[11px] font-black text-emerald-700 uppercase tracking-wider">Transparansi PPID</div>
-            <h2 class="text-sm font-black text-[#1a120c]">Unggah Dokumen Publik</h2>
-            <p class="text-xs text-[#3d261a]/75 leading-relaxed">
+            <h2 class="text-sm font-black text-slate-900">Unggah Dokumen Publik</h2>
+            <p class="text-xs text-slate-700/75 leading-relaxed">
               Tambahkan Renja, Renstra, DPA, atau peraturan daerah ke katalog publik.
             </p>
           </div>
           <button
             type="button"
             on:click={() => { currentTab = 'documents'; openDocModal(); }}
-            class="w-full py-2.5 px-4 rounded-xl bg-[#1a120c] hover:bg-[#3d261a] text-white text-xs font-bold transition"
+            class="w-full py-2.5 px-4 rounded-xl bg-[#0b172a] hover:bg-slate-800 ds-hover-lift ds-press text-white text-xs font-bold transition shadow-xs ds-specular-top cursor-pointer"
           >
             Unggah Dokumen PDF
           </button>
         </div>
 
-        <div class="bg-white border border-[#eee9db] rounded-2xl p-5 shadow-xs flex flex-col justify-between space-y-4">
+        <div class="ds-glass-card rounded-2xl p-5 border border-white/80 ds-specular-top ds-hover-lift flex flex-col justify-between space-y-4">
           <div class="space-y-1.5">
             <div class="text-[11px] font-black text-[#F08300] uppercase tracking-wider">Kelembagaan Dinamis</div>
-            <h2 class="text-sm font-black text-[#1a120c]">Struktur Organisasi</h2>
-            <p class="text-xs text-[#3d261a]/75 leading-relaxed">
+            <h2 class="text-sm font-black text-slate-900">Struktur Organisasi</h2>
+            <p class="text-xs text-slate-700/75 leading-relaxed">
               Kelola { $organizationStore.length } simpul jabatan dan ID Khusus unit (<code class="font-mono">ORG-*</code>).
             </p>
           </div>
           <button
             type="button"
             on:click={() => (currentTab = 'organization')}
-            class="w-full py-2.5 px-4 rounded-xl bg-[#f9f4e8] hover:bg-[#eee9db] text-[#1a120c] border border-[#eee9db] text-xs font-bold transition"
+            class="w-full py-2.5 px-4 rounded-xl ds-glass hover:bg-white text-slate-900 border border-white/80 ds-hover-lift ds-press text-xs font-bold transition cursor-pointer"
           >
             Kelola Struktur SOTK
           </button>
@@ -662,39 +662,39 @@
       description="Identitas pelapor tetap disamarkan di tampilan daftar hingga dibuka pada log audit."
       emptyMessage="Tidak ada aduan yang cocok dengan filter status atau kata kunci."
     >
-      <div slot="header-left" class="mt-3 flex flex-wrap gap-1.5">
+      <div slot="header-left" class="mt-3 flex flex-wrap gap-2">
         <button
           type="button"
           on:click={() => (statusFilter = 'ALL')}
-          class="px-3 py-1.5 rounded-xl text-[11px] font-bold transition {statusFilter === 'ALL' ? 'bg-[#1a120c] text-white' : 'bg-[#f9f4e8] text-[#3d261a] hover:bg-[#eee9db]'}"
+          class="px-3.5 py-1.5 rounded-xl text-[11px] font-bold uppercase transition ds-press {statusFilter === 'ALL' ? 'ds-pill-active' : 'ds-pill-inactive'}"
         >
           Semua ({totalCount})
         </button>
         <button
           type="button"
           on:click={() => (statusFilter = 'MENUNGGU_VERIFIKASI')}
-          class="px-3 py-1.5 rounded-xl text-[11px] font-bold transition {statusFilter === 'MENUNGGU_VERIFIKASI' ? 'bg-[#F08300] text-white' : 'bg-amber-50 text-amber-900 hover:bg-amber-100'}"
+          class="px-3.5 py-1.5 rounded-xl text-[11px] font-bold uppercase transition ds-press {statusFilter === 'MENUNGGU_VERIFIKASI' ? 'bg-[#070e1c] text-amber-300 ring-2 ring-amber-300 shadow-[0_0_12px_rgba(251,191,36,0.35)]' : 'ds-pill-inactive text-amber-900'}"
         >
           Verifikasi ({pendingCount})
         </button>
         <button
           type="button"
           on:click={() => (statusFilter = 'DISPOSISI_BIDANG')}
-          class="px-3 py-1.5 rounded-xl text-[11px] font-bold transition {statusFilter === 'DISPOSISI_BIDANG' ? 'bg-sky-700 text-white' : 'bg-sky-50 text-sky-900 hover:bg-sky-100'}"
+          class="px-3.5 py-1.5 rounded-xl text-[11px] font-bold uppercase transition ds-press {statusFilter === 'DISPOSISI_BIDANG' ? 'bg-[#070e1c] text-sky-300 ring-2 ring-sky-300 shadow-[0_0_12px_rgba(56,189,248,0.35)]' : 'ds-pill-inactive text-sky-900'}"
         >
           Disposisi ({disposedCount})
         </button>
         <button
           type="button"
           on:click={() => (statusFilter = 'PENINDAKAN_LAPANGAN')}
-          class="px-3 py-1.5 rounded-xl text-[11px] font-bold transition {statusFilter === 'PENINDAKAN_LAPANGAN' ? 'bg-[#3d261a] text-white' : 'bg-orange-50 text-orange-900 hover:bg-orange-100'}"
+          class="px-3.5 py-1.5 rounded-xl text-[11px] font-bold uppercase transition ds-press {statusFilter === 'PENINDAKAN_LAPANGAN' ? 'bg-[#070e1c] text-[#F08300] ring-2 ring-[#F08300] shadow-[0_0_12px_rgba(240,131,0,0.35)]' : 'ds-pill-inactive text-orange-900'}"
         >
           Penindakan ({inProgressCount})
         </button>
         <button
           type="button"
           on:click={() => (statusFilter = 'SELESAI')}
-          class="px-3 py-1.5 rounded-xl text-[11px] font-bold transition {statusFilter === 'SELESAI' ? 'bg-emerald-700 text-white' : 'bg-emerald-50 text-emerald-900 hover:bg-emerald-100'}"
+          class="px-3.5 py-1.5 rounded-xl text-[11px] font-bold uppercase transition ds-press {statusFilter === 'SELESAI' ? 'bg-[#070e1c] text-emerald-300 ring-2 ring-emerald-300 shadow-[0_0_12px_rgba(52,211,153,0.35)]' : 'ds-pill-inactive text-emerald-900'}"
         >
           Selesai ({completedCount})
         </button>
@@ -709,19 +709,19 @@
         <th class="px-4 py-3.5 text-right">Aksi</th>
       </tr>
 
-      <tr slot="row" let:item class="hover:bg-[#f9f4e8]/55 transition">
+      <tr slot="row" let:item class="hover:bg-slate-100/55 transition">
         <td class="px-4 py-3.5 align-top whitespace-nowrap">
-          <div class="font-mono text-xs font-black text-[#1a120c]">{item.ticket_code}</div>
-          <div class="text-[11px] text-[#3d261a]/65 mt-0.5">
+          <div class="font-mono text-xs font-black text-slate-900">{item.ticket_code}</div>
+          <div class="text-[11px] text-slate-700/65 mt-0.5">
             {new Date(item.created_at).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}
           </div>
         </td>
 
         <td class="px-4 py-3.5 align-top">
-          <div class="font-bold text-xs text-[#1a120c]">
+          <div class="font-bold text-xs text-slate-900">
             {maskComplaintIdentity(item).name}
           </div>
-          <div class="text-[11px] font-mono text-[#3d261a]/70">
+          <div class="text-[11px] font-mono text-slate-700/70">
             {maskComplaintIdentity(item).phone}
           </div>
           {#if item.is_anonymous}
@@ -732,8 +732,8 @@
         </td>
 
         <td class="px-4 py-3.5 align-top max-w-xs">
-          <div class="font-bold text-xs text-[#1a120c]">{item.violation_type.replaceAll('_', ' ')}</div>
-          <div class="text-[11px] text-[#3d261a]/80 mt-0.5 flex items-center gap-1">
+          <div class="font-bold text-xs text-slate-900">{item.violation_type.replaceAll('_', ' ')}</div>
+          <div class="text-[11px] text-slate-700/80 mt-0.5 flex items-center gap-1">
             <MapPin class="w-3 h-3 text-[#F08300] shrink-0" />
             <span class="truncate">{item.regency_name}{item.district_name ? `, ${item.district_name}` : ''}</span>
           </div>
@@ -743,7 +743,7 @@
           <StatusBadge status={item.status} size="sm" />
         </td>
 
-        <td class="px-4 py-3.5 align-top text-xs text-[#3d261a]">
+        <td class="px-4 py-3.5 align-top text-xs text-slate-700">
           {item.disposed_to || 'Belum didisposisikan'}
         </td>
 
@@ -763,11 +763,11 @@
   <!-- TAB 3: CMS BERITA -->
   {#if currentTab === 'articles'}
     {#if isWritingArticle}
-      <div class="bg-white border border-[#eee9db] rounded-2xl p-6 md:p-8 shadow-xs space-y-6">
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-[#eee9db] pb-4">
+      <div class="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-xs space-y-6">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-200 pb-4">
           <div>
             <div class="text-[#F08300] font-bold text-xs uppercase tracking-wider">Redaksi &amp; Publikasi Warta</div>
-            <h2 class="text-lg font-black text-[#1a120c] mt-0.5">
+            <h2 class="text-lg font-black text-slate-900 mt-0.5">
               {editingArticleId ? 'Edit Warta Berita' : 'Editor Penulisan Berita Resmi'}
             </h2>
           </div>
@@ -775,7 +775,7 @@
             <button
               type="button"
               on:click={() => (isWritingArticle = false)}
-              class="px-4 py-2 border border-[#eee9db] text-[#3d261a] text-xs font-bold rounded-xl hover:bg-[#f9f4e8] transition"
+              class="px-4 py-2 border border-slate-200 text-slate-700 text-xs font-bold rounded-xl hover:bg-slate-100 transition"
             >
               Batal
             </button>
@@ -797,7 +797,7 @@
 
         <div class="space-y-5">
           <div>
-            <label for="editor-article-title" class="block text-xs font-bold uppercase text-[#1a120c] mb-1.5">
+            <label for="editor-article-title" class="block text-xs font-bold uppercase text-slate-900 mb-1.5">
               Judul Berita (Headline) *
             </label>
             <input
@@ -807,9 +807,9 @@
               on:input={handleTitleInput}
               required
               placeholder="Masukkan judul berita yang informatif dan akurat..."
-              class="w-full border border-[#eee9db] rounded-xl p-3 text-sm font-bold text-[#1a120c] focus:border-[#F08300] focus:outline-none"
+              class="w-full border border-slate-200 rounded-xl p-3 text-sm font-bold text-slate-900 focus:border-[#F08300] focus:outline-none"
             />
-            <div class="flex justify-between items-center text-[11px] text-[#3d261a]/65 mt-1.5">
+            <div class="flex justify-between items-center text-[11px] text-slate-700/65 mt-1.5">
               <span class="font-mono">Slug: /berita/{articleSlug || 'judul-berita'}</span>
               <span>{articleTitle.length} karakter</span>
             </div>
@@ -817,8 +817,8 @@
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label for="editor-article-cat" class="block text-xs font-bold uppercase text-[#1a120c] mb-1.5">Kategori Warta</label>
-              <select id="editor-article-cat" bind:value={articleCategory} class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs bg-white">
+              <label for="editor-article-cat" class="block text-xs font-bold uppercase text-slate-900 mb-1.5">Kategori Warta</label>
+              <select id="editor-article-cat" bind:value={articleCategory} class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white">
                 <option value="Kegiatan">Kegiatan &amp; Patroli</option>
                 <option value="Penertiban Aset">Penertiban Aset Daerah</option>
                 <option value="Pengumuman">Pengumuman Resmi</option>
@@ -826,8 +826,8 @@
               </select>
             </div>
             <div>
-              <label for="editor-article-author" class="block text-xs font-bold uppercase text-[#1a120c] mb-1.5">Penulis / Unit Peliput</label>
-              <input id="editor-article-author" type="text" bind:value={articleAuthor} class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs" />
+              <label for="editor-article-author" class="block text-xs font-bold uppercase text-slate-900 mb-1.5">Penulis / Unit Peliput</label>
+              <input id="editor-article-author" type="text" bind:value={articleAuthor} class="w-full border border-slate-200 rounded-xl p-2.5 text-xs" />
             </div>
           </div>
 
@@ -846,7 +846,7 @@
           />
 
           <div>
-            <label for="editor-article-summary" class="block text-xs font-bold uppercase text-[#1a120c] mb-1.5">
+            <label for="editor-article-summary" class="block text-xs font-bold uppercase text-slate-900 mb-1.5">
               Ringkasan / Lead Paragraph *
             </label>
             <textarea
@@ -854,12 +854,12 @@
               bind:value={articleSummary}
               rows="2"
               placeholder="Tuliskan 1-2 kalimat pengantar utama..."
-              class="w-full border border-[#eee9db] rounded-xl p-3 text-xs focus:border-[#F08300] focus:outline-none"
+              class="w-full border border-slate-200 rounded-xl p-3 text-xs focus:border-[#F08300] focus:outline-none"
             ></textarea>
           </div>
 
           <div>
-            <label for="editor-article-content" class="block text-xs font-bold uppercase text-[#1a120c] mb-1.5">
+            <label for="editor-article-content" class="block text-xs font-bold uppercase text-slate-900 mb-1.5">
               Isi Berita Lengkap
             </label>
             <RichTextEditor
@@ -900,29 +900,29 @@
           <th class="px-4 py-3.5 text-right">Aksi</th>
         </tr>
 
-        <tr slot="row" let:item class="hover:bg-[#f9f4e8]/55 transition">
+        <tr slot="row" let:item class="hover:bg-slate-100/55 transition">
           <td class="px-4 py-3.5">
-            <img src={item.thumbnail} alt={item.title} class="w-16 h-12 object-cover rounded-xl border border-[#eee9db]" />
+            <img src={item.thumbnail} alt={item.title} class="w-16 h-12 object-cover rounded-xl border border-slate-200" />
           </td>
-          <td class="px-4 py-3.5 font-bold text-[#1a120c] max-w-sm">
+          <td class="px-4 py-3.5 font-bold text-slate-900 max-w-sm">
             <a href={`/berita/${item.slug}`} target="_blank" class="hover:text-[#F08300] transition line-clamp-2">
               {item.title}
             </a>
-            <div class="text-[10px] text-[#3d261a]/60 font-normal mt-0.5 font-mono">/berita/{item.slug}</div>
+            <div class="text-[10px] text-slate-700/60 font-normal mt-0.5 font-mono">/berita/{item.slug}</div>
           </td>
           <td class="px-4 py-3.5">
-            <span class="bg-[#f9f4e8] text-[#3d261a] text-[10px] font-bold uppercase px-2.5 py-1 rounded-lg border border-[#eee9db]">
+            <span class="bg-slate-100 text-slate-700 text-[10px] font-bold uppercase px-2.5 py-1 rounded-lg border border-slate-200">
               {item.category}
             </span>
           </td>
-          <td class="px-4 py-3.5 text-xs text-[#3d261a]/75">{item.author_name}</td>
-          <td class="px-4 py-3.5 font-bold text-xs text-[#1a120c]">{item.view_count}x</td>
+          <td class="px-4 py-3.5 text-xs text-slate-700/75">{item.author_name}</td>
+          <td class="px-4 py-3.5 font-bold text-xs text-slate-900">{item.view_count}x</td>
           <td class="px-4 py-3.5 text-right whitespace-nowrap">
             <div class="inline-flex items-center gap-1.5">
               <button
                 type="button"
                 on:click={() => openEditArticle(item)}
-                class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-[#f9f4e8] hover:bg-[#eee9db] text-[#1a120c] text-xs font-bold border border-[#eee9db] transition"
+                class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-bold border border-slate-200 transition"
               >
                 <Edit3 class="w-3.5 h-3.5" />
                 Edit
@@ -974,22 +974,22 @@
         <th class="px-4 py-3.5 text-right">Aksi</th>
       </tr>
 
-      <tr slot="row" let:item class="hover:bg-[#f9f4e8]/55 transition">
-        <td class="px-4 py-3.5 font-bold text-xs text-[#1a120c]">{item.title}</td>
-        <td class="px-4 py-3.5 font-mono text-xs text-[#3d261a]/75">{item.doc_number || '-'}</td>
+      <tr slot="row" let:item class="hover:bg-slate-100/55 transition">
+        <td class="px-4 py-3.5 font-bold text-xs text-slate-900">{item.title}</td>
+        <td class="px-4 py-3.5 font-mono text-xs text-slate-700/75">{item.doc_number || '-'}</td>
         <td class="px-4 py-3.5">
-          <span class="bg-[#f9f4e8] text-[#3d261a] text-[10px] font-bold uppercase px-2.5 py-1 rounded-lg border border-[#eee9db]">
+          <span class="bg-slate-100 text-slate-700 text-[10px] font-bold uppercase px-2.5 py-1 rounded-lg border border-slate-200">
             {item.category}
           </span>
         </td>
-        <td class="px-4 py-3.5 font-bold text-xs text-[#1a120c]">{item.year}</td>
-        <td class="px-4 py-3.5 text-xs text-[#3d261a]/75">{item.file_size}</td>
+        <td class="px-4 py-3.5 font-bold text-xs text-slate-900">{item.year}</td>
+        <td class="px-4 py-3.5 text-xs text-slate-700/75">{item.file_size}</td>
         <td class="px-4 py-3.5 text-right whitespace-nowrap">
           <div class="inline-flex items-center gap-1.5">
             <a
               href={item.file_url}
               target="_blank"
-              class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-[#f9f4e8] hover:bg-[#eee9db] text-[#1a120c] text-xs font-bold border border-[#eee9db] transition"
+              class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-bold border border-slate-200 transition"
             >
               <Download class="w-3.5 h-3.5" />
               Unduh
@@ -1011,10 +1011,10 @@
   <!-- TAB 5: CMS GALERI MULTIMEDIA -->
   {#if currentTab === 'gallery'}
     <div class="space-y-5">
-      <div class="bg-white border border-[#eee9db] rounded-2xl p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-xs">
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-xs">
         <div>
-          <h2 class="text-sm md:text-base font-black text-[#1a120c]">Galeri Multimedia Dokumentasi</h2>
-          <p class="text-xs text-[#3d261a]/75 mt-0.5">Kelola foto kegiatan apel, operasi penertiban, dan koordinasi lapangan.</p>
+          <h2 class="text-sm md:text-base font-black text-slate-900">Galeri Multimedia Dokumentasi</h2>
+          <p class="text-xs text-slate-700/75 mt-0.5">Kelola foto kegiatan apel, operasi penertiban, dan koordinasi lapangan.</p>
         </div>
         <button
           type="button"
@@ -1028,24 +1028,24 @@
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {#each $galleryStore as item}
-          <article class="bg-white border border-[#eee9db] rounded-2xl overflow-hidden shadow-xs group flex flex-col justify-between">
+          <article class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-xs group flex flex-col justify-between">
             <div>
-              <div class="relative h-44 bg-[#f9f4e8] overflow-hidden">
+              <div class="relative h-44 bg-slate-100 overflow-hidden">
                 <img
                   src={item.image_url}
                   alt={item.title}
                   class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                 />
-                <span class="absolute top-3 left-3 bg-[#1a120c]/85 text-[#F08300] font-bold text-[10px] uppercase px-2.5 py-1 rounded-lg">
+                <span class="absolute top-3 left-3 bg-[#0b172a]/85 text-[#F08300] font-bold text-[10px] uppercase px-2.5 py-1 rounded-lg">
                   {item.category}
                 </span>
               </div>
               <div class="p-4">
-                <div class="text-[11px] text-[#3d261a]/65">{item.date}</div>
-                <h3 class="text-xs font-black text-[#1a120c] line-clamp-2 min-h-[2.25rem] mt-1">{item.title}</h3>
+                <div class="text-[11px] text-slate-700/65">{item.date}</div>
+                <h3 class="text-xs font-black text-slate-900 line-clamp-2 min-h-[2.25rem] mt-1">{item.title}</h3>
               </div>
             </div>
-            <div class="px-4 py-3 border-t border-[#eee9db] bg-[#f9f4e8]/40 flex justify-end">
+            <div class="px-4 py-3 border-t border-slate-200 bg-slate-100/40 flex justify-end">
               <button
                 type="button"
                 on:click={() => requestDelete('gallery', item.id, item.title)}
@@ -1079,10 +1079,10 @@
     {@const evidenceUrl = selectedComplaint.evidence_image_url || selectedComplaint.evidence_photos || ''}
     <div class="space-y-5 text-xs">
       <!-- Identitas & Lokasi -->
-      <div class="bg-[#f9f4e8]/75 border border-[#eee9db] rounded-2xl p-4 space-y-4">
+      <div class="bg-slate-100/75 border border-slate-200 rounded-2xl p-4 space-y-4">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <span class="text-[#3d261a]/70 uppercase text-[10px] font-bold block mb-1.5">Identitas Pelapor</span>
+            <span class="text-slate-700/70 uppercase text-[10px] font-bold block mb-1.5">Identitas Pelapor</span>
             {#if selectedComplaint.is_anonymous}
               {#if unmaskRequested}
                 <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 space-y-1">
@@ -1092,19 +1092,19 @@
                       <EyeOff class="w-3 h-3" /> Tercatat
                     </span>
                   </div>
-                  <div class="font-black text-[#1a120c]">{selectedComplaint.reporter_name}</div>
-                  <div class="font-mono text-[11px] text-[#3d261a]">NIK: {selectedComplaint.reporter_nik || '-'}</div>
-                  <div class="text-[11px] text-[#3d261a]">Telp: {selectedComplaint.reporter_phone || '-'}</div>
-                  <div class="text-[11px] text-[#3d261a] flex items-center gap-1">
+                  <div class="font-black text-slate-900">{selectedComplaint.reporter_name}</div>
+                  <div class="font-mono text-[11px] text-slate-700">NIK: {selectedComplaint.reporter_nik || '-'}</div>
+                  <div class="text-[11px] text-slate-700">Telp: {selectedComplaint.reporter_phone || '-'}</div>
+                  <div class="text-[11px] text-slate-700 flex items-center gap-1">
                     <Mail class="w-3 h-3 text-[#F08300]" /> {selectedComplaint.reporter_email || 'Tidak dilampirkan'}
                   </div>
                 </div>
               {:else}
-                <div class="bg-white border border-[#eee9db] rounded-xl p-3 space-y-1.5">
-                  <div class="font-black text-[#1a120c]">{masked.name}</div>
-                  <div class="text-[11px] font-mono text-[#3d261a]/75">NIK: {masked.nik}</div>
-                  <div class="text-[11px] text-[#3d261a]/75">Telp: {masked.phone}</div>
-                  <div class="text-[11px] text-[#3d261a]/75">Email: {masked.email || '-'}</div>
+                <div class="bg-white border border-slate-200 rounded-xl p-3 space-y-1.5">
+                  <div class="font-black text-slate-900">{masked.name}</div>
+                  <div class="text-[11px] font-mono text-slate-700/75">NIK: {masked.nik}</div>
+                  <div class="text-[11px] text-slate-700/75">Telp: {masked.phone}</div>
+                  <div class="text-[11px] text-slate-700/75">Email: {masked.email || '-'}</div>
                   <button
                     type="button"
                     on:click={handleUnmaskIdentity}
@@ -1116,22 +1116,22 @@
                 </div>
               {/if}
             {:else}
-              <div class="bg-white border border-[#eee9db] rounded-xl p-3 space-y-1">
-                <div class="font-black text-[#1a120c]">{selectedComplaint.reporter_name}</div>
-                <div class="font-mono text-[11px] text-[#3d261a]/80">NIK: {selectedComplaint.reporter_nik || '-'}</div>
-                <div class="text-[11px] text-[#3d261a]/80">Telp: {selectedComplaint.reporter_phone || '-'}</div>
-                <div class="text-[11px] text-[#3d261a]/80 flex items-center gap-1">
+              <div class="bg-white border border-slate-200 rounded-xl p-3 space-y-1">
+                <div class="font-black text-slate-900">{selectedComplaint.reporter_name}</div>
+                <div class="font-mono text-[11px] text-slate-700/80">NIK: {selectedComplaint.reporter_nik || '-'}</div>
+                <div class="text-[11px] text-slate-700/80">Telp: {selectedComplaint.reporter_phone || '-'}</div>
+                <div class="text-[11px] text-slate-700/80 flex items-center gap-1">
                   <Mail class="w-3 h-3 text-[#F08300]" /> {selectedComplaint.reporter_email || 'Tidak dilampirkan'}
                 </div>
               </div>
             {/if}
           </div>
 
-          <div class="bg-white border border-[#eee9db] rounded-xl p-3 space-y-1">
-            <span class="text-[#3d261a]/70 uppercase text-[10px] font-bold block mb-1">Wilayah &amp; Waktu Laporan</span>
-            <div class="font-black text-[#1a120c]">{selectedComplaint.regency_name}</div>
-            <div class="text-[11px] text-[#3d261a]/80">{selectedComplaint.district_name}, {selectedComplaint.village_name}</div>
-            <div class="text-[11px] text-[#3d261a]/70">
+          <div class="bg-white border border-slate-200 rounded-xl p-3 space-y-1">
+            <span class="text-slate-700/70 uppercase text-[10px] font-bold block mb-1">Wilayah &amp; Waktu Laporan</span>
+            <div class="font-black text-slate-900">{selectedComplaint.regency_name}</div>
+            <div class="text-[11px] text-slate-700/80">{selectedComplaint.district_name}, {selectedComplaint.village_name}</div>
+            <div class="text-[11px] text-slate-700/70">
               Dikirim: {new Date(selectedComplaint.created_at).toLocaleString('id-ID')}
             </div>
             <div class="pt-2">
@@ -1140,19 +1140,19 @@
           </div>
         </div>
 
-        <div class="pt-2 border-t border-[#eee9db]">
-          <span class="text-[#3d261a]/70 uppercase text-[10px] font-bold">Alamat Kejadian</span>
-          <div class="text-[#1a120c] font-semibold mt-0.5">{selectedComplaint.address_detail}</div>
+        <div class="pt-2 border-t border-slate-200">
+          <span class="text-slate-700/70 uppercase text-[10px] font-bold">Alamat Kejadian</span>
+          <div class="text-slate-900 font-semibold mt-0.5">{selectedComplaint.address_detail}</div>
         </div>
 
         {#if evidenceUrl}
-          <div class="pt-3 border-t border-[#eee9db]">
-            <span class="text-[#3d261a]/70 uppercase text-[10px] font-bold block mb-1.5">Bukti Foto Lapangan</span>
+          <div class="pt-3 border-t border-slate-200">
+            <span class="text-slate-700/70 uppercase text-[10px] font-bold block mb-1.5">Bukti Foto Lapangan</span>
             <a href={evidenceUrl} target="_blank" class="inline-block group">
               <img
                 src={evidenceUrl}
                 alt="Bukti Foto Aduan"
-                class="w-60 h-36 object-cover rounded-xl border border-[#eee9db] group-hover:opacity-90 transition shadow-xs"
+                class="w-60 h-36 object-cover rounded-xl border border-slate-200 group-hover:opacity-90 transition shadow-xs"
               />
               <span class="text-[11px] text-[#F08300] font-bold block mt-1 group-hover:underline">Buka Foto Ukuran Penuh &rarr;</span>
             </a>
@@ -1161,18 +1161,18 @@
       </div>
 
       <div>
-        <span class="text-[#3d261a]/70 uppercase text-[10px] font-bold">Kategori: {selectedComplaint.violation_type}</span>
-        <div class="p-3.5 bg-white border border-[#eee9db] rounded-xl mt-1 text-[#3d261a] leading-relaxed">
+        <span class="text-slate-700/70 uppercase text-[10px] font-bold">Kategori: {selectedComplaint.violation_type}</span>
+        <div class="p-3.5 bg-white border border-slate-200 rounded-xl mt-1 text-slate-700 leading-relaxed">
           {selectedComplaint.description}
         </div>
       </div>
 
-      <fieldset class="space-y-4 pt-3 border-t border-[#eee9db]">
-        <legend class="text-xs font-black uppercase tracking-wider text-[#1a120c]">Pembaruan Status SOP &amp; Notifikasi Email</legend>
+      <fieldset class="space-y-4 pt-3 border-t border-slate-200">
+        <legend class="text-xs font-black uppercase tracking-wider text-slate-900">Pembaruan Status SOP &amp; Notifikasi Email</legend>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label for="complaint-status-select" class="block text-[11px] font-bold text-[#3d261a] mb-1.5">Status Prosedur</label>
-            <select id="complaint-status-select" bind:value={editStatus} class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs bg-white font-bold">
+            <label for="complaint-status-select" class="block text-[11px] font-bold text-slate-700 mb-1.5">Status Prosedur</label>
+            <select id="complaint-status-select" bind:value={editStatus} class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white font-bold">
               <option value="MENUNGGU_VERIFIKASI">1. Menunggu Verifikasi</option>
               <option value="DISPOSISI_BIDANG">2. Disposisi Bidang</option>
               <option value="PENINDAKAN_LAPANGAN">3. Penindakan Lapangan</option>
@@ -1182,14 +1182,14 @@
           </div>
 
           <div>
-            <label for="complaint-disposition-input" class="block text-[11px] font-bold text-[#3d261a] mb-1.5">Disposisi Unit Kerja</label>
+            <label for="complaint-disposition-input" class="block text-[11px] font-bold text-slate-700 mb-1.5">Disposisi Unit Kerja</label>
             <input
               id="complaint-disposition-input"
               type="text"
               list="sop-org-units"
               bind:value={editDisposedTo}
               placeholder="Pilih atau ketik unit/pleton..."
-              class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs bg-white"
+              class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white"
             />
             <datalist id="sop-org-units">
               {#each dispositionOptions as opt}
@@ -1200,13 +1200,13 @@
         </div>
 
         <div>
-          <label for="complaint-bap-notes" class="block text-[11px] font-bold text-[#3d261a] mb-1.5">Catatan Tindakan / Berita Acara (BAP)</label>
+          <label for="complaint-bap-notes" class="block text-[11px] font-bold text-slate-700 mb-1.5">Catatan Tindakan / Berita Acara (BAP)</label>
           <textarea
             id="complaint-bap-notes"
             bind:value={editActionNotes}
             rows="3"
             placeholder="Catat hasil verifikasi, penertiban lapangan, atau alasan penolakan..."
-            class="w-full border border-[#eee9db] rounded-xl p-3 text-xs"
+            class="w-full border border-slate-200 rounded-xl p-3 text-xs"
           ></textarea>
         </div>
       </fieldset>
@@ -1217,7 +1217,7 @@
     <button
       type="button"
       on:click={handleClose}
-      class="px-4 py-2 rounded-xl border border-[#eee9db] bg-white hover:bg-[#f9f4e8] text-xs font-bold text-[#3d261a] transition"
+      class="px-4 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-xs font-bold text-slate-700 transition"
     >
       Tutup
     </button>
@@ -1260,19 +1260,19 @@
     />
 
     <div>
-      <label for="doc-title-input" class="block text-xs font-bold text-[#1a120c] mb-1">Nama / Judul Dokumen *</label>
-      <input id="doc-title-input" type="text" required bind:value={docTitle} placeholder="Contoh: Rencana Kerja Satpol PP TA 2026" class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs bg-white" />
+      <label for="doc-title-input" class="block text-xs font-bold text-slate-900 mb-1">Nama / Judul Dokumen *</label>
+      <input id="doc-title-input" type="text" required bind:value={docTitle} placeholder="Contoh: Rencana Kerja Satpol PP TA 2026" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white" />
       <p class="field-error">Judul dokumen wajib diisi.</p>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <div>
-        <label for="doc-number-input" class="block text-xs font-bold text-[#1a120c] mb-1">Nomor SK / Registrasi</label>
-        <input id="doc-number-input" type="text" bind:value={docNumber} placeholder="050/112/SATPOL/2026" class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs bg-white" />
+        <label for="doc-number-input" class="block text-xs font-bold text-slate-900 mb-1">Nomor SK / Registrasi</label>
+        <input id="doc-number-input" type="text" bind:value={docNumber} placeholder="050/112/SATPOL/2026" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white" />
       </div>
       <div>
-        <label for="doc-year-select" class="block text-xs font-bold text-[#1a120c] mb-1">Tahun Anggaran</label>
-        <select id="doc-year-select" bind:value={docYear} class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs bg-white">
+        <label for="doc-year-select" class="block text-xs font-bold text-slate-900 mb-1">Tahun Anggaran</label>
+        <select id="doc-year-select" bind:value={docYear} class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white">
           <option value={2026}>2026</option>
           <option value={2025}>2025</option>
           <option value={2024}>2024</option>
@@ -1283,8 +1283,8 @@
     </div>
 
     <div>
-      <label for="doc-category-select" class="block text-xs font-bold text-[#1a120c] mb-1">Kategori Dokumen</label>
-      <select id="doc-category-select" bind:value={docCategory} class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs bg-white">
+      <label for="doc-category-select" class="block text-xs font-bold text-slate-900 mb-1">Kategori Dokumen</label>
+      <select id="doc-category-select" bind:value={docCategory} class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white">
         <option value="renja">Rencana Kerja (Renja)</option>
         <option value="renstra">Rencana Strategis (Renstra)</option>
         <option value="dpa">Dokumen Pelaksanaan Anggaran (DPA)</option>
@@ -1301,7 +1301,7 @@
     <button
       type="button"
       on:click={handleClose}
-      class="px-4 py-2 rounded-xl border border-[#eee9db] bg-white hover:bg-[#f9f4e8] text-xs font-bold text-[#3d261a] transition"
+      class="px-4 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-xs font-bold text-slate-700 transition"
     >
       Batal
     </button>
@@ -1344,14 +1344,14 @@
     />
 
     <div>
-      <label for="gallery-title-input" class="block text-xs font-bold text-[#1a120c] mb-1">Judul / Keterangan Kegiatan *</label>
-      <input id="gallery-title-input" type="text" required bind:value={galleryTitle} placeholder="Contoh: Apel Kesiapsiagaan Anggota Satpol PP" class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs bg-white" />
+      <label for="gallery-title-input" class="block text-xs font-bold text-slate-900 mb-1">Judul / Keterangan Kegiatan *</label>
+      <input id="gallery-title-input" type="text" required bind:value={galleryTitle} placeholder="Contoh: Apel Kesiapsiagaan Anggota Satpol PP" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white" />
       <p class="field-error">Judul kegiatan wajib diisi.</p>
     </div>
 
     <div>
-      <label for="gallery-category-select" class="block text-xs font-bold text-[#1a120c] mb-1">Kategori Dokumentasi</label>
-      <select id="gallery-category-select" bind:value={galleryCategory} class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs bg-white">
+      <label for="gallery-category-select" class="block text-xs font-bold text-slate-900 mb-1">Kategori Dokumentasi</label>
+      <select id="gallery-category-select" bind:value={galleryCategory} class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white">
         <option value="Penertiban">Operasi &amp; Penertiban</option>
         <option value="Apel & Upacara">Apel &amp; Upacara Resmi</option>
         <option value="Koordinasi">Koordinasi &amp; Sosialisasi</option>
@@ -1364,7 +1364,7 @@
     <button
       type="button"
       on:click={handleClose}
-      class="px-4 py-2 rounded-xl border border-[#eee9db] bg-white hover:bg-[#f9f4e8] text-xs font-bold text-[#3d261a] transition"
+      class="px-4 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-xs font-bold text-slate-700 transition"
     >
       Batal
     </button>
@@ -1385,7 +1385,7 @@
   subtitle="Tindakan ini akan menghapus item dari portal publik."
   size="sm"
 >
-  <p class="text-xs text-[#3d261a] leading-relaxed">
+  <p class="text-xs text-slate-700 leading-relaxed">
     Yakin ingin menghapus <strong>{confirmDeleteLabel}</strong>? Penghapusan ini akan dicatat di log audit sistem.
   </p>
 
@@ -1393,7 +1393,7 @@
     <button
       type="button"
       on:click={handleClose}
-      class="px-4 py-2 rounded-xl border border-[#eee9db] bg-white hover:bg-[#f9f4e8] text-xs font-bold text-[#3d261a] transition"
+      class="px-4 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-xs font-bold text-slate-700 transition"
     >
       Batal
     </button>

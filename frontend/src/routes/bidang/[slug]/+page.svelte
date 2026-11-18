@@ -1,5 +1,6 @@
 <script lang="ts">
   import { page } from '$app/stores';
+  import { ChevronRight, Shield, CheckCircle2, ArrowRight } from 'lucide-svelte';
 
   interface BidangInfo {
     title: string;
@@ -11,7 +12,7 @@
   const bidangData: Record<string, BidangInfo> = {
     'sekretariat': {
       title: 'Sekretariat Satpol PP Sulsel',
-      lead: 'Sekretariat mempunyai tugas memberikan pelayanan teknis dan administratif kepada seluruh unsur di lingkungan Satuan Polisi Pamong Praja Provinsi Sulawesi Selatan.',
+      lead: 'Pusat koordinasi perencanaan, tata kelola keuangan, kepegawaian aparatur, dan pelayanan administrasi terpadu.',
       tasks: [
         'Pengkoordinasian penyusunan rencana program, anggaran, dan pelaporan akuntabilitas kinerja instansi.',
         'Pengelolaan urusan kepegawaian, pengembangan kompetensi personel, dan tata usaha persuratan.',
@@ -26,7 +27,7 @@
     },
     'perda': {
       title: 'Bidang Penegakan Peraturan Daerah (Perda)',
-      lead: 'Bidang Penegakan Peraturan Daerah mempunyai tugas menyelenggarakan penegakan, pengawasan, dan penyidikan atas pelanggaran Peraturan Daerah dan Peraturan Kepala Daerah Provinsi Sulawesi Selatan.',
+      lead: 'Mengawal penegakan Perda dan Peraturan Gubernur secara adil, terukur, dan persuasif demi menciptakan kepatuhan hukum yang berkeadilan.',
       tasks: [
         'Penyusunan rencana teknis operasional penegakan dan pengawasan kepatuhan terhadap Perda dan Perkada.',
         'Pemeriksaan dan penyelidikan awal atas laporan dugaan pelanggaran Perda oleh masyarakat atau badan usaha.',
@@ -40,7 +41,7 @@
     },
     'trantibum': {
       title: 'Bidang Ketenteraman & Ketertiban Umum',
-      lead: 'Bidang Ketenteraman dan Ketertiban Umum bertugas merencanakan, mengendalikan, dan melaksanakan operasi patroli, pengamanan aset milik daerah, serta penertiban fasilitas umum di wilayah Provinsi Sulawesi Selatan.',
+      lead: 'Menyelenggarakan kesiapsiagaan patroli 24 jam, pengamanan fasilitas publik, dan penertiban ruang kota agar aman dan tenteram bagi seluruh warga.',
       tasks: [
         'Pelaksanaan patroli ketertiban rutin dan terpadu pada titik rawan kerumunan dan jalur protokol provinsi.',
         'Penertiban pedagang liar (PKL), spanduk tanpa izin, dan bangunan semi permanen yang mengokupasi ruang publik.',
@@ -54,7 +55,7 @@
     },
     'binmas': {
       title: 'Bidang Pembinaan Masyarakat & Kapasitas',
-      lead: 'Bidang Pembinaan Masyarakat mempunyai tugas mengedukasi publik, membina kesadaran hukum masyarakat, serta menyelenggarakan bimbingan teknis bagi personel Satpol PP di kabupaten/kota.',
+      lead: 'Membangun dialog kemitraan, penyuluhan kesadaran hukum warga, dan pembinaan partisipasi publik dalam memelihara ketertiban.',
       tasks: [
         'Sosialisasi materi Peraturan Daerah dan etika ketertiban umum ke lingkungan sekolah, kampus, dan komunitas.',
         'Pelaksanaan pembinaan mental, fisik, dan disiplin (samapta) anggota Satpol PP Sulawesi Selatan.',
@@ -68,7 +69,7 @@
     },
     'linmas-damkar': {
       title: 'Bidang Pelindungan Masyarakat & Penyelamatan Kebakaran',
-      lead: 'Bidang Linmas dan Damkar bertugas mengoordinasikan pembinaan Satuan Pelindungan Masyarakat (Satlinmas) serta kesiapsiagaan pengendalian bahaya kebakaran dan kedaruratan daerah.',
+      lead: 'Mengkoordinasikan satuan perlindungan masyarakat (Satlinmas) dan kesiapsiagaan penanggulangan gangguan ketertiban.',
       tasks: [
         'Pendataan, registrasi, dan pembinaan kelembagaan Satlinmas di 24 Kabupaten/Kota se-Sulawesi Selatan.',
         'Pengerahan anggota Satlinmas dalam pengamanan agenda nasional, pemilihan umum (Pemilu/Pilkada), dan penanggulangan bencana.',
@@ -98,29 +99,45 @@
   <title>{current.title} | Satpol PP Prov. Sulsel</title>
 </svelte:head>
 
-<div class="bg-[#f9f4e8] border-b border-[#eee9db] py-6 px-4">
-  <div class="max-w-6xl mx-auto flex flex-wrap items-center gap-2 text-[11px] text-[#6f7775]">
-    <a href="/" class="hover:text-[#F08300]">Beranda</a>
-    <span>/</span>
-    <span class="hover:text-[#F08300]">Bidang Kerja</span>
-    <span>/</span>
-    <span class="text-[#101116] font-semibold">{current.title}</span>
+<!-- Sovereign Slim Hero Banner -->
+<div class="bg-gradient-to-b from-[#070e1c] via-[#0b172a] to-[#0f223d] text-white py-6 sm:py-7 md:py-8 px-4 relative overflow-hidden ds-specular-dark border-b border-white/10">
+  <div class="absolute top-0 right-10 w-72 h-72 rounded-full bg-[#246bfd]/8 blur-3xl pointer-events-none"></div>
+  <div class="absolute bottom-0 left-10 w-56 h-56 rounded-full bg-[#F08300]/8 blur-3xl pointer-events-none"></div>
+
+  <div class="max-w-6xl mx-auto relative z-10">
+    <!-- Breadcrumb Pills -->
+    <div class="flex flex-wrap items-center gap-1.5 text-xs text-slate-400 mb-2">
+      <a href="/" class="hover:text-[#F08300] transition">Beranda</a>
+      <ChevronRight class="w-3.5 h-3.5 text-slate-500" />
+      <span class="text-slate-400">Bidang Kerja</span>
+      <ChevronRight class="w-3.5 h-3.5 text-slate-500" />
+      <span class="text-[#F08300] font-medium">{current.title}</span>
+    </div>
+
+    <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">{current.title}</h1>
+    <p class="text-xs sm:text-sm text-slate-300 mt-1.5 max-w-2xl font-light leading-relaxed">
+      {current.lead}
+    </p>
   </div>
 </div>
 
 <div class="py-10 px-4 max-w-6xl mx-auto">
   <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
     <!-- Sidebar Navigation -->
-    <div class="lg:col-span-1 space-y-4">
-      <div class="bg-white border border-[#eee9db] shadow-xs p-4 rounded-2xl">
-        <h3 class="text-xs font-bold text-[#101116] uppercase tracking-wider border-b border-gray-100 pb-2 mb-3">
-          Bidang Kerja
+    <div class="lg:col-span-1 space-y-5">
+      <div class="ds-glass border border-white/90 p-4 rounded-3xl shadow-glass ds-specular-top">
+        <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider border-b border-white/80 pb-3 mb-3">
+          Struktur Bidang
         </h3>
-        <nav class="space-y-1">
+        <nav class="space-y-2">
           {#each bidangMenu as b}
             <a 
               href={`/bidang/${b.slug}`}
-              class={`block px-3.5 py-2.5 text-xs font-bold transition rounded-xl ${slug === b.slug ? 'bg-[#F08300] text-white shadow-xs' : 'text-[#3d261a] hover:bg-[#f9f4e8]'}`}
+              class={`block px-4 py-2.5 text-xs font-bold transition duration-200 rounded-xl ds-press ${
+                slug === b.slug 
+                  ? 'ds-pill-active' 
+                  : 'ds-pill-inactive'
+              }`}
             >
               {b.label}
             </a>
@@ -128,37 +145,40 @@
         </nav>
       </div>
 
-      <!-- Quick Action Card -->
-      <div class="bg-[#3d261a] text-white p-5 rounded-2xl border-t-4 border-[#F08300] shadow-xs">
+      <!-- Quick Action SIAP TERTIB Card -->
+      <div class="ds-glass-dark text-white p-5 rounded-3xl border border-white/15 shadow-glass ds-specular-dark">
         <div class="text-[10px] text-[#F08300] font-bold uppercase tracking-wider mb-1">SIAP TERTIB</div>
-        <div class="font-bold text-xs">Aduan Pelanggaran Wilayah</div>
-        <p class="text-[11px] text-gray-300 mt-2 leading-relaxed">
-          Laporan masyarakat yang masuk melalui portal akan didisposisikan langsung ke bidang teknis terkait untuk ditindaklanjuti.
+        <div class="font-bold text-xs text-white">Aduan Pelanggaran Wilayah</div>
+        <p class="text-[11px] text-slate-300 mt-2 leading-relaxed font-light">
+          Laporan masyarakat yang masuk melalui portal akan didisposisikan langsung ke bidang teknis terkait untuk ditindaklanjuti secara terpadu.
         </p>
         <a 
           href="/lapor" 
-          class="mt-3 block text-center bg-[#F08300] text-white font-bold text-xs uppercase py-2.5 rounded-xl hover:bg-[#d97400] transition shadow-xs"
+          class="mt-3.5 inline-flex items-center justify-center gap-2 w-full bg-gradient-to-r from-[#F08300] to-[#e07000] hover:from-[#d97400] hover:to-[#c66500] text-white font-bold text-xs uppercase py-2.5 rounded-xl transition shadow-glass-gold ds-press"
         >
-          Kirim Laporan
+          <span>Kirim Laporan</span>
+          <ArrowRight class="w-3.5 h-3.5" />
         </a>
       </div>
     </div>
 
     <!-- Main Content Column -->
-    <div class="lg:col-span-3 bg-white border border-[#eee9db] shadow-xs p-6 md:p-8 space-y-6 rounded-2xl">
-      <div class="border-b border-gray-100 pb-4">
+    <div class="lg:col-span-3 ds-glass-strong border border-white/90 p-6 md:p-8 space-y-6 rounded-3xl shadow-glass ds-specular-top">
+      <div class="border-b border-white/80 pb-4">
         <div class="text-[#F08300] font-bold text-xs uppercase tracking-widest">Unit Kerja Satpol PP Sulsel</div>
-        <h1 class="text-2xl md:text-3xl font-extrabold text-[#101116] tracking-tight mt-1">{current.title}</h1>
-        <p class="text-xs text-[#3d261a] font-semibold mt-2 leading-relaxed">{current.lead}</p>
+        <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight mt-1">{current.title}</h2>
+        <p class="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed font-light">{current.lead}</p>
       </div>
 
       <!-- Tasks List -->
-      <div class="space-y-3">
-        <h3 class="text-xs font-bold uppercase tracking-wider text-[#101116]">Uraian Tugas dan Tanggung Jawab:</h3>
-        <ul class="space-y-2 text-xs text-[#3d261a] leading-relaxed">
+      <div class="space-y-4">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-900">
+          Uraian Tugas dan Tanggung Jawab:
+        </h3>
+        <ul class="space-y-3 text-xs sm:text-sm text-slate-700 leading-relaxed">
           {#each current.tasks as task}
-            <li class="flex items-start gap-2.5">
-              <span class="inline-block w-1.5 h-1.5 bg-[#F08300] mt-1.5 flex-shrink-0"></span>
+            <li class="flex items-start gap-3 bg-slate-50/70 border border-slate-200/80 p-3.5 rounded-xl">
+              <CheckCircle2 class="w-4 h-4 text-[#F08300] mt-0.5 shrink-0" />
               <span>{task}</span>
             </li>
           {/each}
@@ -166,13 +186,17 @@
       </div>
 
       <!-- Sub-sections List -->
-      <div class="pt-4 border-t border-gray-100 space-y-3">
-        <h3 class="text-xs font-bold uppercase tracking-wider text-[#101116]">Seksi &amp; Sub-Bagian di Bawah Bidang:</h3>
+      <div class="pt-6 border-t border-slate-200/70 space-y-4">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-900">
+          Seksi &amp; Sub-Bagian di Bawah Bidang:
+        </h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           {#each current.sections as sec}
-            <div class="border border-gray-200 p-4 bg-gray-50/50 rounded-xl">
-              <div class="font-bold text-xs text-[#101116] uppercase">{sec.name}</div>
-              <p class="text-[11px] text-[#6f7775] mt-1 leading-relaxed">{sec.desc}</p>
+            <div class="ds-glass border border-slate-200/80 p-5 rounded-2xl hover:border-[#246bfd] transition shadow-xs">
+              <div class="font-bold text-xs text-slate-900 uppercase">
+                {sec.name}
+              </div>
+              <p class="text-xs text-slate-600 mt-2 leading-relaxed font-light">{sec.desc}</p>
             </div>
           {/each}
         </div>

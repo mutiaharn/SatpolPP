@@ -171,11 +171,11 @@
   }
 </script>
 
-<div class="bg-white border border-[#eee9db] rounded-2xl shadow-sm p-6 md:p-8 max-w-4xl mx-auto">
+<div class="ds-glass-strong border border-white/90 rounded-3xl shadow-glass p-6 sm:p-8 md:p-10 max-w-4xl mx-auto ds-specular-top">
   {#if submitSuccess && createdTicket}
     <!-- SUCCESS RECEIPT / TICKET VIEW -->
     <div class="space-y-6 text-center py-4" role="status" aria-live="polite">
-      <div class="w-16 h-16 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto text-2xl font-bold">
+      <div class="w-16 h-16 bg-emerald-100/80 text-emerald-700 rounded-full flex items-center justify-center mx-auto text-2xl font-bold shadow-xs">
         &#10003;
       </div>
 
@@ -183,19 +183,19 @@
         <span class="bg-emerald-50 text-emerald-800 text-[11px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-emerald-200">
           Laporan Berhasil Diterbitkan
         </span>
-        <h3 class="text-2xl font-extrabold text-[#1a120c] mt-2">
+        <h3 class="text-2xl font-extrabold text-slate-900 mt-2">
           Bukti Registrasi Resi SIAP TERTIB
         </h3>
-        <p class="text-xs text-stone-500 max-w-lg mx-auto mt-1">
+        <p class="text-xs text-slate-500 max-w-lg mx-auto mt-1 font-light">
           Laporan Anda telah masuk ke Sistem Operasional Terpadu Satpol PP Prov. Sulsel dan siap diverifikasi oleh petugas piket.
         </p>
       </div>
 
       <!-- Resi Card -->
-      <div class="bg-[#faf7f2] border-2 border-[#e8dbc9] rounded-2xl p-6 text-left max-w-xl mx-auto space-y-4 shadow-xs">
-        <div class="flex flex-wrap justify-between items-start gap-2 border-b border-[#eee9db] pb-3">
+      <div class="ds-glass border border-white/90 rounded-2xl p-6 text-left max-w-xl mx-auto space-y-4 shadow-glass">
+        <div class="flex flex-wrap justify-between items-start gap-2 border-b border-white/80 pb-3">
           <div>
-            <div class="text-[10px] text-stone-500 uppercase font-bold tracking-wider">Kode Resi Pengaduan Resmi</div>
+            <div class="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Kode Resi Pengaduan Resmi</div>
             <div class="text-xl font-mono font-extrabold text-[#F08300] tracking-wide mt-0.5">
               {createdTicket.ticket_code}
             </div>
@@ -205,8 +205,8 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
           <div>
-            <div class="text-[10px] text-stone-500 uppercase font-semibold">Identitas Pelapor</div>
-            <div class="font-bold text-[#1a120c]">
+            <div class="text-[10px] text-slate-500 uppercase font-semibold">Identitas Pelapor</div>
+            <div class="font-bold text-slate-900">
               {createdTicket.is_anonymous ? 'Warga (Anonim Terlindungi)' : createdTicket.reporter_name}
             </div>
             {#if createdTicket.is_anonymous}
@@ -215,47 +215,47 @@
           </div>
 
           <div>
-            <div class="text-[10px] text-stone-500 uppercase font-semibold">Waktu Masuk</div>
-            <div class="font-bold text-[#1a120c]">
+            <div class="text-[10px] text-slate-500 uppercase font-semibold">Waktu Masuk</div>
+            <div class="font-bold text-slate-900">
               {new Date(createdTicket.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })} WITA
             </div>
           </div>
 
           <div class="sm:col-span-2">
-            <div class="text-[10px] text-stone-500 uppercase font-semibold">Email Penerima Notifikasi</div>
-            <div class="font-bold text-[#1a120c] font-mono">{createdTicket.reporter_email || email}</div>
+            <div class="text-[10px] text-slate-500 uppercase font-semibold">Email Penerima Notifikasi</div>
+            <div class="font-bold text-slate-900 font-mono">{createdTicket.reporter_email || email}</div>
           </div>
 
           <div class="sm:col-span-2">
-            <div class="text-[10px] text-stone-500 uppercase font-semibold">Klasifikasi Aduan</div>
-            <div class="font-bold text-[#1a120c]">{createdTicket.violation_type}</div>
+            <div class="text-[10px] text-slate-500 uppercase font-semibold">Klasifikasi Aduan</div>
+            <div class="font-bold text-slate-900">{createdTicket.violation_type}</div>
           </div>
 
           <div class="sm:col-span-2">
-            <div class="text-[10px] text-stone-500 uppercase font-semibold">Wilayah Tempat Kejadian</div>
-            <div class="font-bold text-[#1a120c]">{createdTicket.regency_name}</div>
-            <div class="text-stone-600 text-[11px] mt-0.5">{createdTicket.address_detail}</div>
+            <div class="text-[10px] text-slate-500 uppercase font-semibold">Wilayah Tempat Kejadian</div>
+            <div class="font-bold text-slate-900">{createdTicket.regency_name}</div>
+            <div class="text-slate-600 text-[11px] mt-0.5">{createdTicket.address_detail}</div>
           </div>
         </div>
 
         <!-- Email Notification Status / Preview -->
         {#if emailNotice}
-          <div class="bg-white border border-[#e8dbc9] rounded-xl p-3.5 text-[11px] space-y-1">
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 text-[11px] space-y-1">
             <div class="flex items-center justify-between gap-2">
-              <span class="font-bold text-[#3d261a] uppercase tracking-wider">
+              <span class="font-bold text-slate-800 uppercase tracking-wider">
                 {emailNotice.mode === 'smtp' ? 'Notifikasi Email Terkirim' : 'Simulasi Notifikasi Email'}
               </span>
               <span class={`text-[10px] font-bold px-2 py-0.5 rounded-full ${emailNotice.sent ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>
                 {emailNotice.sent ? 'SMTP OK' : 'Preview Lokal'}
               </span>
             </div>
-            <div class="text-stone-600">Kepada: <strong class="font-mono text-[#1a120c]">{emailNotice.to}</strong></div>
-            <div class="text-stone-600">Subjek: <span class="text-[#1a120c] font-medium">{emailNotice.subject}</span></div>
-            <p class="text-stone-500 italic">{emailNotice.message}</p>
+            <div class="text-slate-600">Kepada: <strong class="font-mono text-slate-900">{emailNotice.to}</strong></div>
+            <div class="text-slate-600">Subjek: <span class="text-slate-900 font-medium">{emailNotice.subject}</span></div>
+            <p class="text-slate-500 italic">{emailNotice.message}</p>
           </div>
         {/if}
 
-        <div class="bg-amber-50 border-l-4 border-[#F08300] p-3 text-[11px] text-[#3d261a] rounded-r-lg">
+        <div class="bg-amber-50 border-l-4 border-[#F08300] p-3 text-[11px] text-slate-700 rounded-r-lg">
           Simpan <strong>Kode Resi Tiket</strong> di atas untuk memantau perkembangan penanganan melalui menu <strong>Lacak Aduan</strong>.
         </div>
       </div>
@@ -264,13 +264,13 @@
         <button
           type="button"
           on:click={resetForm}
-          class="bg-[#3d261a] hover:bg-[#271810] text-white text-xs font-bold uppercase px-6 py-2.5 rounded-xl transition"
+          class="ds-glass hover:bg-white/90 text-slate-800 text-xs font-bold uppercase px-6 py-2.5 rounded-xl border border-white/80 transition ds-press"
         >
           Kirim Laporan Baru
         </button>
         <a
           href={`/lacak?ticket=${encodeURIComponent(createdTicket.ticket_code)}`}
-          class="bg-[#F08300] hover:bg-[#d97400] text-white text-xs font-bold uppercase px-6 py-2.5 rounded-xl transition shadow-xs"
+          class="bg-gradient-to-r from-[#F08300] to-[#e07000] hover:from-[#d97400] hover:to-[#c66500] text-white text-xs font-bold uppercase px-6 py-2.5 rounded-xl transition shadow-glass-gold ds-press"
         >
           Lacak Tiket Sekarang &rarr;
         </a>
@@ -279,10 +279,10 @@
   {:else}
     <!-- INPUT FORM -->
     <form on:submit|preventDefault={handleSubmit} class="space-y-6" aria-labelledby="siap-tertib-form-heading">
-      <div class="border-b border-[#eee9db] pb-4">
+      <div class="border-b border-white/80 pb-4">
         <div class="text-[11px] font-bold text-[#F08300] uppercase tracking-wider">Aplikasi SIAP TERTIB</div>
-        <h3 id="siap-tertib-form-heading" class="text-xl font-extrabold text-[#1a120c] tracking-tight">Formulir Laporan Pelanggaran Trantibum &amp; Perda</h3>
-        <p class="text-xs text-stone-500 mt-1">
+        <h3 id="siap-tertib-form-heading" class="text-xl font-extrabold text-slate-900 tracking-tight">Formulir Laporan Pelanggaran Trantibum &amp; Perda</h3>
+        <p class="text-xs text-slate-500 mt-1 font-light">
           Layanan pelaporan terintegrasi Satuan Polisi Pamong Praja Provinsi Sulawesi Selatan. Identitas pelapor dilindungi pada tampilan publik.
         </p>
       </div>
@@ -298,13 +298,13 @@
 
       <!-- 1. Identitas Pelapor -->
       <fieldset class="space-y-4">
-        <legend class="font-extrabold text-sm uppercase text-[#1a120c] tracking-wide border-b border-stone-100 pb-2 w-full">
+        <legend class="font-extrabold text-sm uppercase text-slate-900 tracking-wide border-b border-slate-100 pb-2 w-full">
           1. Identitas Pelapor (Validasi KTP &amp; Email)
         </legend>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label for="nik-input" class="block font-bold uppercase text-[11px] text-[#1a120c] mb-1">NIK (16 Digit KTP) *</label>
+            <label for="nik-input" class="block font-bold uppercase text-[11px] text-slate-800 mb-1.5">NIK (16 Digit KTP) *</label>
             <input
               id="nik-input"
               name="reporter_nik"
@@ -319,12 +319,12 @@
               autocapitalize="none"
               spellcheck="false"
               placeholder="7371xxxxxxxxxxxx"
-              class="w-full border border-stone-300 rounded-lg p-2.5 text-xs text-[#1a120c] focus:border-[#F08300] focus:outline-none"
+              class="w-full ds-glass-input rounded-xl p-3 text-xs text-slate-900 focus:outline-none"
             />
           </div>
 
           <div>
-            <label for="name-input" class="block font-bold uppercase text-[11px] text-[#1a120c] mb-1">Nama Lengkap *</label>
+            <label for="name-input" class="block font-bold uppercase text-[11px] text-slate-800 mb-1.5">Nama Lengkap *</label>
             <input
               id="name-input"
               name="reporter_name"
@@ -333,12 +333,12 @@
               bind:value={name}
               required
               placeholder="Sesuai identitas KTP"
-              class="w-full border border-stone-300 rounded-lg p-2.5 text-xs text-[#1a120c] focus:border-[#F08300] focus:outline-none"
+              class="w-full ds-glass-input rounded-xl p-3 text-xs text-slate-900 focus:outline-none"
             />
           </div>
 
           <div>
-            <label for="phone-input" class="block font-bold uppercase text-[11px] text-[#1a120c] mb-1">No. WhatsApp / Telepon *</label>
+            <label for="phone-input" class="block font-bold uppercase text-[11px] text-slate-800 mb-1.5">No. WhatsApp / Telepon *</label>
             <input
               id="phone-input"
               name="reporter_phone"
@@ -347,13 +347,13 @@
               bind:value={phone}
               required
               placeholder="08xxxxxxxxxx"
-              class="w-full border border-stone-300 rounded-lg p-2.5 text-xs text-[#1a120c] focus:border-[#F08300] focus:outline-none"
+              class="w-full ds-glass-input rounded-xl p-3 text-xs text-slate-900 focus:outline-none"
             />
           </div>
 
           <div>
-            <label for="email-input" class="block font-bold uppercase text-[11px] text-[#1a120c] mb-0.5">Email Pelapor (Notifikasi Resi) *</label>
-            <span id="email-hint" class="block text-[10px] text-stone-500 mb-1">Kode tiket dan pembaruan progres akan dikirim ke alamat ini (format: nama@domain.com).</span>
+            <label for="email-input" class="block font-bold uppercase text-[11px] text-slate-800 mb-0.5">Email Pelapor (Notifikasi Resi) *</label>
+            <span id="email-hint" class="block text-[10px] text-slate-400 mb-1 font-light">Kode tiket dan pembaruan progres akan dikirim ke alamat ini (format: nama@domain.com).</span>
             <input
               id="email-input"
               name="reporter_email"
@@ -366,7 +366,7 @@
               bind:value={email}
               required
               placeholder="pelapor@email.com"
-              class="peer w-full border border-stone-300 rounded-lg p-2.5 text-xs text-[#1a120c] focus:border-[#F08300] focus:outline-none"
+              class="peer w-full ds-glass-input rounded-xl p-3 text-xs text-slate-900 focus:outline-none"
             />
             <div class="hidden peer-[:user-invalid]:block text-[11px] text-rose-700 font-semibold mt-1">
               Masukkan alamat email valid dalam format nama@domain.com.
@@ -375,16 +375,16 @@
         </div>
 
         <!-- Opsi Anonim Masking Identitas -->
-        <div class="bg-[#faf7f2] border border-[#e8dbc9] p-3.5 rounded-xl flex items-start gap-3">
+        <div class="ds-glass border border-white/80 p-3.5 rounded-2xl flex items-start gap-3">
           <input
             type="checkbox"
             id="anon-check"
             bind:checked={isAnonymous}
-            class="mt-1 h-4 w-4 text-[#F08300] focus:ring-[#F08300] border-stone-300 rounded accent-[#F08300]"
+            class="mt-1 h-4 w-4 text-[#F08300] focus:ring-[#F08300] border-slate-300 rounded accent-[#F08300]"
           />
-          <label for="anon-check" class="text-xs text-[#1a120c] cursor-pointer">
+          <label for="anon-check" class="text-xs text-slate-800 cursor-pointer">
             <span class="font-bold block">Sembunyikan Nama Saya Sepenuhnya (Mode Anonim)</span>
-            <span class="text-stone-500 text-[11px] block mt-0.5">
+            <span class="text-slate-500 text-[11px] block mt-0.5 font-light">
               Seluruh pelacakan tiket publik sudah menyamarkan identitas pelapor otomatis. Centang opsi ini jika ingin label tampil sebagai &ldquo;Warga (Anonim Terlindungi)&rdquo;.
             </span>
           </label>
@@ -392,14 +392,14 @@
       </fieldset>
 
       <!-- 2. Klasifikasi Pelanggaran & Lokasi -->
-      <fieldset class="space-y-4 pt-4 border-t border-stone-100">
-        <legend class="font-extrabold text-sm uppercase text-[#1a120c] tracking-wide border-b border-stone-100 pb-2 w-full">
+      <fieldset class="space-y-4 pt-4 border-t border-white/80">
+        <legend class="font-extrabold text-sm uppercase text-slate-900 tracking-wide border-b border-white/80 pb-2 w-full">
           2. Klasifikasi Masalah &amp; Titik Lokasi
         </legend>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
           {#each violationOptions as opt}
-            <label class={`border rounded-xl p-3.5 cursor-pointer transition flex items-start gap-3 ${violationType === opt.id ? 'border-[#F08300] bg-[#faf7f2] ring-1 ring-[#F08300]' : 'border-stone-200 hover:border-stone-300 bg-white'}`}>
+            <label class={`border rounded-2xl p-4 cursor-pointer transition flex items-start gap-3 ds-hover-lift ${violationType === opt.id ? 'border-[#F08300] bg-orange-50/70 ring-2 ring-[#F08300]/30 shadow-xs' : 'border-white/80 ds-glass hover:bg-white/90'}`}>
               <input
                 type="radio"
                 name="violation_group"
@@ -408,8 +408,8 @@
                 class="mt-1 text-[#F08300] focus:ring-[#F08300] accent-[#F08300]"
               />
               <div class="text-xs">
-                <div class="font-bold text-[#1a120c] leading-snug">{opt.label}</div>
-                <div class="text-[11px] text-stone-500 mt-0.5 leading-relaxed">{opt.desc}</div>
+                <div class="font-bold text-slate-900 leading-snug">{opt.label}</div>
+                <div class="text-[11px] text-slate-500 mt-1 leading-relaxed font-light">{opt.desc}</div>
               </div>
             </label>
           {/each}
@@ -417,12 +417,12 @@
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label for="regency-select" class="block font-bold uppercase text-[11px] text-[#1a120c] mb-1">Kabupaten / Kota *</label>
+            <label for="regency-select" class="block font-bold uppercase text-[11px] text-slate-800 mb-1.5">Kabupaten / Kota *</label>
             <select
               id="regency-select"
               name="regency_id"
               bind:value={regencyId}
-              class="w-full border border-stone-300 rounded-lg p-2.5 text-xs bg-white text-[#1a120c] focus:border-[#F08300] focus:outline-none"
+              class="w-full ds-glass-input rounded-xl p-3 text-xs text-slate-900 focus:outline-none"
             >
               {#each regencies as reg}
                 <option value={reg.id}>{reg.name}</option>
@@ -431,32 +431,32 @@
           </div>
 
           <div>
-            <label for="district-input" class="block font-bold uppercase text-[11px] text-[#1a120c] mb-1">Kecamatan</label>
+            <label for="district-input" class="block font-bold uppercase text-[11px] text-slate-800 mb-1.5">Kecamatan</label>
             <input
               id="district-input"
               name="district_name"
               type="text"
               bind:value={districtName}
               placeholder="Contoh: Panakkukang"
-              class="w-full border border-stone-300 rounded-lg p-2.5 text-xs text-[#1a120c] focus:border-[#F08300] focus:outline-none"
+              class="w-full ds-glass-input rounded-xl p-3 text-xs text-slate-900 focus:outline-none"
             />
           </div>
 
           <div>
-            <label for="village-input" class="block font-bold uppercase text-[11px] text-[#1a120c] mb-1">Kelurahan / Desa</label>
+            <label for="village-input" class="block font-bold uppercase text-[11px] text-slate-800 mb-1.5">Kelurahan / Desa</label>
             <input
               id="village-input"
               name="village_name"
               type="text"
               bind:value={villageName}
               placeholder="Contoh: Panaikang"
-              class="w-full border border-stone-300 rounded-lg p-2.5 text-xs text-[#1a120c] focus:border-[#F08300] focus:outline-none"
+              class="w-full ds-glass-input rounded-xl p-3 text-xs text-slate-900 focus:outline-none"
             />
           </div>
         </div>
 
         <div>
-          <label for="address-textarea" class="block font-bold uppercase text-[11px] text-[#1a120c] mb-1">
+          <label for="address-textarea" class="block font-bold uppercase text-[11px] text-slate-800 mb-1.5">
             Alamat Detail Tempat Kejadian *
           </label>
           <textarea
@@ -467,14 +467,14 @@
             rows="2"
             required
             placeholder="Sebutkan nama jalan, patokan gedung, nomor bangunan, atau persimpangan tempat peristiwa terjadi..."
-            class="w-full border border-stone-300 rounded-lg p-2.5 text-xs text-[#1a120c] focus:border-[#F08300] focus:outline-none"
+            class="w-full ds-glass-input rounded-xl p-3 text-xs text-slate-900 focus:outline-none"
           ></textarea>
         </div>
       </fieldset>
 
       <!-- 3. Bukti Foto & Uraian (Reusable FileUploader) -->
-      <fieldset class="space-y-4 pt-4 border-t border-stone-100">
-        <legend class="font-extrabold text-sm uppercase text-[#1a120c] tracking-wide border-b border-stone-100 pb-2 w-full">
+      <fieldset class="space-y-4 pt-4 border-t border-white/80">
+        <legend class="font-extrabold text-sm uppercase text-slate-900 tracking-wide border-b border-white/80 pb-2 w-full">
           3. Bukti Gambar &amp; Uraian Kejadian
         </legend>
 
@@ -488,7 +488,7 @@
         />
 
         <div>
-          <label for="desc-textarea" class="block font-bold uppercase text-[11px] text-[#1a120c] mb-1">
+          <label for="desc-textarea" class="block font-bold uppercase text-[11px] text-slate-800 mb-1.5">
             Kronologi &amp; Uraian Pengaduan *
           </label>
           <textarea
@@ -498,17 +498,17 @@
             rows="4"
             required
             placeholder="Jelaskan secara ringkas situasi, perkiraan jumlah pihak terlibat, waktu kejadian, serta potensi bahaya terhadap ketertiban umum..."
-            class="w-full border border-stone-300 rounded-lg p-2.5 text-xs text-[#1a120c] focus:border-[#F08300] focus:outline-none"
+            class="w-full ds-glass-input rounded-xl p-3 text-xs text-slate-900 focus:outline-none"
           ></textarea>
         </div>
       </fieldset>
 
-      <div class="pt-4 border-t border-stone-100 flex flex-wrap items-center justify-between gap-3">
-        <span class="text-[11px] text-stone-500">* Wajib diisi secara lengkap untuk keabsahan laporan</span>
+      <div class="pt-4 border-t border-white/80 flex flex-wrap items-center justify-between gap-3">
+        <span class="text-[11px] text-slate-400 font-light">* Wajib diisi secara lengkap untuk keabsahan laporan</span>
         <button
           type="submit"
           disabled={isLoading}
-          class="bg-[#3d261a] hover:bg-[#271810] disabled:opacity-50 text-white font-bold text-xs uppercase px-8 py-3 rounded-xl transition shadow-md"
+          class="bg-gradient-to-r from-[#F08300] to-[#e07000] hover:from-[#d97400] hover:to-[#c66500] disabled:opacity-50 text-white font-bold text-xs uppercase px-8 py-3.5 rounded-xl transition duration-200 shadow-glass-gold cursor-pointer ds-press"
         >
           {#if isLoading}
             Mengirim Laporan...

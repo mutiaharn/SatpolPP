@@ -2,6 +2,7 @@
   import { galleryStore } from '$lib/stores/appState';
   import type { GalleryItem } from '$lib/types';
   import Lightbox from '$lib/components/ui/Lightbox.svelte';
+  import { Camera, ChevronRight, Image as ImageIcon, ZoomIn } from 'lucide-svelte';
 
   let selectedCategory = '';
   let showLightbox = false;
@@ -10,7 +11,7 @@
   const categories = [
     { id: '', label: 'Semua Dokumentasi' },
     { id: 'Penertiban', label: 'Operasi & Penertiban' },
-    { id: 'Apel & Upacara', label: 'Apel & Peringatan Hari Besar' },
+    { id: 'Apel & Upacara', label: 'Apel & Upacara Korps' },
     { id: 'Koordinasi', label: 'Koordinasi & Sosialisasi' }
   ];
 
@@ -28,24 +29,36 @@
   <title>Galeri Dokumentasi Kegiatan | Satpol PP Prov. Sulsel</title>
 </svelte:head>
 
-<div class="bg-[#f9f4e8] border-b border-[#eee9db] py-10 px-4">
-  <div class="max-w-6xl mx-auto">
-    <div class="text-[#F08300] font-bold text-xs uppercase tracking-widest">Dokumentasi Multimedia</div>
-    <h1 class="text-3xl font-extrabold text-[#1a120c] tracking-tight mt-1">Galeri Kegiatan &amp; Penugasan</h1>
-    <div class="w-12 h-1 bg-[#F08300] mt-3 rounded-full"></div>
-    <p class="text-xs text-[#6f7775] mt-2 max-w-2xl">
-      Rekam jejak visual pengabdian personel Satpol PP Provinsi Sulawesi Selatan dalam mengawal penegakan Peraturan Daerah, menjaga ketenteraman masyarakat, serta apel kesiapsiagaan korps Praja Wibawa.
+<!-- Sovereign Slim Hero Banner -->
+<div class="bg-gradient-to-b from-[#070e1c] via-[#0b172a] to-[#0f223d] text-white py-6 sm:py-7 md:py-8 px-4 relative overflow-hidden ds-specular-dark border-b border-white/10">
+  <div class="absolute top-0 right-10 w-72 h-72 rounded-full bg-[#246bfd]/8 blur-3xl pointer-events-none"></div>
+  <div class="absolute bottom-0 left-10 w-56 h-56 rounded-full bg-[#F08300]/8 blur-3xl pointer-events-none"></div>
+
+  <div class="max-w-6xl mx-auto relative z-10">
+    <div class="flex flex-wrap items-center gap-1.5 text-xs text-slate-400 mb-2">
+      <a href="/" class="hover:text-[#F08300] transition">Beranda</a>
+      <ChevronRight class="w-3.5 h-3.5 text-slate-500" />
+      <span class="text-[#F08300] font-medium">Galeri Multimedia</span>
+    </div>
+
+    <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Galeri Foto &amp; Kegiatan</h1>
+    <p class="text-xs sm:text-sm text-slate-300 mt-1.5 max-w-2xl font-light leading-relaxed">
+      Rekam jejak visual dedikasi dan pengabdian personel Satpol PP Sulsel dalam mengayomi warga, apel kesiapsiagaan, dan patroli pengamanan wilayah.
     </p>
   </div>
 </div>
 
 <div class="py-10 px-4 max-w-6xl mx-auto space-y-8">
-  <!-- Filter Tabs -->
-  <div class="flex flex-wrap gap-2 bg-white p-4 sm:p-5 border border-[#eee9db] rounded-xl shadow-xs">
+  <!-- Filter Tabs (Tamalate Specular Glass Style) -->
+  <div class="flex flex-wrap gap-2 ds-glass p-4 sm:p-5 border border-white/90 rounded-3xl shadow-glass ds-specular-top">
     {#each categories as cat}
       <button 
         type="button"
-        class={`px-4 py-2 text-xs font-bold uppercase transition rounded-lg ${selectedCategory === cat.id ? 'bg-[#3d261a] text-white shadow-xs' : 'bg-stone-50 border border-stone-200 text-[#1a120c] hover:bg-stone-100'}`}
+        class={`px-4 py-2 text-xs font-bold uppercase transition duration-200 rounded-xl ds-press ${
+          selectedCategory === cat.id 
+            ? 'ds-pill-active' 
+            : 'ds-pill-inactive'
+        }`}
         on:click={() => selectedCategory = cat.id}
       >
         {cat.label}
@@ -59,32 +72,30 @@
       {#each filteredItems as item, idx}
         <button 
           type="button"
-          class="bg-white border border-[#eee9db] rounded-xl overflow-hidden group text-left focus:outline-none focus:ring-2 focus:ring-[#F08300] shadow-xs hover:shadow-md transition flex flex-col justify-between"
+          class="ds-glass-card border border-white/80 rounded-2xl overflow-hidden group text-left focus:outline-none focus:ring-2 focus:ring-[#246bfd] shadow-glass flex flex-col justify-between ds-press"
           on:click={() => openLightbox(idx)}
         >
-          <div class="relative h-56 bg-stone-100 overflow-hidden w-full">
+          <div class="relative h-56 bg-slate-100 overflow-hidden w-full">
             <img 
               src={item.image_url} 
               alt={item.title} 
-              class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+              class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
               loading="lazy"
             />
-            <span class="absolute top-3 left-3 bg-[#1a120c]/85 text-[#F08300] font-bold text-[10px] uppercase px-2.5 py-1 tracking-wider border-l-2 border-[#F08300] rounded-sm">
+            <span class="absolute top-3 left-3 ds-glass-dark text-[#F08300] font-bold text-[10px] uppercase px-3 py-1 tracking-wider border border-white/20 rounded-lg shadow-xs">
               {item.category}
             </span>
 
             <!-- Zoom overlay icon indicator -->
-            <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-              <span class="bg-[#3d261a]/90 text-white p-2.5 rounded-full shadow-lg">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
-                </svg>
+            <div class="absolute inset-0 bg-[#070e1c]/35 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-xs">
+              <span class="ds-glass-dark text-white p-3.5 rounded-full shadow-2xl border border-white/25">
+                <ZoomIn class="w-5 h-5 text-[#F08300]" />
               </span>
             </div>
           </div>
-          <div class="p-4 space-y-1">
-            <div class="text-[10px] text-[#6f7775] font-semibold">{item.date}</div>
-            <h3 class="text-xs font-bold text-[#1a120c] group-hover:text-[#F08300] transition line-clamp-2 leading-snug">
+          <div class="p-5 space-y-1.5 flex-1 flex flex-col justify-between">
+            <div class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider font-mono">{item.date}</div>
+            <h3 class="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-[#F08300] transition duration-200 line-clamp-2 leading-snug">
               {item.title}
             </h3>
           </div>
@@ -92,17 +103,18 @@
       {/each}
     </div>
   {:else}
-    <div class="bg-white p-12 text-center rounded-xl border border-[#eee9db] text-stone-400">
-      <p class="text-xs font-medium">Tidak ada foto dokumentasi pada kategori ini.</p>
+    <div class="ds-glass border border-white/90 p-12 text-center rounded-3xl text-slate-400 space-y-2 shadow-glass">
+      <ImageIcon class="w-8 h-8 text-slate-300 mx-auto mb-1" />
+      <p class="text-xs font-medium text-slate-600">Tidak ada foto dokumentasi pada kategori ini.</p>
     </div>
   {/if}
 </div>
 
-<!-- Reusable Lightbox Modal with Next/Prev and Keyboard Navigation (Poin 16) -->
-<Lightbox
-  bind:open={showLightbox}
-  items={filteredItems}
-  currentIndex={selectedIndex}
-  on:change={(e) => selectedIndex = e.detail}
-  on:close={() => showLightbox = false}
-/>
+<!-- Modal Lightbox -->
+{#if showLightbox}
+  <Lightbox
+    items={filteredItems}
+    {selectedIndex}
+    on:close={() => showLightbox = false}
+  />
+{/if}

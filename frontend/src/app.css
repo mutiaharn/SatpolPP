@@ -8,12 +8,30 @@
   :root {
     --satpol-canvas: #f8fafc;
     --satpol-surface: #ffffff;
-    --satpol-navy: #0b172a;
+    --satpol-navy: #070e1c;
     --satpol-accent: #f08300;
     --satpol-azure: #246bfd;
-    --satpol-glass-border: rgba(255, 255, 255, 0.7);
-    --satpol-glass-bg: rgba(255, 255, 255, 0.78);
-    --satpol-glass-dark: rgba(11, 23, 42, 0.85);
+
+    /* Specular Glassmorphism Tokens (Tamalate Sovereign & Praja Fusion) */
+    --ds-glass-bg: rgba(255, 255, 255, 0.68);
+    --ds-glass-bg-subtle: rgba(255, 255, 255, 0.42);
+    --ds-glass-bg-strong: rgba(255, 255, 255, 0.86);
+    --ds-glass-dark: rgba(7, 14, 28, 0.76);
+    --ds-glass-dark-strong: rgba(11, 23, 42, 0.88);
+    --ds-glass-border: rgba(255, 255, 255, 0.85);
+    --ds-glass-border-subtle: rgba(255, 255, 255, 0.50);
+    --ds-glass-border-dark: rgba(255, 255, 255, 0.16);
+    --ds-glass-blur: 18px;
+    --ds-glass-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    --ds-glass-highlight-dark: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    --ds-shadow-glass: 0 8px 32px 0 rgba(15, 23, 42, 0.08), 0 2px 8px rgba(15, 23, 42, 0.04);
+    --ds-shadow-glass-strong: 0 16px 44px -8px rgba(15, 23, 42, 0.12), 0 4px 12px rgba(15, 23, 42, 0.04);
+    --ds-shadow-glass-gold: 0 12px 36px -6px rgba(240, 131, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    --ds-shadow-glass-azure: 0 12px 36px -6px rgba(36, 107, 253, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+
+    /* Smooth Motion Easings */
+    --ds-ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+    --ds-ease-spring: cubic-bezier(0.2, 0.9, 0.3, 1);
   }
 
   html {
@@ -24,7 +42,15 @@
 
   body {
     background-color: #f8fafc;
+    background-image: 
+      radial-gradient(ellipse 90% 60% at 15% -5%, rgba(36, 107, 253, 0.07), transparent 60%),
+      radial-gradient(ellipse 80% 55% at 85% 25%, rgba(240, 131, 0, 0.06), transparent 60%),
+      radial-gradient(ellipse 70% 50% at 10% 70%, rgba(56, 189, 248, 0.05), transparent 60%),
+      radial-gradient(ellipse 75% 55% at 90% 95%, rgba(240, 131, 0, 0.05), transparent 60%);
+    background-attachment: fixed;
     color: #0f172a;
+    min-height: 100vh;
+    overflow-x: hidden;
   }
 
   /* Native top-layer <dialog> scroll containment */
@@ -35,9 +61,9 @@
   dialog::backdrop {
     overflow: hidden;
     overscroll-behavior: contain;
-    background-color: rgba(7, 14, 26, 0.65);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background-color: rgba(7, 14, 28, 0.55);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
   }
 
   /* Validate only after user interaction or submission attempt */
@@ -50,52 +76,211 @@
 }
 
 /* ==========================================================================
-   TAMALATE DESIGN SYSTEM - SOVEREIGN GLASS & SPECULAR UTILITIES
+   TAMALATE DESIGN SYSTEM - SOVEREIGN SPECULAR GLASSMORPHISM
    ========================================================================== */
+
+/* Standard Frosted Glass Surface */
 .ds-glass {
-  background: rgba(255, 255, 255, 0.82);
-  border: 1px solid rgba(226, 232, 240, 0.8);
-  box-shadow: 0 8px 30px -4px rgba(15, 23, 42, 0.06), 0 2px 6px rgba(15, 23, 42, 0.02);
-  -webkit-backdrop-filter: blur(16px) saturate(160%);
-  backdrop-filter: blur(16px) saturate(160%);
+  background: var(--ds-glass-bg);
+  border: 1px solid var(--ds-glass-border);
+  box-shadow: var(--ds-shadow-glass), var(--ds-glass-highlight);
+  -webkit-backdrop-filter: blur(var(--ds-glass-blur)) saturate(180%);
+  backdrop-filter: blur(var(--ds-glass-blur)) saturate(180%);
 }
 
+/* Subtle Glass Surface for Pills, Badges & Inner Containers */
+.ds-glass-subtle {
+  background: var(--ds-glass-bg-subtle);
+  border: 1px solid var(--ds-glass-border-subtle);
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04), var(--ds-glass-highlight);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  backdrop-filter: blur(12px) saturate(160%);
+}
+
+/* Strong Frosted Glass Surface for High Readability / Core Content */
 .ds-glass-strong {
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  box-shadow: 0 14px 38px -6px rgba(15, 23, 42, 0.08), 0 4px 10px rgba(15, 23, 42, 0.03);
+  background: var(--ds-glass-bg-strong);
+  border: 1px solid var(--ds-glass-border);
+  box-shadow: var(--ds-shadow-glass-strong), var(--ds-glass-highlight);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  backdrop-filter: blur(24px) saturate(190%);
+}
+
+/* Deep Obsidian Glass for Hero & Dark Theme Modules */
+.ds-glass-dark {
+  background: var(--ds-glass-dark);
+  border: 1px solid var(--ds-glass-border-dark);
+  box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.45), var(--ds-glass-highlight-dark);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   backdrop-filter: blur(20px) saturate(180%);
 }
 
-.ds-glass-dark {
-  background: rgba(11, 23, 42, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.45);
-  -webkit-backdrop-filter: blur(18px) saturate(180%);
-  backdrop-filter: blur(18px) saturate(180%);
+.ds-glass-dark-strong {
+  background: var(--ds-glass-dark-strong);
+  border: 1px solid var(--ds-glass-border-dark);
+  box-shadow: 0 20px 48px -10px rgba(0, 0, 0, 0.55), var(--ds-glass-highlight-dark);
+  -webkit-backdrop-filter: blur(26px) saturate(190%);
+  backdrop-filter: blur(26px) saturate(190%);
 }
 
+/* Accent Luminous Glass (Praja Amber / Gold) */
 .ds-glass-gold {
-  background: linear-gradient(135deg, rgba(240, 131, 0, 0.08) 0%, rgba(255, 255, 255, 0.9) 100%);
-  border: 1px solid rgba(240, 131, 0, 0.25);
-  box-shadow: 0 10px 32px -4px rgba(240, 131, 0, 0.15);
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
+  background: linear-gradient(135deg, rgba(240, 131, 0, 0.14) 0%, rgba(255, 255, 255, 0.72) 100%);
+  border: 1px solid rgba(240, 131, 0, 0.35);
+  box-shadow: var(--ds-shadow-glass-gold), var(--ds-glass-highlight);
+  -webkit-backdrop-filter: blur(16px) saturate(170%);
+  backdrop-filter: blur(16px) saturate(170%);
 }
 
+/* Accent Luminous Glass (Sovereign Azure) */
+.ds-glass-azure {
+  background: linear-gradient(135deg, rgba(36, 107, 253, 0.12) 0%, rgba(255, 255, 255, 0.72) 100%);
+  border: 1px solid rgba(36, 107, 253, 0.32);
+  box-shadow: var(--ds-shadow-glass-azure), var(--ds-glass-highlight);
+  -webkit-backdrop-filter: blur(16px) saturate(170%);
+  backdrop-filter: blur(16px) saturate(170%);
+}
+
+/* Specular Inner Rim Highlights */
 .ds-specular-top {
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.8);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.95);
 }
 
 .ds-specular-dark {
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.22);
 }
 
+/* Glassmorphic Interactive Form Inputs */
+.ds-glass-input {
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  transition: all 0.2s var(--ds-ease-smooth);
+}
+.ds-glass-input:focus {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: #246bfd;
+  box-shadow: 0 0 0 3px rgba(36, 107, 253, 0.18), inset 0 1px 2px rgba(15, 23, 42, 0.02);
+}
+
+/* Glassmorphic Interactive Cards with Smooth Transitions */
+.ds-glass-card {
+  background: var(--ds-glass-bg);
+  border: 1px solid var(--ds-glass-border);
+  box-shadow: var(--ds-shadow-glass), var(--ds-glass-highlight);
+  -webkit-backdrop-filter: blur(var(--ds-glass-blur)) saturate(180%);
+  backdrop-filter: blur(var(--ds-glass-blur)) saturate(180%);
+  transition: transform 0.3s var(--ds-ease-smooth),
+              box-shadow 0.3s var(--ds-ease-smooth),
+              border-color 0.25s ease,
+              background-color 0.25s ease;
+  will-change: transform, box-shadow;
+}
+
+.ds-glass-card:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(255, 255, 255, 1);
+  box-shadow: 0 20px 48px -10px rgba(15, 23, 42, 0.12),
+              0 0 24px -4px rgba(36, 107, 253, 0.10),
+              var(--ds-glass-highlight);
+}
+
+/* Tactile Compositor Press Physics (60fps) */
+.ds-press {
+  transition: transform 120ms var(--ds-ease-spring), opacity 140ms ease-out;
+  will-change: transform;
+}
+.ds-press:active {
+  transform: scale(0.97);
+}
+
+/* Smooth Hover Lift Physics */
+.ds-hover-lift {
+  transition: transform 0.28s var(--ds-ease-smooth),
+              box-shadow 0.28s var(--ds-ease-smooth),
+              border-color 0.22s ease;
+  will-change: transform, box-shadow;
+}
+.ds-hover-lift:hover {
+  transform: translateY(-2.5px);
+}
+.ds-hover-lift:active {
+  transform: scale(0.98);
+}
+
+/* Glassmorphic Active Pill with Luminous Sky-Blue Outline (User Spec) */
+.ds-pill-active {
+  background-color: #070e1c !important;
+  color: #ffffff !important;
+  border-color: #7dd3fc !important;
+  box-shadow: 0 0 0 2px #7dd3fc, 0 0 14px -1px rgba(56, 189, 248, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+}
+
+/* Glassmorphic Inactive Pill */
+.ds-pill-inactive {
+  background: var(--ds-glass-bg-subtle);
+  border: 1px solid var(--ds-glass-border-subtle);
+  color: #334155;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03), var(--ds-glass-highlight);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  backdrop-filter: blur(12px) saturate(160%);
+}
+.ds-pill-inactive:hover {
+  background: rgba(255, 255, 255, 0.92);
+  color: #0f172a;
+  border-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+}
+
+/* Ambient Canvas Glow & Underneath Mesh Blobs */
 .ds-ambient-glow {
   background-image: 
-    radial-gradient(800px 400px at 10% 0%, rgba(36, 107, 253, 0.08), transparent 60%),
-    radial-gradient(700px 380px at 90% 0%, rgba(240, 131, 0, 0.07), transparent 55%);
+    radial-gradient(1100px 600px at 5% -5%, rgba(36, 107, 253, 0.09), transparent 60%),
+    radial-gradient(900px 520px at 95% 5%, rgba(240, 131, 0, 0.08), transparent 55%),
+    radial-gradient(850px 500px at 50% 50%, rgba(14, 165, 233, 0.05), transparent 65%);
+}
+
+/* Fallback for System Settings: Reduced Transparency */
+@media (prefers-reduced-transparency: reduce) {
+  .ds-glass,
+  .ds-glass-subtle,
+  .ds-glass-strong,
+  .ds-glass-gold,
+  .ds-glass-azure,
+  .ds-glass-card {
+    background: #ffffff !important;
+    border-color: #cbd5e1 !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+  .ds-glass-dark,
+  .ds-glass-dark-strong {
+    background: #070e1c !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+}
+
+/* Fallback for Browsers Lacking Backdrop-Filter */
+@supports not (backdrop-filter: blur(1px)) {
+  .ds-glass,
+  .ds-glass-subtle,
+  .ds-glass-card {
+    background: #ffffff;
+    border-color: #cbd5e1;
+  }
+  .ds-glass-strong {
+    background: #f8fafc;
+    border-color: #94a3b8;
+  }
+  .ds-glass-dark,
+  .ds-glass-dark-strong {
+    background: #070e1c;
+    border-color: #1e293b;
+  }
 }
 
 /* Custom scrollbar for modern subtle appearance */
@@ -104,12 +289,14 @@
   height: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: rgba(241, 245, 249, 0.6);
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: rgba(203, 213, 225, 0.8);
   border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: rgba(148, 163, 184, 0.95);
 }

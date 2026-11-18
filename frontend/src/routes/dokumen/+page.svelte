@@ -4,6 +4,7 @@
   import type { PublicDocument } from '$lib/types';
   import DataTable from '$lib/components/ui/DataTable.svelte';
   import Modal from '$lib/components/ui/Modal.svelte';
+  import { ChevronRight, FileText } from 'lucide-svelte';
 
   let selectedCategory = '';
   let selectedDoc: PublicDocument | null = null;
@@ -45,24 +46,35 @@
   <title>Dokumen Publik &amp; Transparansi Kinerja | Satpol PP Prov. Sulsel</title>
 </svelte:head>
 
-<div class="bg-gradient-to-b from-[#070e1c] to-[#0f223d] text-white py-12 px-4 relative overflow-hidden ds-specular-dark">
-  <div class="absolute top-0 right-10 w-96 h-96 rounded-full bg-[#f08300]/10 blur-3xl pointer-events-none"></div>
+<!-- Sovereign Slim Hero Banner -->
+<div class="bg-gradient-to-b from-[#070e1c] via-[#0b172a] to-[#0f223d] text-white py-6 sm:py-7 md:py-8 px-4 relative overflow-hidden ds-specular-dark border-b border-white/10">
+  <div class="absolute top-0 right-10 w-72 h-72 rounded-full bg-[#246bfd]/8 blur-3xl pointer-events-none"></div>
+  <div class="absolute bottom-0 left-10 w-56 h-56 rounded-full bg-[#F08300]/8 blur-3xl pointer-events-none"></div>
+
   <div class="max-w-6xl mx-auto relative z-10">
-    <div class="text-[#F08300] font-bold text-xs uppercase tracking-widest">Transparansi Penyelenggaraan Negara</div>
-    <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mt-1">Dokumen &amp; Regulasi Publik Resmi</h1>
-    <p class="text-xs sm:text-sm text-slate-300 mt-2 max-w-2xl font-light">
-      Akses berkas perencanaan, penganggaran tahunan, laporan akuntabilitas kinerja (LAKIP/LKjIP), serta peraturan daerah ketertiban umum Satpol PP Prov. Sulsel.
+    <!-- Breadcrumb Pills -->
+    <div class="flex flex-wrap items-center gap-1.5 text-xs text-slate-400 mb-2">
+      <a href="/" class="hover:text-[#F08300] transition">Beranda</a>
+      <ChevronRight class="w-3.5 h-3.5 text-slate-500" />
+      <span class="text-slate-400">Informasi Publik</span>
+      <ChevronRight class="w-3.5 h-3.5 text-slate-500" />
+      <span class="text-[#F08300] font-medium">Dokumen &amp; Regulasi</span>
+    </div>
+
+    <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Dokumen &amp; Regulasi Resmi</h1>
+    <p class="text-xs sm:text-sm text-slate-300 mt-1.5 max-w-2xl font-light leading-relaxed">
+      Akses terbuka terhadap rencana kerja, transparansi anggaran, laporan kinerja instansi, serta peraturan daerah untuk mewujudkan tata kelola pemerintahan yang bersih dan akuntabel.
     </p>
   </div>
 </div>
 
 <div class="py-10 px-4 max-w-6xl mx-auto space-y-6">
-  <!-- Category Filter Pills (Tamalate Pill Style) -->
-  <div class="flex flex-wrap gap-2 ds-glass p-4 sm:p-5 border border-slate-200/80 rounded-2xl shadow-glass">
+  <!-- Category Filter Pills (Tamalate Specular Glass Pills) -->
+  <div class="flex flex-wrap gap-2 ds-glass p-4 sm:p-5 border border-white/90 rounded-3xl shadow-glass ds-specular-top">
     {#each categories as cat}
       <button 
         type="button"
-        class={`px-3.5 py-2 text-xs font-bold uppercase transition rounded-xl ${selectedCategory === cat.id ? 'bg-[#070e1c] text-white shadow-sm ring-2 ring-[#246bfd]/30' : 'bg-slate-100/80 border border-slate-200 text-slate-700 hover:bg-slate-200/70'}`}
+        class={`px-3.5 py-2 text-xs font-bold uppercase transition duration-200 rounded-xl ds-press ${selectedCategory === cat.id ? 'ds-pill-active' : 'ds-pill-inactive'}`}
         on:click={() => selectedCategory = cat.id}
       >
         {cat.label}
@@ -92,33 +104,33 @@
     </svelte:fragment>
 
     <svelte:fragment slot="row" let:item>
-      <tr class="hover:bg-stone-50/70 transition">
-        <td class="p-4 font-bold text-[#1a120c] max-w-md">
+      <tr class="hover:bg-slate-50/80 transition">
+        <td class="p-4 font-bold text-slate-900 max-w-md">
           <button
             type="button"
             on:click={() => openDocDetail(item)}
-            class="text-left hover:text-[#F08300] transition flex items-start gap-2"
+            class="text-left hover:text-[#F08300] transition flex items-start gap-2.5"
           >
-            <svg class="w-4 h-4 text-stone-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-4 h-4 text-slate-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
             </svg>
             <span>{item.title}</span>
           </button>
         </td>
-        <td class="p-4 text-[#6f7775] font-mono text-xs">{item.doc_number || '-'}</td>
+        <td class="p-4 text-slate-500 font-mono text-xs">{item.doc_number || '-'}</td>
         <td class="p-4">
-          <span class="bg-[#f5ede4] text-[#3d261a] font-bold text-[10px] uppercase px-2.5 py-1 rounded-md border border-[#e8dbc9]">
+          <span class="bg-slate-100 text-slate-700 font-bold text-[10px] uppercase px-2.5 py-1 rounded-lg border border-slate-200">
             {item.category}
           </span>
         </td>
-        <td class="p-4 text-center text-[#1a120c] font-semibold">{item.year}</td>
+        <td class="p-4 text-center text-slate-900 font-semibold">{item.year}</td>
         <td class="p-4 text-right">
-          <div class="inline-flex items-center gap-1.5 justify-end">
+          <div class="inline-flex items-center gap-2 justify-end">
             <!-- Modal Detail Trigger -->
             <button
               type="button"
               on:click={() => openDocDetail(item)}
-              class="bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold text-[11px] uppercase px-3 py-1.5 rounded-lg transition"
+              class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] uppercase px-3 py-1.5 rounded-xl transition"
               title="Pratinjau Rincian"
             >
               Detail
@@ -130,7 +142,7 @@
               target="_blank" 
               rel="noreferrer"
               download={item.title}
-              class="bg-[#3d261a] hover:bg-[#271810] text-white font-bold text-[11px] uppercase px-3 py-1.5 rounded-lg transition inline-flex items-center gap-1"
+              class="bg-[#0b172a] hover:bg-[#1e3a5f] text-white font-bold text-[11px] uppercase px-3 py-1.5 rounded-xl transition inline-flex items-center gap-1 shadow-xs"
             >
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -144,7 +156,7 @@
   </DataTable>
 </div>
 
-<!-- Modal Pratinjau Dokumen Publik (Poin 15) -->
+<!-- Modal Pratinjau Dokumen Publik -->
 <Modal
   bind:open={showPreviewModal}
   title={selectedDoc?.title || 'Rincian Dokumen Resmi'}
@@ -154,42 +166,42 @@
   {#if selectedDoc}
     <div class="space-y-5">
       <!-- Metadata Grid -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 bg-[#faf7f2] p-4 rounded-xl border border-[#eee9db]">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 bg-slate-50/80 p-4 rounded-2xl border border-slate-200/80">
         <div>
-          <span class="text-[10px] text-stone-500 uppercase font-semibold block">Nomor Registrasi</span>
-          <span class="font-mono text-xs font-bold text-[#1a120c]">{selectedDoc.doc_number || 'Tidak tertera'}</span>
+          <span class="text-[10px] text-slate-400 uppercase font-semibold block">Nomor Registrasi</span>
+          <span class="font-mono text-xs font-bold text-slate-900">{selectedDoc.doc_number || 'Tidak tertera'}</span>
         </div>
         <div>
-          <span class="text-[10px] text-stone-500 uppercase font-semibold block">Kategori Berkas</span>
+          <span class="text-[10px] text-slate-400 uppercase font-semibold block">Kategori Berkas</span>
           <span class="text-xs font-bold text-[#F08300]">{getCategoryLabel(selectedDoc.category)}</span>
         </div>
         <div>
-          <span class="text-[10px] text-stone-500 uppercase font-semibold block">Tahun Penerbitan</span>
-          <span class="text-xs font-bold text-[#1a120c]">{selectedDoc.year}</span>
+          <span class="text-[10px] text-slate-400 uppercase font-semibold block">Tahun Penerbitan</span>
+          <span class="text-xs font-bold text-slate-900">{selectedDoc.year}</span>
         </div>
         <div>
-          <span class="text-[10px] text-stone-500 uppercase font-semibold block">Estimasi Ukuran File</span>
-          <span class="text-xs font-bold text-[#1a120c]">{selectedDoc.file_size || '1.8 MB'}</span>
+          <span class="text-[10px] text-slate-400 uppercase font-semibold block">Estimasi Ukuran File</span>
+          <span class="text-xs font-bold text-slate-900">{selectedDoc.file_size || '1.8 MB'}</span>
         </div>
       </div>
 
       <!-- Description / Disclaimer -->
-      <div class="border-l-4 border-[#F08300] bg-stone-50 p-3.5 rounded-r-lg text-stone-700 leading-relaxed text-xs">
-        <p class="font-semibold text-[#1a120c] mb-1">Keterbukaan Informasi Publik (UU No. 14 Tahun 2008)</p>
-        <p>
+      <div class="border-l-4 border-[#F08300] bg-amber-50/70 p-4 rounded-r-2xl border border-amber-200/50 text-slate-700 leading-relaxed text-xs">
+        <p class="font-semibold text-slate-900 mb-1">Keterbukaan Informasi Publik (UU No. 14 Tahun 2008)</p>
+        <p class="font-light">
           Dokumen ini dipublikasikan secara resmi oleh Satuan Polisi Pamong Praja Provinsi Sulawesi Selatan sebagai bentuk akuntabilitas kinerja, perencanaan strategis, dan transparansi regulasi bagi seluruh masyarakat.
         </p>
       </div>
 
       <!-- Action Box -->
-      <div class="p-4 bg-white border border-stone-200 rounded-xl flex items-center justify-between gap-3">
+      <div class="p-4 bg-white border border-slate-200 rounded-2xl flex items-center justify-between gap-3 shadow-2xs">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center font-bold text-xs border border-red-200">
+          <div class="w-10 h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center font-bold text-xs border border-red-200">
             PDF
           </div>
           <div>
-            <div class="font-bold text-xs text-[#1a120c]">{selectedDoc.title}.pdf</div>
-            <div class="text-[11px] text-stone-500">Berkas digital resmi terverifikasi</div>
+            <div class="font-bold text-xs text-slate-900">{selectedDoc.title}.pdf</div>
+            <div class="text-[11px] text-slate-500 font-light">Berkas digital resmi terverifikasi</div>
           </div>
         </div>
 
@@ -198,7 +210,7 @@
           target="_blank"
           rel="noreferrer"
           download={selectedDoc.title}
-          class="bg-[#3d261a] hover:bg-[#271810] text-white font-bold text-xs uppercase px-4 py-2.5 rounded-lg transition inline-flex items-center gap-1.5 shadow-xs"
+          class="bg-[#F08300] hover:bg-[#d97400] text-white font-bold text-xs uppercase px-4 py-2.5 rounded-xl transition inline-flex items-center gap-1.5 shadow-xs"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -213,7 +225,7 @@
     <button
       type="button"
       on:click={handleClose}
-      class="px-4 py-2 text-xs font-semibold text-stone-600 hover:text-stone-800 bg-stone-100 hover:bg-stone-200 rounded-lg transition"
+      class="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 rounded-xl transition"
     >
       Tutup
     </button>

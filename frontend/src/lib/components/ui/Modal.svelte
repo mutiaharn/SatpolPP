@@ -65,7 +65,7 @@
   });
 </script>
 
-<!-- Native <dialog> opened via showModal(); Esc & top-layer focus trap ditangani browser -->
+<!-- Native <dialog> with Tamalate Specular Glassmorphism -->
 <dialog
   bind:this={dialogEl}
   aria-labelledby={title ? titleId : undefined}
@@ -73,18 +73,18 @@
   on:close={handleNativeClose}
   on:pointerdown={handlePointerDown}
   on:pointerup={handlePointerUp}
-  class={`m-auto p-0 bg-white rounded-2xl shadow-2xl border border-[#eee9db] w-[calc(100%-1.5rem)] ${sizeClasses[size]} max-h-[90vh] overflow-hidden open:flex flex-col`}
+  class={`m-auto p-0 ds-glass-strong rounded-3xl shadow-2xl border border-white/95 w-[calc(100%-1.5rem)] ${sizeClasses[size]} max-h-[90vh] overflow-hidden open:flex flex-col ds-specular-top`}
 >
-  <!-- Header -->
-  <div class="px-5 py-4 border-b border-[#eee9db] bg-[#faf7f2] flex items-center justify-between shrink-0 gap-3">
+  <!-- Header (Frosted Glass Header) -->
+  <div class="px-6 py-4 border-b border-white/80 bg-white/40 flex items-center justify-between shrink-0 gap-3 backdrop-blur-md">
     <div class="min-w-0">
       {#if subtitle}
-        <span class="text-[10px] font-bold uppercase tracking-wider text-[#F08300] block">
+        <span class="text-[10px] font-bold uppercase tracking-wider text-[#F08300] block mb-0.5">
           {subtitle}
         </span>
       {/if}
       {#if title}
-        <h3 id={titleId} class="text-sm sm:text-base font-bold text-[#1a120c] leading-tight truncate">
+        <h3 id={titleId} class="text-sm sm:text-base font-bold text-slate-900 leading-tight truncate">
           {title}
         </h3>
       {/if}
@@ -95,7 +95,7 @@
       <button
         type="button"
         on:click={handleClose}
-        class="p-1.5 rounded-lg text-stone-500 hover:text-[#1a120c] hover:bg-stone-200/60 transition shrink-0"
+        class="p-2 rounded-xl text-slate-400 hover:text-slate-900 hover:bg-slate-900/5 transition shrink-0 ds-press"
         aria-label="Tutup modal"
       >
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -106,13 +106,13 @@
   </div>
 
   <!-- Body / Content -->
-  <div class="p-5 sm:p-6 overflow-y-auto flex-1 text-xs text-stone-700 leading-relaxed">
+  <div class="p-6 overflow-y-auto flex-1 text-xs text-slate-700 leading-relaxed font-light">
     <slot />
   </div>
 
-  <!-- Footer -->
+  <!-- Footer (Frosted Glass Footer) -->
   {#if $$slots.footer}
-    <div class="px-5 py-3.5 border-t border-[#eee9db] bg-[#faf7f2]/80 flex flex-wrap items-center justify-end gap-2 shrink-0">
+    <div class="px-6 py-4 border-t border-white/80 bg-white/40 flex flex-wrap items-center justify-end gap-2 shrink-0 backdrop-blur-md">
       <slot name="footer" {handleClose} />
     </div>
   {/if}

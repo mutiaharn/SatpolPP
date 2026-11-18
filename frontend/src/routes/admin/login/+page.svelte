@@ -103,11 +103,11 @@
   <!-- =========================================================================
        LEFT PANEL: iOS-STYLE FROSTED GLASS AUTHENTICATION CONSOLE
        ========================================================================= -->
-  <div class="w-full lg:w-[490px] xl:w-[540px] shrink-0 min-h-screen bg-white/95 backdrop-blur-2xl border-r border-slate-200/80 flex flex-col justify-between p-6 sm:p-10 lg:p-12 relative z-20 shadow-2xl transition-all">
+  <div class="w-full lg:w-[490px] xl:w-[540px] shrink-0 min-h-screen ds-glass-strong bg-white/90 backdrop-blur-3xl border-r border-white/60 flex flex-col justify-between p-6 sm:p-10 lg:p-12 relative z-20 shadow-2xl transition-all">
     
     <!-- Top Bar: Logo & Navigation Back -->
     <div>
-      <div class="flex items-center justify-between gap-4 pb-6 sm:pb-8 border-b border-slate-100">
+      <div class="flex items-center justify-between gap-4 pb-6 sm:pb-8 border-b border-slate-200/50">
         <a href="/" class="flex items-center gap-3 group" title="Kembali ke Beranda Publik">
           <img
             src="/uploads/foto_website/1686928245logo_black.png"
@@ -118,7 +118,7 @@
 
         <a
           href="/"
-          class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-[#F08300] bg-slate-100/80 hover:bg-slate-200/60 px-3 py-1.5 rounded-xl border border-slate-200/80 transition"
+          class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-[#F08300] ds-glass px-3.5 py-1.5 rounded-xl border border-white/80 hover:border-[#F08300]/40 transition ds-press"
         >
           <ArrowLeft class="w-3.5 h-3.5" />
           <span>Beranda</span>
@@ -127,8 +127,7 @@
 
       <!-- Header Greeting & Status -->
       <div class="pt-6 sm:pt-8 space-y-2">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-[#246bfd] font-bold text-[10px] uppercase tracking-widest border border-blue-200/60">
-          <span class="w-2 h-2 rounded-full bg-[#246bfd] animate-pulse"></span>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full ds-glass-azure text-[#246bfd] font-bold text-[10px] uppercase tracking-widest border border-blue-200/60">
           <span>Sistem Komando Intra Sulsel</span>
         </div>
         
@@ -142,46 +141,46 @@
       </div>
 
       <!-- iOS Segmented Control (Smooth Sliding Tab Filter) -->
-      <div class="mt-6 p-1 bg-slate-100/90 rounded-2xl border border-slate-200/80 grid grid-cols-3 gap-1 shadow-inner relative">
+      <div class="mt-6 p-1 ds-glass rounded-2xl border border-white/80 grid grid-cols-3 gap-1 shadow-inner relative">
         <button
           type="button"
           on:click={() => selectTab('staff')}
-          class="relative z-10 py-2 text-center text-xs font-bold rounded-xl transition-all duration-200 {activeTab === 'staff' ? 'bg-white text-[#071936] shadow-sm ring-1 ring-black/5 font-extrabold' : 'text-slate-500 hover:text-slate-800'}"
+          class="relative z-10 py-2.5 text-center text-xs font-bold rounded-xl transition-all duration-200 ds-press {activeTab === 'staff' ? 'ds-pill-active font-extrabold' : 'text-slate-600 hover:text-slate-900'}"
         >
           Staf Lapangan
         </button>
         <button
           type="button"
           on:click={() => selectTab('kasatpol')}
-          class="relative z-10 py-2 text-center text-xs font-bold rounded-xl transition-all duration-200 {activeTab === 'kasatpol' ? 'bg-white text-[#071936] shadow-sm ring-1 ring-black/5 font-extrabold' : 'text-slate-500 hover:text-slate-800'}"
+          class="relative z-10 py-2.5 text-center text-xs font-bold rounded-xl transition-all duration-200 ds-press {activeTab === 'kasatpol' ? 'ds-pill-active font-extrabold' : 'text-slate-600 hover:text-slate-900'}"
         >
           Pimpinan
         </button>
         <button
           type="button"
           on:click={() => selectTab('superadmin')}
-          class="relative z-10 py-2 text-center text-xs font-bold rounded-xl transition-all duration-200 {activeTab === 'superadmin' ? 'bg-white text-[#071936] shadow-sm ring-1 ring-black/5 font-extrabold' : 'text-slate-500 hover:text-slate-800'}"
+          class="relative z-10 py-2.5 text-center text-xs font-bold rounded-xl transition-all duration-200 ds-press {activeTab === 'superadmin' ? 'ds-pill-active font-extrabold' : 'text-slate-600 hover:text-slate-900'}"
         >
           Superadmin
         </button>
       </div>
 
       <!-- Active Role Context Card (iOS Style) -->
-      <div class="mt-3 px-3.5 py-2.5 rounded-xl bg-blue-50/50 border border-blue-100 flex items-center justify-between text-xs text-slate-600 animate-in fade-in duration-150">
+      <div class="mt-3 px-3.5 py-2.5 rounded-xl ds-glass-azure border border-blue-200/50 flex items-center justify-between text-xs text-slate-700 animate-in fade-in duration-150">
         <div class="flex items-center gap-2">
-          <div class="p-1 rounded-lg bg-blue-100 text-[#246bfd]">
+          <div class="p-1.5 rounded-lg bg-blue-100/80 text-[#246bfd]">
             <KeyRound class="w-3.5 h-3.5" />
           </div>
           <div>
             <span class="text-[10px] font-bold uppercase tracking-wider text-blue-700 block">{presets[activeTab].roleLabel}</span>
-            <span class="text-[11px] text-slate-500 line-clamp-1">{presets[activeTab].hint}</span>
+            <span class="text-[11px] text-slate-600 line-clamp-1">{presets[activeTab].hint}</span>
           </div>
         </div>
       </div>
 
       <!-- Error Alert -->
       {#if errorMessage}
-        <div role="alert" class="mt-4 p-3.5 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold flex items-start gap-2 animate-in shake duration-200">
+        <div role="alert" class="mt-4 p-3.5 rounded-2xl bg-red-500/10 backdrop-blur-md border border-red-500/30 text-red-700 text-xs font-semibold flex items-start gap-2 animate-in shake duration-200">
           <span class="text-red-500 font-bold">&bull;</span>
           <span>{errorMessage}</span>
         </div>
@@ -205,7 +204,7 @@
               required
               autocomplete="username"
               placeholder="Username akun petugas"
-              class="w-full pl-10 pr-4 py-3 bg-slate-50/70 border border-slate-200 rounded-2xl text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-[#246bfd] focus:ring-4 focus:ring-blue-500/15 transition shadow-2xs"
+              class="ds-glass-input w-full pl-10 pr-4 py-3 text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:outline-none transition shadow-2xs"
             />
           </div>
         </div>
@@ -230,7 +229,7 @@
                 required
                 autocomplete="current-password"
                 placeholder="••••••••"
-                class="w-full pl-10 pr-11 py-3 bg-slate-50/70 border border-slate-200 rounded-2xl text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-[#246bfd] focus:ring-4 focus:ring-blue-500/15 transition shadow-2xs font-mono"
+                class="ds-glass-input w-full pl-10 pr-11 py-3 text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:outline-none transition shadow-2xs font-mono"
               />
             {:else}
               <input
@@ -240,7 +239,7 @@
                 required
                 autocomplete="current-password"
                 placeholder="••••••••"
-                class="w-full pl-10 pr-11 py-3 bg-slate-50/70 border border-slate-200 rounded-2xl text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-[#246bfd] focus:ring-4 focus:ring-blue-500/15 transition shadow-2xs font-mono"
+                class="ds-glass-input w-full pl-10 pr-11 py-3 text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:outline-none transition shadow-2xs font-mono"
               />
             {/if}
             <button
@@ -262,7 +261,7 @@
         <button
           type="submit"
           disabled={isLoading}
-          class="w-full mt-2 bg-gradient-to-r from-[#071936] to-[#0f2d5e] hover:from-[#0b244d] hover:to-[#173d7a] active:scale-[0.98] text-white font-bold text-xs uppercase tracking-wider py-3.5 rounded-2xl transition shadow-lg shadow-blue-950/20 disabled:opacity-50 flex items-center justify-center gap-2 group cursor-pointer"
+          class="w-full mt-2 bg-gradient-to-r from-[#071936] to-[#0f2d5e] hover:from-[#0b244d] hover:to-[#173d7a] ds-hover-lift ds-press text-white font-bold text-xs uppercase tracking-wider py-3.5 rounded-2xl transition shadow-lg shadow-blue-950/20 disabled:opacity-50 flex items-center justify-center gap-2 group cursor-pointer ds-specular-top"
         >
           {#if isLoading}
             <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
@@ -301,7 +300,7 @@
     <div class="relative z-10 max-w-xl space-y-4">
       <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/15 text-[#F08300] font-bold text-xs uppercase tracking-widest shadow-lg">
         <Sparkles class="w-3.5 h-3.5 text-[#F08300]" />
-        <span>Semboyan Luhur &bull; Praja Wibawa</span>
+        <span>Semboyan Luhur - Praja Wibawa</span>
       </div>
 
       <h2 class="text-3xl xl:text-5xl font-black tracking-tight leading-[1.15] text-white">

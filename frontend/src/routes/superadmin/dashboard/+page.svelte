@@ -1,4 +1,4 @@
-<script lang="ts">
+﻿<script lang="ts">
   import { onMount } from 'svelte';
   import {
     Users,
@@ -252,9 +252,9 @@
   }
 
   function roleBadgeStyle(role: UserRole) {
-    if (role === 'SUPERADMIN_DISKOMINFO') return 'bg-[#1a120c] text-[#F08300] border-[#3d261a]';
+    if (role === 'SUPERADMIN_DISKOMINFO') return 'bg-[#0b172a] text-[#F08300] border-slate-700';
     if (role === 'ADMIN_SATPOL') return 'bg-orange-50 text-orange-900 border-orange-200';
-    return 'bg-[#f9f4e8] text-[#3d261a] border-[#eee9db]';
+    return 'bg-slate-100 text-slate-700 border-slate-200';
   }
 </script>
 
@@ -276,7 +276,7 @@
   <svelte:fragment slot="header-actions">
     <a
       href="/admin/dashboard"
-      class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#f9f4e8] hover:bg-[#eee9db] text-[#1a120c] text-xs font-bold border border-[#eee9db] transition"
+      class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-bold border border-slate-200 transition"
     >
       Meja Admin Satpol
     </a>
@@ -284,24 +284,24 @@
 
   <!-- Ringkasan Metrik Superadmin -->
   <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-    <div class="bg-white border border-[#eee9db] rounded-2xl p-5 shadow-xs">
-      <div class="text-[11px] font-bold text-[#3d261a]/75 uppercase">Total Akun RBAC</div>
-      <div class="text-2xl md:text-3xl font-black text-[#1a120c] mt-1.5">{$usersStore.length}</div>
-      <div class="text-[11px] text-[#3d261a]/65 mt-0.5">
+    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs">
+      <div class="text-[11px] font-bold text-slate-700/75 uppercase">Total Akun RBAC</div>
+      <div class="text-2xl md:text-3xl font-black text-slate-900 mt-1.5">{$usersStore.length}</div>
+      <div class="text-[11px] text-slate-700/65 mt-0.5">
         {$usersStore.filter(u => u.is_active).length} akun aktif
       </div>
     </div>
-    <div class="bg-white border border-[#eee9db] rounded-2xl p-5 shadow-xs">
+    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs">
       <div class="text-[11px] font-bold text-[#F08300] uppercase">Simpul Struktur SOTK</div>
-      <div class="text-2xl md:text-3xl font-black text-[#1a120c] mt-1.5">{$organizationStore.length}</div>
-      <div class="text-[11px] text-[#3d261a]/65 mt-0.5">Unit kerja dinamis</div>
+      <div class="text-2xl md:text-3xl font-black text-slate-900 mt-1.5">{$organizationStore.length}</div>
+      <div class="text-[11px] text-slate-700/65 mt-0.5">Unit kerja dinamis</div>
     </div>
-    <div class="bg-white border border-[#eee9db] rounded-2xl p-5 shadow-xs">
-      <div class="text-[11px] font-bold text-[#3d261a]/75 uppercase">Aduan SIAP TERTIB</div>
-      <div class="text-2xl md:text-3xl font-black text-[#1a120c] mt-1.5">{$complaintsStore.length}</div>
-      <div class="text-[11px] text-[#3d261a]/65 mt-0.5">24 kab/kota terhubung</div>
+    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs">
+      <div class="text-[11px] font-bold text-slate-700/75 uppercase">Aduan SIAP TERTIB</div>
+      <div class="text-2xl md:text-3xl font-black text-slate-900 mt-1.5">{$complaintsStore.length}</div>
+      <div class="text-[11px] text-slate-700/65 mt-0.5">24 kab/kota terhubung</div>
     </div>
-    <div class="bg-white border border-[#eee9db] rounded-2xl p-5 shadow-xs">
+    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs">
       <div class="text-[11px] font-bold text-emerald-800 uppercase">Catatan Audit Trail</div>
       <div class="text-2xl md:text-3xl font-black text-emerald-700 mt-1.5">{$auditLogsStore.length}</div>
       <div class="text-[11px] text-emerald-700/80 mt-0.5">Log keamanan tercatat</div>
@@ -355,18 +355,18 @@
         <th class="px-4 py-3.5 text-right">Aksi</th>
       </tr>
 
-      <tr slot="row" let:item class="hover:bg-[#f9f4e8]/55 transition">
+      <tr slot="row" let:item class="hover:bg-slate-100/55 transition">
         <td class="px-4 py-3.5 align-top">
-          <div class="font-bold text-xs text-[#1a120c]">{item.name}</div>
-          <div class="text-[11px] text-[#3d261a]/70">{item.email}</div>
+          <div class="font-bold text-xs text-slate-900">{item.name}</div>
+          <div class="text-[11px] text-slate-700/70">{item.email}</div>
         </td>
-        <td class="px-4 py-3.5 align-top font-mono text-xs font-bold text-[#3d261a]">@{item.username}</td>
+        <td class="px-4 py-3.5 align-top font-mono text-xs font-bold text-slate-700">@{item.username}</td>
         <td class="px-4 py-3.5 align-top">
           <span class="inline-block px-2.5 py-1 rounded-lg border text-[10px] font-bold uppercase {roleBadgeStyle(item.role)}">
             {item.role}
           </span>
         </td>
-        <td class="px-4 py-3.5 align-top text-xs text-[#3d261a]">{item.bidang || '-'}</td>
+        <td class="px-4 py-3.5 align-top text-xs text-slate-700">{item.bidang || '-'}</td>
         <td class="px-4 py-3.5 align-top">
           {#if item.is_active}
             <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-[10px] font-bold">
@@ -383,7 +383,7 @@
             <button
               type="button"
               on:click={() => openEditUserModal(item)}
-              class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-[#f9f4e8] hover:bg-[#eee9db] text-[#1a120c] text-xs font-bold border border-[#eee9db] transition"
+              class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-bold border border-slate-200 transition"
             >
               <Edit3 class="w-3.5 h-3.5" />
               Edit
@@ -423,10 +423,10 @@
 
   <!-- TAB 3: KONFIGURASI PORTAL -->
   {#if activeTab === 'settings'}
-    <div class="bg-white border border-[#eee9db] rounded-2xl shadow-xs p-6 md:p-8 space-y-6">
-      <div class="border-b border-[#eee9db] pb-4">
-        <h2 class="text-base font-black text-[#1a120c]">Identitas Instansi &amp; Kontak Portal</h2>
-        <p class="text-xs text-[#3d261a]/75 mt-1">
+    <div class="ds-glass-strong rounded-2xl border border-white/80 ds-specular-top shadow-lg p-6 md:p-8 space-y-6">
+      <div class="border-b border-slate-200/60 pb-4">
+        <h2 class="text-base font-black text-slate-900">Identitas Instansi &amp; Kontak Portal</h2>
+        <p class="text-xs text-slate-700/75 mt-1">
           Perubahan langsung memperbarui informasi resmi di seluruh halaman publik.
         </p>
       </div>
@@ -434,44 +434,44 @@
       <form on:submit|preventDefault={handleSaveSettings} class="space-y-5">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div>
-            <label for="sup-app-name" class="block text-xs font-bold text-[#1a120c] mb-1.5">Judul Portal / Instansi</label>
-            <input id="sup-app-name" type="text" bind:value={currentSettings.app_name} class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs text-[#1a120c] focus:border-[#F08300] focus:outline-none" />
+            <label for="sup-app-name" class="block text-xs font-bold text-slate-900 mb-1.5">Judul Portal / Instansi</label>
+            <input id="sup-app-name" type="text" bind:value={currentSettings.app_name} class="ds-glass-input w-full p-2.5 text-xs text-slate-900 focus:outline-none" />
           </div>
           <div>
-            <label for="sup-kasatpol-name" class="block text-xs font-bold text-[#1a120c] mb-1.5">Nama Kepala Satpol PP</label>
-            <input id="sup-kasatpol-name" type="text" bind:value={currentSettings.kasatpol_name} class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs text-[#1a120c] focus:border-[#F08300] focus:outline-none" />
+            <label for="sup-kasatpol-name" class="block text-xs font-bold text-slate-900 mb-1.5">Nama Kepala Satpol PP</label>
+            <input id="sup-kasatpol-name" type="text" bind:value={currentSettings.kasatpol_name} class="ds-glass-input w-full p-2.5 text-xs text-slate-900 focus:outline-none" />
           </div>
           <div>
-            <label for="sup-call-center" class="block text-xs font-bold text-[#1a120c] mb-1.5">Telepon / Call Center</label>
-            <input id="sup-call-center" type="text" bind:value={currentSettings.call_center} class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs text-[#1a120c] focus:border-[#F08300] focus:outline-none" />
+            <label for="sup-call-center" class="block text-xs font-bold text-slate-900 mb-1.5">Telepon / Call Center</label>
+            <input id="sup-call-center" type="text" bind:value={currentSettings.call_center} class="ds-glass-input w-full p-2.5 text-xs text-slate-900 focus:outline-none" />
           </div>
           <div>
-            <label for="sup-hotline" class="block text-xs font-bold text-[#1a120c] mb-1.5">Hotline Aduan Cepat</label>
-            <input id="sup-hotline" type="text" bind:value={currentSettings.emergency_hotline} class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs text-[#1a120c] focus:border-[#F08300] focus:outline-none" />
+            <label for="sup-hotline" class="block text-xs font-bold text-slate-900 mb-1.5">Hotline Aduan Cepat</label>
+            <input id="sup-hotline" type="text" bind:value={currentSettings.emergency_hotline} class="ds-glass-input w-full p-2.5 text-xs text-slate-900 focus:outline-none" />
           </div>
           <div>
-            <label for="sup-email" class="block text-xs font-bold text-[#1a120c] mb-1.5">Email Resmi Instansi</label>
-            <input id="sup-email" type="email" bind:value={currentSettings.email_contact} class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs text-[#1a120c] focus:border-[#F08300] focus:outline-none" />
+            <label for="sup-email" class="block text-xs font-bold text-slate-900 mb-1.5">Email Resmi Instansi</label>
+            <input id="sup-email" type="email" bind:value={currentSettings.email_contact} class="ds-glass-input w-full p-2.5 text-xs text-slate-900 focus:outline-none" />
           </div>
           <div>
-            <label for="sup-address" class="block text-xs font-bold text-[#1a120c] mb-1.5">Alamat Markas Komando</label>
-            <input id="sup-address" type="text" bind:value={currentSettings.office_address} class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs text-[#1a120c] focus:border-[#F08300] focus:outline-none" />
+            <label for="sup-address" class="block text-xs font-bold text-slate-900 mb-1.5">Alamat Markas Komando</label>
+            <input id="sup-address" type="text" bind:value={currentSettings.office_address} class="ds-glass-input w-full p-2.5 text-xs text-slate-900 focus:outline-none" />
           </div>
           <div class="md:col-span-2">
-            <label for="sup-tagline" class="block text-xs font-bold text-[#1a120c] mb-1.5">Semboyan / Tagline Resmi</label>
-            <textarea id="sup-tagline" rows="2" bind:value={currentSettings.agency_tagline} class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs text-[#1a120c] focus:border-[#F08300] focus:outline-none"></textarea>
+            <label for="sup-tagline" class="block text-xs font-bold text-slate-900 mb-1.5">Semboyan / Tagline Resmi</label>
+            <textarea id="sup-tagline" rows="2" bind:value={currentSettings.agency_tagline} class="ds-glass-input w-full p-2.5 text-xs text-slate-900 focus:outline-none"></textarea>
           </div>
           <div class="md:col-span-2">
-            <label for="sup-quote" class="block text-xs font-bold text-[#1a120c] mb-1.5">Sambutan Kepala Satpol PP di Beranda</label>
-            <textarea id="sup-quote" rows="3" bind:value={currentSettings.kasatpol_quote} class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs text-[#1a120c] focus:border-[#F08300] focus:outline-none"></textarea>
+            <label for="sup-quote" class="block text-xs font-bold text-slate-900 mb-1.5">Sambutan Kepala Satpol PP di Beranda</label>
+            <textarea id="sup-quote" rows="3" bind:value={currentSettings.kasatpol_quote} class="ds-glass-input w-full p-2.5 text-xs text-slate-900 focus:outline-none"></textarea>
           </div>
         </div>
 
-        <div class="pt-4 border-t border-[#eee9db] flex justify-end">
+        <div class="pt-4 border-t border-slate-200/60 flex justify-end">
           <button
             type="submit"
             disabled={isSavingSettings}
-            class="bg-[#F08300] hover:bg-[#d97300] text-white font-bold text-xs px-6 py-2.5 rounded-xl transition disabled:opacity-60 shadow-sm"
+            class="bg-[#F08300] hover:bg-[#d97300] ds-hover-lift ds-press text-white font-bold text-xs px-6 py-2.5 rounded-xl transition disabled:opacity-60 shadow-sm ds-specular-top cursor-pointer"
           >
             {isSavingSettings ? 'Menyimpan...' : 'Simpan Konfigurasi Portal'}
           </button>
@@ -482,23 +482,23 @@
 
   <!-- TAB 4: 24 KABUPATEN/KOTA -->
   {#if activeTab === 'regencies'}
-    <div class="bg-white border border-[#eee9db] rounded-2xl shadow-xs p-6 md:p-8 space-y-5">
-      <div class="border-b border-[#eee9db] pb-4">
-        <h2 class="text-base font-black text-[#1a120c]">Wilayah Administratif 24 Kabupaten / Kota</h2>
-        <p class="text-xs text-[#3d261a]/75 mt-1">
+    <div class="ds-glass-strong rounded-2xl border border-white/80 ds-specular-top shadow-lg p-6 md:p-8 space-y-5">
+      <div class="border-b border-slate-200/60 pb-4">
+        <h2 class="text-base font-black text-slate-900">Wilayah Administratif 24 Kabupaten / Kota</h2>
+        <p class="text-xs text-slate-700/75 mt-1">
           Daftar kode referensi Kemendagri Sulawesi Selatan yang digunakan pada formulir aduan SIAP TERTIB.
         </p>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5">
         {#each defaultRegencies as reg}
-          <div class="border border-[#eee9db] rounded-2xl p-4 bg-[#f9f4e8]/55 hover:border-[#F08300] transition">
-            <div class="flex justify-between items-center text-[10px] text-[#3d261a]/70">
+          <div class="ds-glass-card rounded-2xl p-4 border border-white/70 hover:border-[#F08300]/50 transition ds-hover-lift ds-specular-top">
+            <div class="flex justify-between items-center text-[10px] text-slate-700/70">
               <span class="font-mono font-bold">KODE: {reg.id}</span>
               <span class="font-bold text-emerald-700 uppercase">Aktif</span>
             </div>
-            <div class="font-black text-xs text-[#1a120c] mt-1.5">{reg.name}</div>
-            <div class="text-[11px] text-[#3d261a]/70 mt-0.5">Yurisdiksi Prov. Sulsel</div>
+            <div class="font-black text-xs text-slate-900 mt-1.5">{reg.name}</div>
+            <div class="text-[11px] text-slate-700/70 mt-0.5">Yurisdiksi Prov. Sulsel</div>
           </div>
         {/each}
       </div>
@@ -525,53 +525,53 @@
         <th class="px-4 py-3.5">Rincian</th>
       </tr>
 
-      <tr slot="row" let:item class="hover:bg-[#f9f4e8]/55 transition">
-        <td class="px-4 py-3 text-[11px] font-mono text-[#3d261a]/75 whitespace-nowrap">{item.timestamp}</td>
-        <td class="px-4 py-3 text-xs font-bold text-[#1a120c]">{item.user_name}</td>
+      <tr slot="row" let:item class="hover:bg-slate-100/55 transition">
+        <td class="px-4 py-3 text-[11px] font-mono text-slate-700/75 whitespace-nowrap">{item.timestamp}</td>
+        <td class="px-4 py-3 text-xs font-bold text-slate-900">{item.user_name}</td>
         <td class="px-4 py-3">
-          <span class="inline-block px-2.5 py-0.5 rounded-lg bg-[#f9f4e8] border border-[#eee9db] text-[#1a120c] font-mono text-[10px] font-bold">
+          <span class="inline-block px-2.5 py-0.5 rounded-lg ds-glass border border-white/80 text-slate-900 font-mono text-[10px] font-bold">
             {item.action}
           </span>
         </td>
-        <td class="px-4 py-3 text-xs font-semibold text-[#3d261a]">{item.resource}</td>
-        <td class="px-4 py-3 text-xs text-[#3d261a]/80">{item.details}</td>
+        <td class="px-4 py-3 text-xs font-semibold text-slate-700">{item.resource}</td>
+        <td class="px-4 py-3 text-xs text-slate-700/80">{item.details}</td>
       </tr>
     </DataTable>
   {/if}
 
   <!-- TAB 6: TELEMETRI SISTEM -->
   {#if activeTab === 'server'}
-    <div class="bg-white border border-[#eee9db] rounded-2xl shadow-xs p-6 md:p-8 space-y-6">
-      <div class="border-b border-[#eee9db] pb-4">
-        <h2 class="text-base font-black text-[#1a120c]">Status Runtime &amp; Arsitektur Sistem</h2>
-        <p class="text-xs text-[#3d261a]/75 mt-1">
+    <div class="ds-glass-strong rounded-2xl border border-white/80 ds-specular-top shadow-lg p-6 md:p-8 space-y-6">
+      <div class="border-b border-slate-200/60 pb-4">
+        <h2 class="text-base font-black text-slate-900">Status Runtime &amp; Arsitektur Sistem</h2>
+        <p class="text-xs text-slate-700/75 mt-1">
           Konfigurasi layanan frontend SvelteKit dan API Go (mode lokal / transisi basis data).
         </p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="border border-[#eee9db] rounded-2xl p-5 bg-[#f9f4e8]/55 space-y-2">
-          <div class="text-[10px] font-bold uppercase tracking-wider text-[#3d261a]/70">Frontend Portal</div>
-          <div class="text-sm font-black text-[#1a120c]">SvelteKit + Tailwind CSS</div>
-          <div class="text-xs text-[#3d261a]/80 space-y-1">
+        <div class="ds-glass-card rounded-2xl p-5 border border-white/70 ds-specular-top ds-hover-lift space-y-2">
+          <div class="text-[10px] font-bold uppercase tracking-wider text-slate-700/70">Frontend Portal</div>
+          <div class="text-sm font-black text-slate-900">SvelteKit + Tailwind CSS</div>
+          <div class="text-xs text-slate-700/80 space-y-1">
             <div>Dev Server: <span class="font-mono font-bold">Port 3000</span></div>
             <div>Proxy API: <span class="font-mono font-bold">/api &rarr; :8080</span></div>
           </div>
         </div>
 
-        <div class="border border-[#eee9db] rounded-2xl p-5 bg-[#f9f4e8]/55 space-y-2">
-          <div class="text-[10px] font-bold uppercase tracking-wider text-[#3d261a]/70">Backend &amp; Mailer</div>
-          <div class="text-sm font-black text-[#1a120c]">Go net/http &amp; net/smtp</div>
-          <div class="text-xs text-[#3d261a]/80 space-y-1">
+        <div class="ds-glass-card rounded-2xl p-5 border border-white/70 ds-specular-top ds-hover-lift space-y-2">
+          <div class="text-[10px] font-bold uppercase tracking-wider text-slate-700/70">Backend &amp; Mailer</div>
+          <div class="text-sm font-black text-slate-900">Go net/http &amp; net/smtp</div>
+          <div class="text-xs text-slate-700/80 space-y-1">
             <div>Masking Publik: <span class="font-bold text-emerald-700">Selalu Aktif</span></div>
             <div>Email Pelapor: <span class="font-bold">SMTP / Simulasi Lokal</span></div>
           </div>
         </div>
 
-        <div class="border border-[#eee9db] rounded-2xl p-5 bg-[#f9f4e8]/55 space-y-2">
-          <div class="text-[10px] font-bold uppercase tracking-wider text-[#3d261a]/70">Penyimpanan Data</div>
-          <div class="text-sm font-black text-[#1a120c]">In-Memory + LocalStorage</div>
-          <div class="text-xs text-[#3d261a]/80 space-y-1">
+        <div class="ds-glass-card rounded-2xl p-5 border border-white/70 ds-specular-top ds-hover-lift space-y-2">
+          <div class="text-[10px] font-bold uppercase tracking-wider text-slate-700/70">Penyimpanan Data</div>
+          <div class="text-sm font-black text-slate-900">In-Memory + LocalStorage</div>
+          <div class="text-xs text-slate-700/80 space-y-1">
             <div>Integrasi PostgreSQL: <span class="font-bold text-[#F08300]">Ditahan (Tahap Berikutnya)</span></div>
             <div>Fallback Offline: <span class="font-bold text-emerald-700">Aktif</span></div>
           </div>
@@ -597,26 +597,26 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <div>
-        <label for="user-name" class="block text-xs font-bold text-[#1a120c] mb-1">Nama Lengkap &amp; Gelar *</label>
-        <input id="user-name" type="text" required bind:value={formName} placeholder="Andi Baso, S.STP" class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs bg-white" />
+        <label for="user-name" class="block text-xs font-bold text-slate-900 mb-1">Nama Lengkap &amp; Gelar *</label>
+        <input id="user-name" type="text" required bind:value={formName} placeholder="Andi Baso, S.STP" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white" />
         <p class="field-error">Nama wajib diisi.</p>
       </div>
       <div>
-        <label for="user-username" class="block text-xs font-bold text-[#1a120c] mb-1">Username Login *</label>
-        <input id="user-username" type="text" required bind:value={formUsername} disabled={!isNewUser} placeholder="staf_perda" class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs bg-white disabled:bg-[#f9f4e8]" />
+        <label for="user-username" class="block text-xs font-bold text-slate-900 mb-1">Username Login *</label>
+        <input id="user-username" type="text" required bind:value={formUsername} disabled={!isNewUser} placeholder="staf_perda" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white disabled:bg-slate-100" />
         <p class="field-error">Username wajib diisi.</p>
       </div>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <div>
-        <label for="user-email" class="block text-xs font-bold text-[#1a120c] mb-1">Email Dinas *</label>
-        <input id="user-email" type="email" required bind:value={formEmail} placeholder="nama@sulselprov.go.id" class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs bg-white" />
+        <label for="user-email" class="block text-xs font-bold text-slate-900 mb-1">Email Dinas *</label>
+        <input id="user-email" type="email" required bind:value={formEmail} placeholder="nama@sulselprov.go.id" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white" />
         <p class="field-error">Format email tidak valid.</p>
       </div>
       <div>
-        <label for="user-role" class="block text-xs font-bold text-[#1a120c] mb-1">Tingkat Akses (Role)</label>
-        <select id="user-role" bind:value={formRole} class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs bg-white font-bold">
+        <label for="user-role" class="block text-xs font-bold text-slate-900 mb-1">Tingkat Akses (Role)</label>
+        <select id="user-role" bind:value={formRole} class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white font-bold">
           <option value="STAFF_SATPOL">STAFF SATPOL PP (Verifikator &amp; Humas)</option>
           <option value="ADMIN_SATPOL">ADMIN SATPOL (Pimpinan / Kasatpol)</option>
           <option value="SUPERADMIN_DISKOMINFO">SUPERADMIN DISKOMINFO</option>
@@ -625,8 +625,8 @@
     </div>
 
     <div>
-      <label for="user-bidang" class="block text-xs font-bold text-[#1a120c] mb-1">Unit Kerja / Bidang Penugasan</label>
-      <input id="user-bidang" type="text" list="rbac-org-units" bind:value={formBidang} placeholder="Contoh: Bidang Penegakan Perda" class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs bg-white" />
+      <label for="user-bidang" class="block text-xs font-bold text-slate-900 mb-1">Unit Kerja / Bidang Penugasan</label>
+      <input id="user-bidang" type="text" list="rbac-org-units" bind:value={formBidang} placeholder="Contoh: Bidang Penegakan Perda" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white" />
       <datalist id="rbac-org-units">
         {#each $organizationStore as org}
           <option value={org.position_title}></option>
@@ -635,15 +635,15 @@
     </div>
 
     <div>
-      <label for="user-password" class="block text-xs font-bold text-[#1a120c] mb-1">
+      <label for="user-password" class="block text-xs font-bold text-slate-900 mb-1">
         {isNewUser ? 'Kata Sandi Awal' : 'Kata Sandi Baru (Kosongkan jika tidak diubah)'}
       </label>
-      <input id="user-password" type="password" bind:value={formPassword} placeholder={isNewUser ? 'Default demo: satpolpp2026' : 'Biarkan kosong untuk tetap'} class="w-full border border-[#eee9db] rounded-xl p-2.5 text-xs bg-white" />
+      <input id="user-password" type="password" bind:value={formPassword} placeholder={isNewUser ? 'Default demo: satpolpp2026' : 'Biarkan kosong untuk tetap'} class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white" />
     </div>
 
-    <label class="flex items-center gap-2.5 p-3 rounded-xl bg-[#f9f4e8] border border-[#eee9db] cursor-pointer">
+    <label class="flex items-center gap-2.5 p-3 rounded-xl bg-slate-100 border border-slate-200 cursor-pointer">
       <input type="checkbox" bind:checked={formActive} class="rounded text-[#F08300] focus:ring-[#F08300]" />
-      <span class="text-xs font-bold text-[#1a120c]">Akun aktif dan diizinkan masuk ke panel dashboard</span>
+      <span class="text-xs font-bold text-slate-900">Akun aktif dan diizinkan masuk ke panel dashboard</span>
     </label>
   </form>
 
@@ -651,7 +651,7 @@
     <button
       type="button"
       on:click={handleClose}
-      class="px-4 py-2 rounded-xl border border-[#eee9db] bg-white hover:bg-[#f9f4e8] text-xs font-bold text-[#3d261a] transition"
+      class="px-4 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-xs font-bold text-slate-700 transition"
     >
       Batal
     </button>
@@ -678,7 +678,7 @@
       {deleteUserError}
     </div>
   {:else if deleteUserTarget}
-    <p class="text-xs text-[#3d261a] leading-relaxed">
+    <p class="text-xs text-slate-700 leading-relaxed">
       Apakah Anda yakin ingin menghapus akun <strong>@{deleteUserTarget.username}</strong> ({deleteUserTarget.role})?
     </p>
   {/if}
@@ -687,7 +687,7 @@
     <button
       type="button"
       on:click={handleClose}
-      class="px-4 py-2 rounded-xl border border-[#eee9db] bg-white hover:bg-[#f9f4e8] text-xs font-bold text-[#3d261a] transition"
+      class="px-4 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-xs font-bold text-slate-700 transition"
     >
       Tutup
     </button>
