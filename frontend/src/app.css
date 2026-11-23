@@ -12,32 +12,36 @@
     --satpol-accent: #f08300;
     --satpol-azure: #246bfd;
 
-    /* Specular Glassmorphism Tokens (Tamalate Sovereign & Praja Fusion) */
-    --ds-glass-bg: rgba(255, 255, 255, 0.68);
-    --ds-glass-bg-subtle: rgba(255, 255, 255, 0.42);
-    --ds-glass-bg-strong: rgba(255, 255, 255, 0.86);
-    --ds-glass-dark: rgba(7, 14, 28, 0.76);
-    --ds-glass-dark-strong: rgba(11, 23, 42, 0.88);
-    --ds-glass-border: rgba(255, 255, 255, 0.85);
-    --ds-glass-border-subtle: rgba(255, 255, 255, 0.50);
+    /* Apple HIG Liquid Glass & Specular Vibrancy Tokens */
+    --ds-glass-bg: rgba(255, 255, 255, 0.72);
+    --ds-glass-bg-subtle: rgba(255, 255, 255, 0.48);
+    --ds-glass-bg-strong: rgba(255, 255, 255, 0.88);
+    --ds-glass-dark: rgba(7, 14, 28, 0.78);
+    --ds-glass-dark-strong: rgba(11, 23, 42, 0.90);
+    --ds-glass-border: rgba(255, 255, 255, 0.88);
+    --ds-glass-border-subtle: rgba(255, 255, 255, 0.55);
     --ds-glass-border-dark: rgba(255, 255, 255, 0.16);
-    --ds-glass-blur: 18px;
-    --ds-glass-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.95);
-    --ds-glass-highlight-dark: inset 0 1px 0 rgba(255, 255, 255, 0.22);
-    --ds-shadow-glass: 0 8px 32px 0 rgba(15, 23, 42, 0.08), 0 2px 8px rgba(15, 23, 42, 0.04);
-    --ds-shadow-glass-strong: 0 16px 44px -8px rgba(15, 23, 42, 0.12), 0 4px 12px rgba(15, 23, 42, 0.04);
-    --ds-shadow-glass-gold: 0 12px 36px -6px rgba(240, 131, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.6);
-    --ds-shadow-glass-azure: 0 12px 36px -6px rgba(36, 107, 253, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    --ds-glass-blur: 20px;
+    --ds-glass-highlight: inset 0 1px 0 0 rgba(255, 255, 255, 0.95);
+    --ds-glass-highlight-dark: inset 0 1px 0 0 rgba(255, 255, 255, 0.20);
+    --ds-shadow-glass: 0 4px 24px -2px rgba(15, 23, 42, 0.06), 0 1px 4px rgba(15, 23, 42, 0.03);
+    --ds-shadow-glass-strong: 0 16px 44px -8px rgba(15, 23, 42, 0.10), 0 4px 12px rgba(15, 23, 42, 0.03);
+    --ds-shadow-glass-gold: 0 10px 30px -4px rgba(240, 131, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.65);
+    --ds-shadow-glass-azure: 0 10px 30px -4px rgba(36, 107, 253, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.65);
 
-    /* Smooth Motion Easings */
+    /* Apple HIG Ergonomics & Motion Physics */
     --ds-ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
     --ds-ease-spring: cubic-bezier(0.2, 0.9, 0.3, 1);
+    --ds-hit-target: 44px;
   }
 
   html {
     scroll-behavior: smooth;
-    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "SF Pro", "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
     color: #0f172a;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
   body {
@@ -53,6 +57,12 @@
     overflow-x: hidden;
   }
 
+  /* Apple HIG Focus Ring */
+  :focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #246bfd;
+  }
+
   /* Native top-layer <dialog> scroll containment */
   dialog:modal {
     overscroll-behavior: contain;
@@ -62,8 +72,8 @@
     overflow: hidden;
     overscroll-behavior: contain;
     background-color: rgba(7, 14, 28, 0.55);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
   }
 
   /* Validate only after user interaction or submission attempt */
@@ -165,36 +175,36 @@
   box-shadow: 0 0 0 3px rgba(36, 107, 253, 0.18), inset 0 1px 2px rgba(15, 23, 42, 0.02);
 }
 
-/* Glassmorphic Interactive Cards with Smooth Transitions */
+/* Glassmorphic Interactive Cards with Apple Smooth Transitions */
 .ds-glass-card {
   background: var(--ds-glass-bg);
   border: 1px solid var(--ds-glass-border);
   box-shadow: var(--ds-shadow-glass), var(--ds-glass-highlight);
   -webkit-backdrop-filter: blur(var(--ds-glass-blur)) saturate(180%);
   backdrop-filter: blur(var(--ds-glass-blur)) saturate(180%);
-  transition: transform 0.3s var(--ds-ease-smooth),
-              box-shadow 0.3s var(--ds-ease-smooth),
-              border-color 0.25s ease,
-              background-color 0.25s ease;
+  transition: transform 0.25s var(--ds-ease-smooth),
+              box-shadow 0.25s var(--ds-ease-smooth),
+              border-color 0.2s ease,
+              background-color 0.2s ease;
   will-change: transform, box-shadow;
 }
 
 .ds-glass-card:hover {
-  transform: translateY(-4px);
-  background: rgba(255, 255, 255, 0.85);
+  transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.88);
   border-color: rgba(255, 255, 255, 1);
-  box-shadow: 0 20px 48px -10px rgba(15, 23, 42, 0.12),
-              0 0 24px -4px rgba(36, 107, 253, 0.10),
+  box-shadow: 0 16px 40px -8px rgba(15, 23, 42, 0.10),
+              0 0 20px -2px rgba(36, 107, 253, 0.08),
               var(--ds-glass-highlight);
 }
 
-/* Tactile Compositor Press Physics (60fps) */
+/* Tactile Compositor Press Physics (Apple HIG 60fps) */
 .ds-press {
-  transition: transform 120ms var(--ds-ease-spring), opacity 140ms ease-out;
+  transition: transform 140ms var(--ds-ease-smooth), opacity 140ms ease-out;
   will-change: transform;
 }
 .ds-press:active {
-  transform: scale(0.97);
+  transform: scale(0.975);
 }
 
 /* Smooth Hover Lift Physics */

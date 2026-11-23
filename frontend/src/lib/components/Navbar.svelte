@@ -39,8 +39,8 @@
       </a>
 
       <!-- Desktop Navigation Menu Links -->
-      <nav class="hidden lg:flex items-center gap-1.5 xl:gap-2.5 text-[12px] xl:text-[13px] font-bold text-slate-700 uppercase tracking-wider shrink-0">
-        <a href="/" class="px-3 py-1.5 rounded-xl hover:bg-slate-900/5 hover:text-[#F08300] transition duration-200 ds-press">Beranda</a>
+      <nav class="hidden lg:flex items-center gap-1 xl:gap-2 text-[12px] xl:text-[13px] font-bold text-slate-700 uppercase tracking-wider shrink-0">
+        <a href="/" class="px-3.5 py-2 rounded-xl min-h-[38px] flex items-center hover:bg-slate-900/5 hover:text-[#F08300] transition duration-200 ds-press">Beranda</a>
 
         <!-- Dropdown Profil -->
         <div 
@@ -50,17 +50,17 @@
           on:mouseenter={() => profilOpen = true}
           on:mouseleave={() => profilOpen = false}
         >
-          <button class="flex items-center gap-1 px-3 py-1.5 rounded-xl hover:bg-slate-900/5 hover:text-[#F08300] transition duration-200 uppercase focus:outline-none ds-press" aria-haspopup="true" aria-expanded={profilOpen}>
+          <button class="flex items-center gap-1 px-3.5 py-2 rounded-xl min-h-[38px] hover:bg-slate-900/5 hover:text-[#F08300] transition duration-200 uppercase focus:outline-none ds-press" aria-haspopup="true" aria-expanded={profilOpen}>
             <span>Profil</span>
             <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
           </button>
           {#if profilOpen}
-            <div class="absolute top-full left-0 w-64 ds-glass-strong border border-white/90 shadow-2xl rounded-2xl p-2 z-50 text-xs normal-case animate-in fade-in zoom-in-95 duration-150">
-              <a href="/profil/sejarah" class="block px-3.5 py-2.5 rounded-xl hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Sejarah Singkat</a>
-              <a href="/profil/visi-misi" class="block px-3.5 py-2.5 rounded-xl hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Visi &amp; Misi</a>
-              <a href="/profil/struktur" class="block px-3.5 py-2.5 rounded-xl hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Struktur Organisasi</a>
-              <a href="/profil/tupoksi" class="block px-3.5 py-2.5 rounded-xl hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Tugas Pokok &amp; Fungsi</a>
-              <a href="/profil/pejabat" class="block px-3.5 py-2.5 rounded-xl hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Profil Pejabat</a>
+            <div class="absolute top-full left-0 w-64 ds-glass-strong border border-white/90 shadow-2xl rounded-2xl p-1.5 z-50 text-xs normal-case animate-in fade-in zoom-in-95 duration-150">
+              <a href="/profil/sejarah" class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Sejarah Singkat</a>
+              <a href="/profil/visi-misi" class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Visi &amp; Misi</a>
+              <a href="/profil/struktur" class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Struktur Organisasi</a>
+              <a href="/profil/tupoksi" class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Tugas Pokok &amp; Fungsi</a>
+              <a href="/profil/pejabat" class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Profil Pejabat</a>
             </div>
           {/if}
         </div>
@@ -73,56 +73,56 @@
           on:mouseenter={() => bidangOpen = true}
           on:mouseleave={() => bidangOpen = false}
         >
-          <button class="flex items-center gap-1 px-3 py-1.5 rounded-xl hover:bg-slate-900/5 hover:text-[#F08300] transition duration-200 uppercase focus:outline-none ds-press" aria-haspopup="true" aria-expanded={bidangOpen}>
+          <button class="flex items-center gap-1 px-3.5 py-2 rounded-xl min-h-[38px] hover:bg-slate-900/5 hover:text-[#F08300] transition duration-200 uppercase focus:outline-none ds-press" aria-haspopup="true" aria-expanded={bidangOpen}>
             <span>Bidang</span>
             <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
           </button>
           {#if bidangOpen}
-            <div class="absolute top-full left-0 w-64 ds-glass-strong border border-white/90 shadow-2xl rounded-2xl p-2 z-50 text-xs normal-case animate-in fade-in zoom-in-95 duration-150">
-              <a href="/bidang/sekretariat" class="block px-3.5 py-2.5 rounded-xl hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Sekretariat</a>
-              <a href="/bidang/perda" class="block px-3.5 py-2.5 rounded-xl hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Bidang Penegakan Perda</a>
-              <a href="/bidang/trantibum" class="block px-3.5 py-2.5 rounded-xl hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Bidang Trantibum</a>
-              <a href="/bidang/binmas" class="block px-3.5 py-2.5 rounded-xl hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Bidang Pembinaan Masyarakat</a>
-              <a href="/bidang/linmas-damkar" class="block px-3.5 py-2.5 rounded-xl hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Bidang Linmas &amp; Damkar</a>
+            <div class="absolute top-full left-0 w-64 ds-glass-strong border border-white/90 shadow-2xl rounded-2xl p-1.5 z-50 text-xs normal-case animate-in fade-in zoom-in-95 duration-150">
+              <a href="/bidang/sekretariat" class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Sekretariat</a>
+              <a href="/bidang/perda" class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Bidang Penegakan Perda</a>
+              <a href="/bidang/trantibum" class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Bidang Trantibum</a>
+              <a href="/bidang/binmas" class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Bidang Pembinaan Masyarakat</a>
+              <a href="/bidang/linmas-damkar" class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Bidang Linmas &amp; Damkar</a>
             </div>
           {/if}
         </div>
 
-        <a href="/berita" class="px-3 py-1.5 rounded-xl hover:bg-slate-900/5 hover:text-[#F08300] transition duration-200 ds-press">Berita</a>
-        <a href="/dokumen" class="px-3 py-1.5 rounded-xl hover:bg-slate-900/5 hover:text-[#F08300] transition duration-200 ds-press">Dokumen</a>
-        <a href="/lacak" class="px-3 py-1.5 rounded-xl hover:bg-slate-900/5 hover:text-[#F08300] transition duration-200 whitespace-nowrap ds-press">Lacak Aduan</a>
-        <a href="/kontak" class="px-3 py-1.5 rounded-xl hover:bg-slate-900/5 hover:text-[#F08300] transition duration-200 ds-press">Kontak</a>
+        <a href="/berita" class="px-3.5 py-2 rounded-xl min-h-[38px] flex items-center hover:bg-slate-900/5 hover:text-[#F08300] transition duration-200 ds-press">Berita</a>
+        <a href="/dokumen" class="px-3.5 py-2 rounded-xl min-h-[38px] flex items-center hover:bg-slate-900/5 hover:text-[#F08300] transition duration-200 ds-press">Dokumen</a>
+        <a href="/lacak" class="px-3.5 py-2 rounded-xl min-h-[38px] flex items-center hover:bg-slate-900/5 hover:text-[#F08300] transition duration-200 whitespace-nowrap ds-press">Lacak Aduan</a>
+        <a href="/kontak" class="px-3.5 py-2 rounded-xl min-h-[38px] flex items-center hover:bg-slate-900/5 hover:text-[#F08300] transition duration-200 ds-press">Kontak</a>
       </nav>
 
       <!-- Search Engine Trigger & CTA Button -->
       <div class="hidden lg:flex items-center gap-2.5 shrink-0">
-        <!-- Search Command Trigger (Frosted Glass Capsule) -->
+        <!-- Search Command Trigger (Apple Frosted Glass Capsule) -->
         <button
           type="button"
           on:click={() => searchOpen = true}
-          class="inline-flex items-center gap-2 px-3 py-2 text-xs text-slate-600 bg-white/70 hover:bg-white/95 rounded-xl border border-white/80 transition duration-200 shadow-xs hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-[#F08300]/40 shrink-0 ds-press backdrop-blur-md"
-          title="Buka Pencarian Cepat (Ctrl+K)"
+          class="inline-flex items-center gap-2 px-3.5 py-2 text-xs text-slate-600 bg-white/70 hover:bg-white/95 rounded-xl border border-white/80 min-h-[40px] transition duration-200 shadow-xs hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-[#F08300]/40 shrink-0 ds-press backdrop-blur-md"
+          title="Buka Pencarian Cepat (⌘K / Ctrl+K)"
         >
           <Search class="w-3.5 h-3.5 text-slate-400" />
           <span class="hidden xl:inline">Cari...</span>
-          <kbd class="bg-white/90 px-1.5 py-0.5 rounded text-[10px] font-mono text-slate-500 border border-slate-200 shadow-2xs">Ctrl K</kbd>
+          <kbd class="bg-white/90 px-1.5 py-0.5 rounded text-[10px] font-mono text-slate-500 border border-slate-200 shadow-2xs">⌘K</kbd>
         </button>
 
         <!-- Call-to-Action: SIAP TERTIB (Luminous Amber Glass Button) -->
         <a 
           href="/lapor" 
-          class="bg-gradient-to-r from-[#F08300] to-[#e07000] hover:from-[#d97400] hover:to-[#c66500] text-white font-bold text-xs uppercase px-4 xl:px-5 py-2.5 rounded-xl transition duration-200 shadow-glass-gold hover:shadow-lg hover:-translate-y-0.5 whitespace-nowrap shrink-0 ds-press"
+          class="inline-flex items-center justify-center bg-gradient-to-r from-[#F08300] to-[#e07000] hover:from-[#d97400] hover:to-[#c66500] text-white font-bold text-xs uppercase px-4 xl:px-5 py-2.5 min-h-[40px] rounded-xl transition duration-200 shadow-glass-gold hover:shadow-lg hover:-translate-y-0.5 whitespace-nowrap shrink-0 ds-press"
         >
           Lapor SIAP TERTIB
         </a>
       </div>
 
       <!-- Mobile Search & Menu Controls -->
-      <div class="flex items-center gap-1 lg:hidden">
+      <div class="flex items-center gap-1.5 lg:hidden">
         <button
           type="button"
           on:click={() => searchOpen = true}
-          class="p-2 rounded-xl text-slate-700 hover:text-[#F08300] hover:bg-white/60 transition focus:outline-none ds-press"
+          class="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl text-slate-700 hover:text-[#F08300] hover:bg-white/60 transition focus:outline-none ds-press"
           aria-label="Cari"
         >
           <Search class="w-5 h-5" />
@@ -130,7 +130,7 @@
 
         <button 
           type="button" 
-          class="p-2 rounded-xl text-slate-800 hover:text-[#F08300] hover:bg-white/60 transition focus:outline-none ds-press"
+          class="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl text-slate-800 hover:text-[#F08300] hover:bg-white/60 transition focus:outline-none ds-press"
           on:click={() => mobileMenuOpen = !mobileMenuOpen}
           aria-label="Buka Menu"
         >

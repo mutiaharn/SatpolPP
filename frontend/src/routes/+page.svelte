@@ -100,14 +100,14 @@
       <div class="pt-2 flex flex-wrap items-center gap-4">
         <a
           href="/lapor"
-          class="inline-flex items-center gap-2 bg-gradient-to-r from-[#F08300] to-[#e07000] hover:from-[#d97400] hover:to-[#c66500] text-white font-bold text-xs uppercase px-7 py-4 rounded-xl transition duration-200 shadow-glass-gold hover:shadow-xl hover:-translate-y-0.5 transform ds-press"
+          class="inline-flex items-center gap-2 bg-gradient-to-r from-[#F08300] to-[#e07000] hover:from-[#d97400] hover:to-[#c66500] text-white font-bold text-xs uppercase px-7 py-3.5 min-h-[44px] rounded-2xl transition duration-200 shadow-glass-gold hover:shadow-xl hover:-translate-y-0.5 transform ds-press ds-specular-top"
         >
           <span>Lapor SIAP TERTIB</span>
           <ArrowRight class="w-4 h-4" />
         </a>
         <a 
           href="/dokumen" 
-          class="inline-flex items-center gap-2 ds-glass-dark hover:bg-white/15 text-white font-bold text-xs uppercase px-7 py-4 rounded-xl border border-white/25 transition duration-200 hover:-translate-y-0.5 transform ds-press"
+          class="inline-flex items-center gap-2 ds-glass-dark hover:bg-white/15 text-white font-bold text-xs uppercase px-7 py-3.5 min-h-[44px] rounded-2xl border border-white/25 transition duration-200 hover:-translate-y-0.5 transform ds-press"
         >
           <FileText class="w-4 h-4 text-slate-300" />
           <span>Dokumen Publik</span>
@@ -129,15 +129,17 @@
     </svg>
   </a>
 
-  <!-- Slide Navigation Indicators (Frosted Glass Dock) -->
-  <div class="absolute bottom-8 right-8 z-30 flex items-center gap-2 ds-glass-dark border border-white/20 px-3.5 py-2 rounded-full shadow-lg">
+  <!-- Slide Navigation Indicators (Frosted Glass Dock - Apple HIG Ergonomic Touch Targets) -->
+  <div class="absolute bottom-8 right-8 z-30 flex items-center gap-1 ds-glass-dark border border-white/20 p-1.5 rounded-full shadow-lg">
     {#each slides as _, i}
       <button
         type="button"
-        class={`h-2 transition-all duration-300 rounded-full ${currentSlide === i ? 'w-8 bg-[#F08300]' : 'w-2 bg-white/40 hover:bg-white/80'}`}
+        class="h-8 min-w-[32px] px-1.5 flex items-center justify-center rounded-full transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F08300] ds-press cursor-pointer"
         on:click={() => currentSlide = i}
-        aria-label={`Slide ${i + 1}`}
-      ></button>
+        aria-label={`Pindah ke slide ${i + 1}`}
+      >
+        <span class={`h-2 transition-all duration-300 rounded-full ${currentSlide === i ? 'w-7 bg-[#F08300] shadow-[0_0_8px_rgba(240,131,0,0.6)]' : 'w-2 bg-white/40 hover:bg-white/80'}`}></span>
+      </button>
     {/each}
   </div>
 </section>
@@ -269,18 +271,18 @@
         Aparatur Satpol PP hadir di tengah warga bukan untuk ditakuti, melainkan untuk mengayomi, mengedukasi, dan menegakkan wibawa daerah dengan ketulusan hati serta integritas yang teguh.
       </p>
 
-      <!-- CTA Buttons -->
+      <!-- CTA Buttons (Apple HIG Ergonomics) -->
       <div class="pt-2 flex flex-wrap items-center gap-3.5">
         <a 
           href="/profil/visi-misi" 
-          class="inline-flex items-center gap-2 bg-[#070e1c] hover:bg-slate-800 text-white text-xs font-bold uppercase px-6 py-3.5 rounded-xl transition duration-200 shadow-glass-azure hover:-translate-y-0.5 ds-press ds-specular-top"
+          class="inline-flex items-center gap-2 bg-[#070e1c] hover:bg-slate-800 text-white text-xs font-bold uppercase px-6 py-3.5 min-h-[44px] rounded-2xl transition duration-200 shadow-glass-azure hover:-translate-y-0.5 ds-press ds-specular-top"
         >
           <span>Visi &amp; Misi Instansi</span>
           <ArrowRight class="w-4 h-4 text-[#F08300]" />
         </a>
         <a 
           href="/profil/struktur" 
-          class="inline-flex items-center gap-2 ds-glass hover:bg-white/90 text-slate-700 text-xs font-bold uppercase px-6 py-3.5 rounded-xl border border-white/90 transition duration-200 ds-press"
+          class="inline-flex items-center gap-2 ds-glass hover:bg-white/90 text-slate-700 text-xs font-bold uppercase px-6 py-3.5 min-h-[44px] rounded-2xl border border-white/90 transition duration-200 ds-press"
         >
           <span>Struktur Kelembagaan</span>
         </a>
@@ -326,9 +328,9 @@
         <p class="text-xs text-slate-500 mt-2 line-clamp-2 font-light">Dokumen perencanaan tahunan program dan target kegiatan Satpol PP Prov. Sulsel.</p>
       </div>
       <div class="mt-5 pt-3.5 border-t border-slate-100/90 flex items-center justify-between">
-        <a href="/dokumen?category=renja" class="text-xs font-bold text-[#246bfd] uppercase tracking-wider hover:underline flex items-center gap-1 group-hover:text-[#1d4ed8]">
+        <a href="/dokumen?category=renja" class="text-xs font-bold text-[#246bfd] uppercase tracking-wider flex items-center gap-1 group-hover:text-[#1d4ed8] py-1.5 px-2.5 -ml-2.5 rounded-lg hover:bg-blue-50/70 transition ds-press">
           <span>Akses Dokumen</span>
-          <ArrowRight class="w-3.5 h-3.5" />
+          <ArrowRight class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
         </a>
         <span class="text-[11px] text-slate-400 font-mono">PDF Resmi</span>
       </div>
@@ -345,9 +347,9 @@
         <p class="text-xs text-slate-500 mt-2 line-clamp-2 font-light">Rencana strategis jangka menengah pencapaian visi, misi, dan sasaran instansi.</p>
       </div>
       <div class="mt-5 pt-3.5 border-t border-slate-100/90 flex items-center justify-between">
-        <a href="/dokumen?category=renstra" class="text-xs font-bold text-[#246bfd] uppercase tracking-wider hover:underline flex items-center gap-1 group-hover:text-[#1d4ed8]">
+        <a href="/dokumen?category=renstra" class="text-xs font-bold text-[#246bfd] uppercase tracking-wider flex items-center gap-1 group-hover:text-[#1d4ed8] py-1.5 px-2.5 -ml-2.5 rounded-lg hover:bg-blue-50/70 transition ds-press">
           <span>Akses Dokumen</span>
-          <ArrowRight class="w-3.5 h-3.5" />
+          <ArrowRight class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
         </a>
         <span class="text-[11px] text-slate-400 font-mono">PDF Resmi</span>
       </div>
@@ -364,9 +366,9 @@
         <p class="text-xs text-slate-500 mt-2 line-clamp-2 font-light">Alokasi anggaran belanja dan rincian pembiayaan kegiatan operasional.</p>
       </div>
       <div class="mt-5 pt-3.5 border-t border-slate-100/90 flex items-center justify-between">
-        <a href="/dokumen?category=dpa" class="text-xs font-bold text-[#F08300] uppercase tracking-wider hover:underline flex items-center gap-1">
+        <a href="/dokumen?category=dpa" class="text-xs font-bold text-[#F08300] uppercase tracking-wider flex items-center gap-1 group-hover:text-[#d97400] py-1.5 px-2.5 -ml-2.5 rounded-lg hover:bg-orange-50/70 transition ds-press">
           <span>Akses Dokumen</span>
-          <ArrowRight class="w-3.5 h-3.5" />
+          <ArrowRight class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
         </a>
         <span class="text-[11px] text-slate-400 font-mono">PDF Resmi</span>
       </div>
@@ -383,9 +385,9 @@
         <p class="text-xs text-slate-500 mt-2 line-clamp-2 font-light">Laporan akuntabilitas kinerja instansi pemerintah tahunan.</p>
       </div>
       <div class="mt-5 pt-3.5 border-t border-slate-100/90 flex items-center justify-between">
-        <a href="/dokumen?category=lakip" class="text-xs font-bold text-emerald-600 uppercase tracking-wider hover:underline flex items-center gap-1">
+        <a href="/dokumen?category=lakip" class="text-xs font-bold text-emerald-600 uppercase tracking-wider flex items-center gap-1 group-hover:text-emerald-700 py-1.5 px-2.5 -ml-2.5 rounded-lg hover:bg-emerald-50/70 transition ds-press">
           <span>Akses Dokumen</span>
-          <ArrowRight class="w-3.5 h-3.5" />
+          <ArrowRight class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
         </a>
         <span class="text-[11px] text-slate-400 font-mono">PDF Resmi</span>
       </div>
@@ -402,9 +404,9 @@
         <p class="text-xs text-slate-500 mt-2 line-clamp-2 font-light">Laporan pertanggungjawaban realisasi keuangan dan aset tahunan.</p>
       </div>
       <div class="mt-5 pt-3.5 border-t border-slate-100/90 flex items-center justify-between">
-        <a href="/dokumen?category=keuangan" class="text-xs font-bold text-purple-600 uppercase tracking-wider hover:underline flex items-center gap-1">
+        <a href="/dokumen?category=keuangan" class="text-xs font-bold text-purple-600 uppercase tracking-wider flex items-center gap-1 group-hover:text-purple-700 py-1.5 px-2.5 -ml-2.5 rounded-lg hover:bg-purple-50/70 transition ds-press">
           <span>Akses Dokumen</span>
-          <ArrowRight class="w-3.5 h-3.5" />
+          <ArrowRight class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
         </a>
         <span class="text-[11px] text-slate-400 font-mono">PDF Resmi</span>
       </div>
@@ -421,9 +423,9 @@
         <p class="text-xs text-slate-500 mt-2 line-clamp-2 font-light">Peraturan Daerah Provinsi Sulawesi Selatan dan Standar Operasional Prosedur.</p>
       </div>
       <div class="mt-5 pt-3.5 border-t border-slate-100/90 flex items-center justify-between">
-        <a href="/dokumen?category=perda" class="text-xs font-bold text-[#F08300] uppercase tracking-wider hover:underline flex items-center gap-1">
+        <a href="/dokumen?category=perda" class="text-xs font-bold text-[#F08300] uppercase tracking-wider flex items-center gap-1 group-hover:text-[#d97400] py-1.5 px-2.5 -ml-2.5 rounded-lg hover:bg-orange-50/70 transition ds-press">
           <span>Akses Dokumen</span>
-          <ArrowRight class="w-3.5 h-3.5" />
+          <ArrowRight class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
         </a>
         <span class="text-[11px] text-slate-400 font-mono">PDF Resmi</span>
       </div>

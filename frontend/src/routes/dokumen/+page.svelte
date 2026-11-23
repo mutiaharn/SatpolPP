@@ -69,12 +69,12 @@
 </div>
 
 <div class="py-10 px-4 max-w-6xl mx-auto space-y-6">
-  <!-- Category Filter Pills (Tamalate Specular Glass Pills) -->
+  <!-- Category Filter Pills (Apple HIG Glass Capsules) -->
   <div class="flex flex-wrap gap-2 ds-glass p-4 sm:p-5 border border-white/90 rounded-3xl shadow-glass ds-specular-top">
     {#each categories as cat}
       <button 
         type="button"
-        class={`px-3.5 py-2 text-xs font-bold uppercase transition duration-200 rounded-xl ds-press ${selectedCategory === cat.id ? 'ds-pill-active' : 'ds-pill-inactive'}`}
+        class={`px-4 py-2.5 min-h-[40px] inline-flex items-center justify-center text-xs font-bold uppercase tracking-wider transition duration-200 rounded-xl ds-press ${selectedCategory === cat.id ? 'ds-pill-active' : 'ds-pill-inactive'}`}
         on:click={() => selectedCategory = cat.id}
       >
         {cat.label}
