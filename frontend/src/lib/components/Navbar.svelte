@@ -17,7 +17,6 @@
           <span>Telepon: (0411) 453105</span>
         </a>
         <a href="mailto:satpol@sulselprov.go.id" class="hidden sm:inline hover:text-[#F08300] transition text-slate-600">Email: satpol@sulselprov.go.id</a>
-        <a href="https://ppidsatpolppsulsel.my.id/" target="_blank" rel="noreferrer" class="hidden md:inline hover:text-[#F08300] transition text-slate-600">Layanan PPID</a>
       </div>
       <div class="flex items-center gap-2 text-[11px] text-slate-500">
         <span class="font-semibold text-slate-600">Pemerintah Provinsi Sulawesi Selatan</span>
