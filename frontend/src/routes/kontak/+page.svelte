@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { tick } from 'svelte';
   import { ChevronRight, Phone, Mail, MapPin, Clock, Send, ShieldAlert, CheckCircle2 } from 'lucide-svelte';
   import { Button, Input } from '$lib/components/ui';
 
@@ -10,13 +11,13 @@
   let isSending = false;
   let sentSuccess = false;
 
-  function handleSubmit() {
+  async function handleSubmit() {
     if (!senderName || !senderEmail || !message) {
       alert('Nama, email, dan pesan wajib diisi.');
       return;
     }
     isSending = true;
-    setTimeout(() => {
+    setTimeout(async () => {
       isSending = false;
       sentSuccess = true;
       senderName = '';
@@ -24,6 +25,11 @@
       senderPhone = '';
       subject = '';
       message = '';
+      await tick();
+      const alertEl = document.getElementById('contact-sent-alert');
+      if (alertEl) {
+        alertEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
       setTimeout(() => sentSuccess = false, 5000);
     }, 600);
   }
@@ -120,7 +126,7 @@
         </div>
 
         {#if sentSuccess}
-          <div class="bg-emerald-50/90 border border-emerald-300 text-emerald-800 text-xs p-4 font-semibold rounded-2xl flex items-center gap-2 backdrop-blur-md">
+          <div id="contact-sent-alert" class="bg-emerald-50/90 border border-emerald-300 text-emerald-800 text-xs p-4 font-semibold rounded-2xl flex items-center gap-2 backdrop-blur-md">
             <CheckCircle2 class="w-4 h-4 text-emerald-600 shrink-0" />
             <span>Pesan Anda telah berhasil dikirimkan ke sekretariat Satpol PP Prov. Sulsel. Petugas kami akan membalas melalui email resmi.</span>
           </div>

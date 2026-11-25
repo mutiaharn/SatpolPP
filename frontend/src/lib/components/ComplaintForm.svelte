@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { tick } from 'svelte';
   import { defaultRegencies } from '$lib/stores/appState';
   import { submitComplaint, uploadEvidence } from '$lib/api/client';
   import type { Complaint, EmailNotice, Regency, ViolationType } from '$lib/types';
@@ -152,10 +153,27 @@
       }
 
       if (typeof window !== 'undefined') {
-        window.scrollTo({ top: 100, behavior: 'smooth' });
+        await tick();
+        const receiptEl = document.getElementById('complaint-success-receipt');
+        if (receiptEl) {
+          const header = document.querySelector('header');
+          const headerHeight = header ? Math.round(header.getBoundingClientRect().height) : 72;
+          const rect = receiptEl.getBoundingClientRect();
+          const targetY = rect.top + window.pageYOffset - headerHeight - 16;
+          window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+        } else {
+          window.scrollTo({ top: 100, behavior: 'smooth' });
+        }
       }
     } catch (err: any) {
       errorMessage = err?.message || 'Gagal mengirim pengaduan. Silakan coba beberapa saat lagi.';
+      if (typeof window !== 'undefined') {
+        await tick();
+        const errEl = document.getElementById('complaint-error-banner');
+        if (errEl) {
+          errEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }
     } finally {
       isLoading = false;
     }
@@ -216,7 +234,7 @@
 <GlassCard variant="strong" padding="lg" rounded="3xl" className="max-w-4xl mx-auto">
   {#if submitSuccess && createdTicket}
     <!-- SUCCESS RECEIPT / TICKET VIEW -->
-    <div class="space-y-6 text-center py-4" role="status" aria-live="polite">
+    <div id="complaint-success-receipt" class="space-y-6 text-center py-4" role="status" aria-live="polite">
       <div class="w-16 h-16 bg-emerald-100/80 text-emerald-700 rounded-full flex items-center justify-center mx-auto text-2xl font-bold shadow-xs">
         &#10003;
       </div>
@@ -341,7 +359,7 @@
       </div>
 
       {#if errorMessage}
-        <div role="alert" class="bg-rose-50 border border-rose-300 text-rose-800 text-xs p-4 rounded-xl font-semibold flex items-center gap-2">
+        <div id="complaint-error-banner" role="alert" class="bg-rose-50 border border-rose-300 text-rose-800 text-xs p-4 rounded-xl font-semibold flex items-center gap-2">
           <svg class="w-4 h-4 shrink-0 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>

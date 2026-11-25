@@ -11,12 +11,12 @@
 </svelte:head>
 
 <!-- Sovereign Glass Tracking Console (Full Viewport, Zero Scroll) -->
-<div class="flex-1 flex flex-col justify-center items-center px-4 py-8 sm:py-12 bg-gradient-to-b from-[#070e1c] via-[#0b172a] to-[#0f223d] text-white relative overflow-hidden ds-specular-dark">
+<div class="flex-1 flex flex-col justify-center items-center px-4 py-5 sm:py-7 bg-gradient-to-b from-[#070e1c] via-[#0b172a] to-[#0f223d] text-white relative overflow-hidden ds-specular-dark">
   <!-- Ambient Orbs -->
   <div class="absolute top-0 right-10 w-96 h-96 rounded-full bg-[#F08300]/5 blur-3xl pointer-events-none"></div>
   <div class="absolute bottom-0 left-10 w-72 h-72 rounded-full bg-[#F08300]/10 blur-3xl pointer-events-none"></div>
 
-  <div class="max-w-2xl w-full mx-auto relative z-10 text-center space-y-4 my-auto">
+  <div class="max-w-5xl w-full mx-auto relative z-10 text-center space-y-3.5 my-auto">
     <!-- Breadcrumb Pills -->
     <div class="flex flex-wrap items-center justify-center gap-2 text-xs text-slate-300">
       <a href="/" class="hover:text-[#F08300] transition">Beranda</a>
@@ -33,7 +33,7 @@
     </div>
 
     <!-- Heading & Humanized Subtitle -->
-    <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight">
+    <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
       Pelacakan Tiket Pengaduan
     </h1>
     <p class="text-xs sm:text-sm text-slate-300 max-w-lg mx-auto font-light leading-relaxed">
@@ -41,7 +41,7 @@
     </p>
 
     <!-- Search Form Console -->
-    <div class="pt-2 text-left">
+    <div class="pt-1 text-left">
       <TicketTracker initialTicket={ticketQuery} showHeader={false} />
     </div>
   </div>
