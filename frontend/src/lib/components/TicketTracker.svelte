@@ -3,6 +3,7 @@
   import { trackComplaint } from '$lib/api/client';
   import type { Complaint } from '$lib/types';
   import { Button, CopyButton, GlassCard, StatusBadge } from '$lib/components/ui';
+  import { Search } from 'lucide-svelte';
 
   export let initialTicket = '';
   export let showHeader = false;
@@ -70,7 +71,9 @@
         variant="gold"
         size="md"
         loading={isLoading}
+        className="font-bold whitespace-nowrap px-5 rounded-xl shadow-glass-gold"
       >
+        <Search class="w-4 h-4" />
         <span>Cari Tiket</span>
       </Button>
     </form>

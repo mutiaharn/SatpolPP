@@ -51,17 +51,23 @@
           on:mouseenter={() => profilOpen = true}
           on:mouseleave={() => profilOpen = false}
         >
-          <button class="flex items-center gap-1 px-3.5 py-2 rounded-xl min-h-[38px] hover:bg-slate-900/5 hover:text-[#F08300] transition duration-200 uppercase focus:outline-none ds-press" aria-haspopup="true" aria-expanded={profilOpen}>
+          <button 
+            type="button"
+            on:click={() => { profilOpen = !profilOpen; bidangOpen = false; }}
+            class="flex items-center gap-1 px-3.5 py-2 rounded-xl min-h-[38px] hover:bg-slate-900/5 hover:text-[#F08300] transition duration-200 uppercase focus:outline-none ds-press" 
+            aria-haspopup="true" 
+            aria-expanded={profilOpen}
+          >
             <span>Profil</span>
             <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
           </button>
           {#if profilOpen}
             <div class="absolute top-full left-0 w-64 ds-glass-strong border border-white/90 shadow-2xl rounded-2xl p-1.5 z-50 text-xs normal-case animate-in fade-in zoom-in-95 duration-150">
-              <a href="/profil/sejarah" class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Sejarah Singkat</a>
-              <a href="/profil/visi-misi" class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Visi &amp; Misi</a>
-              <a href="/profil/struktur" class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Struktur Organisasi</a>
-              <a href="/profil/tupoksi" class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Tugas Pokok &amp; Fungsi</a>
-              <a href="/profil/pejabat" class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Profil Pejabat</a>
+              <a href="/profil/sejarah" on:click={() => profilOpen = false} class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Sejarah Singkat</a>
+              <a href="/profil/visi-misi" on:click={() => profilOpen = false} class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Visi &amp; Misi</a>
+              <a href="/profil/struktur" on:click={() => profilOpen = false} class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Struktur Organisasi</a>
+              <a href="/profil/tupoksi" on:click={() => profilOpen = false} class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Tugas Pokok &amp; Fungsi</a>
+              <a href="/profil/pejabat" on:click={() => profilOpen = false} class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Profil Pejabat</a>
             </div>
           {/if}
         </div>
@@ -74,17 +80,23 @@
           on:mouseenter={() => bidangOpen = true}
           on:mouseleave={() => bidangOpen = false}
         >
-          <button class="flex items-center gap-1 px-3.5 py-2 rounded-xl min-h-[38px] hover:bg-slate-900/5 hover:text-[#F08300] transition duration-200 uppercase focus:outline-none ds-press" aria-haspopup="true" aria-expanded={bidangOpen}>
+          <button 
+            type="button"
+            on:click={() => { bidangOpen = !bidangOpen; profilOpen = false; }}
+            class="flex items-center gap-1 px-3.5 py-2 rounded-xl min-h-[38px] hover:bg-slate-900/5 hover:text-[#F08300] transition duration-200 uppercase focus:outline-none ds-press" 
+            aria-haspopup="true" 
+            aria-expanded={bidangOpen}
+          >
             <span>Bidang</span>
             <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
           </button>
           {#if bidangOpen}
             <div class="absolute top-full left-0 w-64 ds-glass-strong border border-white/90 shadow-2xl rounded-2xl p-1.5 z-50 text-xs normal-case animate-in fade-in zoom-in-95 duration-150">
-              <a href="/bidang/sekretariat" class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Sekretariat</a>
-              <a href="/bidang/perda" class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Bidang Penegakan Perda</a>
-              <a href="/bidang/trantibum" class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Bidang Trantibum</a>
-              <a href="/bidang/binmas" class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Bidang Pembinaan Masyarakat</a>
-              <a href="/bidang/linmas-damkar" class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Bidang Linmas &amp; Damkar</a>
+              <a href="/bidang/sekretariat" on:click={() => bidangOpen = false} class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Sekretariat</a>
+              <a href="/bidang/perda" on:click={() => bidangOpen = false} class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Bidang Penegakan Perda</a>
+              <a href="/bidang/trantibum" on:click={() => bidangOpen = false} class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Bidang Trantibum</a>
+              <a href="/bidang/binmas" on:click={() => bidangOpen = false} class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Bidang Pembinaan Masyarakat</a>
+              <a href="/bidang/linmas-damkar" on:click={() => bidangOpen = false} class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Bidang Linmas &amp; Damkar</a>
             </div>
           {/if}
         </div>
