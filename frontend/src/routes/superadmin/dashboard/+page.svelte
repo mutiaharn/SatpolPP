@@ -33,7 +33,7 @@
   import type { SiteSettings, User, UserRole } from '$lib/types';
   import DashboardShell, { type DashboardNavItem } from '$lib/components/layout/DashboardShell.svelte';
   import DataTable from '$lib/components/ui/DataTable.svelte';
-  import Modal from '$lib/components/ui/Modal.svelte';
+  import { Button, IconButton, Badge, GlassCard, Modal } from '$lib/components/ui';
   import OrganizationManager from '$lib/components/cms/OrganizationManager.svelte';
 
   type SuperTab = 'users' | 'organization' | 'settings' | 'regencies' | 'audit' | 'server';
@@ -278,38 +278,40 @@
   quickSwitchLabel="Panel Admin Satpol"
 >
   <svelte:fragment slot="header-actions">
-    <a
+    <Button
       href="/admin/dashboard"
-      class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-bold border border-slate-200 transition"
+      variant="secondary"
+      size="sm"
+      className="hidden sm:inline-flex"
     >
-      Meja Admin Satpol
-    </a>
+      <span>Meja Admin Satpol</span>
+    </Button>
   </svelte:fragment>
 
-  <!-- Ringkasan Metrik Superadmin -->
+  <!-- Ringkasan Metrik Superadmin (Apple Squircle Glass) -->
   <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs">
+    <GlassCard variant="default" padding="sm" rounded="2xl" className="p-5">
       <div class="text-[11px] font-bold text-slate-700/75 uppercase">Total Akun RBAC</div>
       <div class="text-2xl md:text-3xl font-black text-slate-900 mt-1.5">{$usersStore.length}</div>
       <div class="text-[11px] text-slate-700/65 mt-0.5">
         {$usersStore.filter(u => u.is_active).length} akun aktif
       </div>
-    </div>
-    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs">
+    </GlassCard>
+    <GlassCard variant="default" padding="sm" rounded="2xl" className="p-5">
       <div class="text-[11px] font-bold text-[#F08300] uppercase">Simpul Struktur SOTK</div>
       <div class="text-2xl md:text-3xl font-black text-slate-900 mt-1.5">{$organizationStore.length}</div>
       <div class="text-[11px] text-slate-700/65 mt-0.5">Unit kerja dinamis</div>
-    </div>
-    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs">
+    </GlassCard>
+    <GlassCard variant="default" padding="sm" rounded="2xl" className="p-5">
       <div class="text-[11px] font-bold text-slate-700/75 uppercase">Aduan SIAP TERTIB</div>
       <div class="text-2xl md:text-3xl font-black text-slate-900 mt-1.5">{$complaintsStore.length}</div>
       <div class="text-[11px] text-slate-700/65 mt-0.5">24 kab/kota terhubung</div>
-    </div>
-    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs">
+    </GlassCard>
+    <GlassCard variant="default" padding="sm" rounded="2xl" className="p-5">
       <div class="text-[11px] font-bold text-emerald-800 uppercase">Catatan Audit Trail</div>
       <div class="text-2xl md:text-3xl font-black text-emerald-700 mt-1.5">{$auditLogsStore.length}</div>
       <div class="text-[11px] text-emerald-700/80 mt-0.5">Log keamanan tercatat</div>
-    </div>
+    </GlassCard>
   </div>
 
   {#if toastMessage}
@@ -340,14 +342,15 @@
       emptyMessage="Tidak ada akun pengguna yang sesuai dengan pencarian."
     >
       <svelte:fragment slot="header-actions">
-        <button
+        <Button
           type="button"
+          variant="gold"
+          size="sm"
           on:click={openAddUserModal}
-          class="inline-flex items-center gap-1.5 bg-[#F08300] hover:bg-[#d97300] text-white text-xs font-bold px-4 py-2 rounded-xl transition shadow-xs"
         >
-          <Plus class="w-4 h-4" />
-          Tambah Akun Baru
-        </button>
+          <Plus class="w-4 h-4" slot="iconLeading" />
+          <span>Tambah Akun Baru</span>
+        </Button>
       </svelte:fragment>
 
       <tr slot="head">
@@ -366,54 +369,51 @@
         </td>
         <td class="px-4 py-3.5 align-top font-mono text-xs font-bold text-slate-700">@{item.username}</td>
         <td class="px-4 py-3.5 align-top">
-          <span class="inline-block px-2.5 py-1 rounded-lg border text-[10px] font-bold uppercase {roleBadgeStyle(item.role)}">
+          <Badge variant={item.role === 'SUPERADMIN_DISKOMINFO' ? 'gold' : 'primary'} size="sm">
             {roleLabelDisplay(item.role)}
-          </span>
+          </Badge>
         </td>
         <td class="px-4 py-3.5 align-top text-xs text-slate-700">{item.bidang || '-'}</td>
         <td class="px-4 py-3.5 align-top">
-          {#if item.is_active}
-            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-[10px] font-bold">
-              Aktif
-            </span>
-          {:else}
-            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-red-50 border border-red-200 text-red-700 text-[10px] font-bold">
-              Nonaktif
-            </span>
-          {/if}
+          <Badge variant={item.is_active ? 'success' : 'danger'} size="sm" dot>
+            {item.is_active ? 'Aktif' : 'Nonaktif'}
+          </Badge>
         </td>
         <td class="px-4 py-3.5 align-top text-right whitespace-nowrap">
           <div class="inline-flex items-center gap-1.5">
-            <button
+            <Button
               type="button"
+              variant="secondary"
+              size="xs"
               on:click={() => openEditUserModal(item)}
-              class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-bold border border-slate-200 transition"
             >
-              <Edit3 class="w-3.5 h-3.5" />
-              Edit
-            </button>
-            <button
+              <Edit3 class="w-3.5 h-3.5" slot="iconLeading" />
+              <span>Edit</span>
+            </Button>
+            <Button
               type="button"
+              variant={item.is_active ? 'secondary' : 'glass'}
+              size="xs"
               on:click={() => handleToggleUserStatus(item)}
               title={item.is_active ? 'Nonaktifkan akun' : 'Aktifkan akun'}
-              class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl border text-xs font-bold transition {item.is_active ? 'bg-amber-50 hover:bg-amber-100 text-amber-900 border-amber-200' : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-emerald-200'}"
             >
               {#if item.is_active}
-                <UserX class="w-3.5 h-3.5" />
-                Nonaktifkan
+                <UserX class="w-3.5 h-3.5" slot="iconLeading" />
+                <span>Nonaktifkan</span>
               {:else}
-                <UserCheck class="w-3.5 h-3.5" />
-                Aktifkan
+                <UserCheck class="w-3.5 h-3.5" slot="iconLeading" />
+                <span>Aktifkan</span>
               {/if}
-            </button>
-            <button
+            </Button>
+            <IconButton
               type="button"
+              variant="danger"
+              size="sm"
+              ariaLabel="Hapus akun {item.username}"
               on:click={() => askDeleteUser(item)}
-              aria-label="Hapus akun {item.username}"
-              class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-700 text-xs font-bold border border-red-200 transition"
             >
               <Trash2 class="w-3.5 h-3.5" />
-            </button>
+            </IconButton>
           </div>
         </td>
       </tr>
@@ -472,13 +472,14 @@
         </div>
 
         <div class="pt-4 border-t border-slate-200/60 flex justify-end">
-          <button
+          <Button
             type="submit"
-            disabled={isSavingSettings}
-            class="bg-[#F08300] hover:bg-[#d97300] ds-hover-lift ds-press text-white font-bold text-xs px-6 py-2.5 rounded-xl transition disabled:opacity-60 shadow-sm ds-specular-top cursor-pointer"
+            variant="gold"
+            size="md"
+            loading={isSavingSettings}
           >
-            {isSavingSettings ? 'Menyimpan...' : 'Simpan Konfigurasi Portal'}
-          </button>
+            <span>{isSavingSettings ? 'Menyimpan...' : 'Simpan Konfigurasi Portal'}</span>
+          </Button>
         </div>
       </form>
     </div>
@@ -651,21 +652,23 @@
   </form>
 
   <svelte:fragment slot="footer" let:handleClose>
-    <button
+    <Button
       type="button"
+      variant="secondary"
+      size="sm"
       on:click={handleClose}
-      class="px-4 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-xs font-bold text-slate-700 transition"
     >
-      Batal
-    </button>
-    <button
+      <span>Batal</span>
+    </Button>
+    <Button
       type="submit"
       form="user-rbac-form"
-      disabled={isSavingUser}
-      class="px-5 py-2 rounded-xl bg-[#F08300] hover:bg-[#d97300] disabled:opacity-60 text-white text-xs font-bold transition shadow-sm"
+      variant="gold"
+      size="sm"
+      loading={isSavingUser}
     >
-      {isSavingUser ? 'Menyimpan...' : isNewUser ? 'Buat Akun' : 'Simpan Perubahan'}
-    </button>
+      <span>{isSavingUser ? 'Menyimpan...' : isNewUser ? 'Buat Akun' : 'Simpan Perubahan'}</span>
+    </Button>
   </svelte:fragment>
 </Modal>
 
@@ -687,21 +690,23 @@
   {/if}
 
   <svelte:fragment slot="footer" let:handleClose>
-    <button
+    <Button
       type="button"
+      variant="secondary"
+      size="sm"
       on:click={handleClose}
-      class="px-4 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-xs font-bold text-slate-700 transition"
     >
-      Tutup
-    </button>
+      <span>Tutup</span>
+    </Button>
     {#if !deleteUserError}
-      <button
+      <Button
         type="button"
+        variant="danger"
+        size="sm"
         on:click={confirmDeleteUser}
-        class="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition"
       >
-        Ya, Hapus Akun
-      </button>
+        <span>Ya, Hapus Akun</span>
+      </Button>
     {/if}
   </svelte:fragment>
 </Modal>

@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Search } from 'lucide-svelte';
   import CommandPalette from '$lib/components/ui/CommandPalette.svelte';
+  import { Button } from '$lib/components/ui';
 
   let mobileMenuOpen = false;
   let profilOpen = false;
@@ -109,12 +110,14 @@
         </button>
 
         <!-- Call-to-Action: SIAP TERTIB (Luminous Amber Glass Button) -->
-        <a 
-          href="/lapor" 
-          class="inline-flex items-center justify-center bg-gradient-to-r from-[#F08300] to-[#e07000] hover:from-[#d97400] hover:to-[#c66500] text-white font-bold text-xs uppercase px-4 xl:px-5 py-2.5 min-h-[40px] rounded-xl transition duration-200 shadow-glass-gold hover:shadow-lg hover:-translate-y-0.5 whitespace-nowrap shrink-0 ds-press"
+        <Button
+          href="/lapor"
+          variant="gold"
+          size="sm"
+          className="uppercase tracking-wider px-4 xl:px-5 py-2.5 min-h-[40px] font-bold"
         >
-          Lapor SIAP TERTIB
-        </a>
+          <span>Lapor SIAP TERTIB</span>
+        </Button>
       </div>
 
       <!-- Mobile Search & Menu Controls -->
@@ -217,13 +220,16 @@
 
       <!-- Mobile Footer Action -->
       <div class="p-6 border-t border-white/10 bg-black/40 backdrop-blur-xl">
-        <a 
-          href="/lapor" 
-          class="block w-full bg-gradient-to-r from-[#F08300] to-[#e07000] text-center text-white font-bold py-3.5 rounded-xl uppercase tracking-wider text-xs shadow-glass-gold transition ds-press"
+        <Button
+          href="/lapor"
+          variant="gold"
+          size="lg"
+          fullWidth
+          className="uppercase tracking-wider font-bold"
           on:click={() => mobileMenuOpen = false}
         >
-          Lapor SIAP TERTIB
-        </a>
+          <span>Lapor SIAP TERTIB</span>
+        </Button>
       </div>
     </div>
   {/if}

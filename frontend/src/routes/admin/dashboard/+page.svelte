@@ -1,4 +1,4 @@
-﻿<script lang="ts">
+<script lang="ts">
   import { onMount } from 'svelte';
   import {
     LayoutDashboard,
@@ -44,8 +44,7 @@
   import RichTextEditor from '$lib/components/RichTextEditor.svelte';
   import DataTable from '$lib/components/ui/DataTable.svelte';
   import FileUploader from '$lib/components/ui/FileUploader.svelte';
-  import Modal from '$lib/components/ui/Modal.svelte';
-  import StatusBadge from '$lib/components/ui/StatusBadge.svelte';
+  import { Button, IconButton, Badge, GlassCard, Modal, StatusBadge } from '$lib/components/ui';
   import OrganizationManager from '$lib/components/cms/OrganizationManager.svelte';
 
   type AdminTab = 'overview' | 'complaints' | 'articles' | 'documents' | 'gallery' | 'organization';
@@ -523,13 +522,15 @@
   quickSwitchLabel="Panel Superadmin"
 >
   <svelte:fragment slot="header-actions">
-    <a
+    <Button
       href="/lapor"
       target="_blank"
-      class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-bold border border-slate-200 transition"
+      variant="secondary"
+      size="sm"
+      className="hidden sm:inline-flex"
     >
-      Halaman Lapor Publik
-    </a>
+      <span>Halaman Lapor Publik</span>
+    </Button>
   </svelte:fragment>
 
   {#if toastMessage}
@@ -547,39 +548,39 @@
     </div>
   {/if}
 
-  <!-- TAB 1: IKHTISAR OPERASIONAL -->
+  <!-- TAB 1: IKHTISAR OPERASIONAL (Modular Apple Squircle Glass) -->
   {#if currentTab === 'overview'}
     <div class="space-y-6">
       <div class="grid grid-cols-2 lg:grid-cols-5 gap-4">
-        <div class="ds-glass-card rounded-2xl p-5 border border-white/80 ds-specular-top ds-hover-lift">
+        <GlassCard variant="default" padding="sm" rounded="2xl" className="p-5">
           <div class="text-[11px] font-bold text-slate-700/75 uppercase">Total Aduan</div>
           <div class="text-3xl font-black text-slate-900 mt-2">{totalCount}</div>
           <div class="text-[11px] text-slate-700/60 mt-1">Registrasi SIAP TERTIB</div>
-        </div>
-        <div class="ds-glass-card rounded-2xl p-5 border border-amber-300/40 ds-specular-top ds-hover-lift">
+        </GlassCard>
+        <GlassCard variant="default" padding="sm" rounded="2xl" className="p-5 border-amber-300/40">
           <div class="text-[11px] font-bold text-amber-800 uppercase">Menunggu Verifikasi</div>
           <div class="text-3xl font-black text-amber-700 mt-2">{pendingCount}</div>
           <div class="text-[11px] text-amber-700/80 mt-1">Perlu verifikasi awal</div>
-        </div>
-        <div class="ds-glass-card rounded-2xl p-5 border border-sky-300/40 ds-specular-top ds-hover-lift">
+        </GlassCard>
+        <GlassCard variant="default" padding="sm" rounded="2xl" className="p-5 border-sky-300/40">
           <div class="text-[11px] font-bold text-sky-800 uppercase">Disposisi Bidang</div>
           <div class="text-3xl font-black text-sky-700 mt-2">{disposedCount}</div>
           <div class="text-[11px] text-sky-700/80 mt-1">Diteruskan ke unit</div>
-        </div>
-        <div class="ds-glass-card rounded-2xl p-5 border border-orange-300/40 ds-specular-top ds-hover-lift">
+        </GlassCard>
+        <GlassCard variant="default" padding="sm" rounded="2xl" className="p-5 border-orange-300/40">
           <div class="text-[11px] font-bold text-[#F08300] uppercase">Penindakan Patroli</div>
           <div class="text-3xl font-black text-[#F08300] mt-2">{inProgressCount}</div>
           <div class="text-[11px] text-slate-700/70 mt-1">Giat lapangan aktif</div>
-        </div>
-        <div class="ds-glass-card rounded-2xl p-5 border border-emerald-300/40 ds-specular-top ds-hover-lift col-span-2 lg:col-span-1">
+        </GlassCard>
+        <GlassCard variant="default" padding="sm" rounded="2xl" className="p-5 border-emerald-300/40 col-span-2 lg:col-span-1">
           <div class="text-[11px] font-bold text-emerald-800 uppercase">Selesai (BAP)</div>
           <div class="text-3xl font-black text-emerald-700 mt-2">{completedCount}</div>
           <div class="text-[11px] text-emerald-700/80 mt-1">Tuntas terdokumentasi</div>
-        </div>
+        </GlassCard>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-        <div class="ds-glass-card rounded-2xl p-5 border border-white/80 ds-specular-top ds-hover-lift flex flex-col justify-between space-y-4">
+        <GlassCard variant="default" padding="sm" rounded="2xl" className="p-5 flex flex-col justify-between space-y-4">
           <div class="space-y-1.5">
             <div class="text-[11px] font-black text-[#F08300] uppercase tracking-wider">SOP SIAP TERTIB</div>
             <h2 class="text-sm font-black text-slate-900">Meja Verifikasi Aduan</h2>
@@ -587,16 +588,18 @@
               Ada <strong>{pendingCount} laporan</strong> baru yang menunggu pengecekan dan disposisi.
             </p>
           </div>
-          <button
+          <Button
             type="button"
+            variant="gold"
+            size="md"
+            fullWidth
             on:click={() => (currentTab = 'complaints')}
-            class="w-full py-2.5 px-4 rounded-xl bg-[#F08300] hover:bg-[#d97300] ds-hover-lift ds-press text-white text-xs font-bold transition shadow-xs ds-specular-top cursor-pointer"
           >
-            Buka Meja Aduan
-          </button>
-        </div>
+            <span>Buka Meja Aduan</span>
+          </Button>
+        </GlassCard>
 
-        <div class="ds-glass-card rounded-2xl p-5 border border-white/80 ds-specular-top ds-hover-lift flex flex-col justify-between space-y-4">
+        <GlassCard variant="default" padding="sm" rounded="2xl" className="p-5 flex flex-col justify-between space-y-4">
           <div class="space-y-1.5">
             <div class="text-[11px] font-black text-slate-700 uppercase tracking-wider">Redaksi Humas</div>
             <h2 class="text-sm font-black text-slate-900">Tulis Warta Berita</h2>
@@ -604,16 +607,18 @@
               Publikasikan kegiatan patroli penertiban dan pengumuman resmi Satpol PP.
             </p>
           </div>
-          <button
+          <Button
             type="button"
+            variant="primary"
+            size="md"
+            fullWidth
             on:click={() => { currentTab = 'articles'; openNewArticleEditor(); }}
-            class="w-full py-2.5 px-4 rounded-xl bg-[#0b172a] hover:bg-slate-800 ds-hover-lift ds-press text-white text-xs font-bold transition shadow-xs ds-specular-top cursor-pointer"
           >
-            Tulis Berita Baru
-          </button>
-        </div>
+            <span>Tulis Berita Baru</span>
+          </Button>
+        </GlassCard>
 
-        <div class="ds-glass-card rounded-2xl p-5 border border-white/80 ds-specular-top ds-hover-lift flex flex-col justify-between space-y-4">
+        <GlassCard variant="default" padding="sm" rounded="2xl" className="p-5 flex flex-col justify-between space-y-4">
           <div class="space-y-1.5">
             <div class="text-[11px] font-black text-emerald-700 uppercase tracking-wider">Transparansi PPID</div>
             <h2 class="text-sm font-black text-slate-900">Unggah Dokumen Publik</h2>
@@ -621,16 +626,18 @@
               Tambahkan Renja, Renstra, DPA, atau peraturan daerah ke katalog publik.
             </p>
           </div>
-          <button
+          <Button
             type="button"
+            variant="primary"
+            size="md"
+            fullWidth
             on:click={() => { currentTab = 'documents'; openDocModal(); }}
-            class="w-full py-2.5 px-4 rounded-xl bg-[#0b172a] hover:bg-slate-800 ds-hover-lift ds-press text-white text-xs font-bold transition shadow-xs ds-specular-top cursor-pointer"
           >
-            Unggah Dokumen PDF
-          </button>
-        </div>
+            <span>Unggah Dokumen PDF</span>
+          </Button>
+        </GlassCard>
 
-        <div class="ds-glass-card rounded-2xl p-5 border border-white/80 ds-specular-top ds-hover-lift flex flex-col justify-between space-y-4">
+        <GlassCard variant="default" padding="sm" rounded="2xl" className="p-5 flex flex-col justify-between space-y-4">
           <div class="space-y-1.5">
             <div class="text-[11px] font-black text-[#F08300] uppercase tracking-wider">Kelembagaan Dinamis</div>
             <h2 class="text-sm font-black text-slate-900">Struktur Organisasi</h2>
@@ -638,14 +645,16 @@
               Kelola { $organizationStore.length } simpul jabatan dan ID Khusus unit (<code class="font-mono">ORG-*</code>).
             </p>
           </div>
-          <button
+          <Button
             type="button"
+            variant="glass"
+            size="md"
+            fullWidth
             on:click={() => (currentTab = 'organization')}
-            class="w-full py-2.5 px-4 rounded-xl ds-glass hover:bg-white text-slate-900 border border-white/80 ds-hover-lift ds-press text-xs font-bold transition cursor-pointer"
           >
-            Kelola Struktur SOTK
-          </button>
-        </div>
+            <span>Kelola Struktur SOTK</span>
+          </Button>
+        </GlassCard>
       </div>
     </div>
   {/if}
@@ -748,13 +757,14 @@
         </td>
 
         <td class="px-4 py-3.5 align-top text-right whitespace-nowrap">
-          <button
+          <Button
             type="button"
+            variant="gold"
+            size="xs"
             on:click={() => openComplaintDetail(item)}
-            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#F08300] hover:bg-[#d97300] text-white text-xs font-bold transition shadow-xs"
           >
-            Tindak Lanjut
-          </button>
+            <span>Tindak Lanjut</span>
+          </Button>
         </td>
       </tr>
     </DataTable>
@@ -1214,21 +1224,23 @@
   {/if}
 
   <svelte:fragment slot="footer" let:handleClose>
-    <button
+    <Button
       type="button"
+      variant="secondary"
+      size="sm"
       on:click={handleClose}
-      class="px-4 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-xs font-bold text-slate-700 transition"
     >
-      Tutup
-    </button>
-    <button
+      <span>Tutup</span>
+    </Button>
+    <Button
       type="button"
+      variant="gold"
+      size="sm"
+      loading={isSavingComplaint}
       on:click={saveComplaintUpdate}
-      disabled={isSavingComplaint}
-      class="px-5 py-2 rounded-xl bg-[#F08300] hover:bg-[#d97300] disabled:opacity-60 text-white text-xs font-bold transition shadow-sm"
     >
-      {isSavingComplaint ? 'Menyimpan...' : 'Simpan & Kirim Notifikasi'}
-    </button>
+      <span>{isSavingComplaint ? 'Menyimpan...' : 'Simpan & Kirim Notifikasi'}</span>
+    </Button>
   </svelte:fragment>
 </Modal>
 
@@ -1298,20 +1310,22 @@
   </form>
 
   <svelte:fragment slot="footer" let:handleClose>
-    <button
+    <Button
       type="button"
+      variant="secondary"
+      size="sm"
       on:click={handleClose}
-      class="px-4 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-xs font-bold text-slate-700 transition"
     >
-      Batal
-    </button>
-    <button
+      <span>Batal</span>
+    </Button>
+    <Button
       type="submit"
       form="doc-upload-form"
-      class="px-5 py-2 rounded-xl bg-[#F08300] hover:bg-[#d97300] text-white text-xs font-bold transition shadow-sm"
+      variant="gold"
+      size="sm"
     >
-      Simpan Dokumen
-    </button>
+      <span>Simpan Dokumen</span>
+    </Button>
   </svelte:fragment>
 </Modal>
 
@@ -1361,20 +1375,22 @@
   </form>
 
   <svelte:fragment slot="footer" let:handleClose>
-    <button
+    <Button
       type="button"
+      variant="secondary"
+      size="sm"
       on:click={handleClose}
-      class="px-4 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-xs font-bold text-slate-700 transition"
     >
-      Batal
-    </button>
-    <button
+      <span>Batal</span>
+    </Button>
+    <Button
       type="submit"
       form="gallery-upload-form"
-      class="px-5 py-2 rounded-xl bg-[#F08300] hover:bg-[#d97300] text-white text-xs font-bold transition shadow-sm"
+      variant="gold"
+      size="sm"
     >
-      Simpan ke Galeri
-    </button>
+      <span>Simpan ke Galeri</span>
+    </Button>
   </svelte:fragment>
 </Modal>
 
@@ -1390,19 +1406,21 @@
   </p>
 
   <svelte:fragment slot="footer" let:handleClose>
-    <button
+    <Button
       type="button"
+      variant="secondary"
+      size="sm"
       on:click={handleClose}
-      class="px-4 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-xs font-bold text-slate-700 transition"
     >
-      Batal
-    </button>
-    <button
+      <span>Batal</span>
+    </Button>
+    <Button
       type="button"
+      variant="danger"
+      size="sm"
       on:click={executeDelete}
-      class="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition"
     >
-      Ya, Hapus
-    </button>
+      <span>Ya, Hapus</span>
+    </Button>
   </svelte:fragment>
 </Modal>

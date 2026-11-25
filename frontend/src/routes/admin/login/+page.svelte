@@ -2,12 +2,11 @@
   import { goto } from '$app/navigation';
   import { loginAdmin } from '$lib/api/client';
   import { saveSession } from '$lib/utils/auth';
+  import { Button, Input, SegmentedControl, GlassCard } from '$lib/components/ui';
   import { 
     ShieldCheck, 
     Lock, 
     User, 
-    Eye, 
-    EyeOff, 
     ArrowRight, 
     ArrowLeft, 
     KeyRound
@@ -17,10 +16,14 @@
   let password = '';
   let errorMessage = '';
   let isLoading = false;
-  let showPassword = false;
 
   // iOS Segmented Tab: 'admin' | 'superadmin' (2 Peran)
   let activeTab: 'admin' | 'superadmin' = 'admin';
+
+  const roleOptions = [
+    { value: 'admin', label: 'Admin Petugas' },
+    { value: 'superadmin', label: 'Superadmin' }
+  ];
 
   const presets = {
     admin: {
@@ -39,10 +42,10 @@
     }
   };
 
-  function selectTab(tab: 'admin' | 'superadmin') {
-    activeTab = tab;
-    username = presets[tab].username;
-    password = presets[tab].pass;
+  function handleTabChange(tab: string) {
+    activeTab = tab as 'admin' | 'superadmin';
+    username = presets[activeTab].username;
+    password = presets[activeTab].pass;
     errorMessage = '';
   }
 
@@ -104,13 +107,15 @@
             />
           </a>
 
-          <a
+          <Button
             href="/"
-            class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-[#246bfd] bg-slate-100/80 hover:bg-slate-200/80 px-3.5 py-1.5 rounded-xl border border-slate-200/60 transition ds-press"
+            variant="glass"
+            size="sm"
+            className="text-slate-600 hover:text-[#246bfd]"
           >
-            <ArrowLeft class="w-3.5 h-3.5" />
+            <ArrowLeft class="w-3.5 h-3.5" slot="iconLeading" />
             <span>Beranda</span>
-          </a>
+          </Button>
         </div>
 
         <!-- Header Greeting & Status (MAGANGKI' Clean Typography Style) -->
@@ -128,36 +133,30 @@
           </p>
         </div>
 
-        <!-- Segmented Control (Clean MAGANGKI' Pill Container - 2 Peran) -->
-        <div class="mt-4 p-1.5 bg-slate-100/90 rounded-2xl border border-slate-200/60 grid grid-cols-2 gap-1.5 shadow-inner relative">
-          <button
-            type="button"
-            on:click={() => selectTab('admin')}
-            class="relative z-10 py-2.5 text-center text-xs font-bold rounded-xl transition-all duration-200 ds-press {activeTab === 'admin' ? 'bg-white text-slate-900 shadow-sm font-extrabold' : 'text-slate-500 hover:text-slate-800 font-medium'}"
-          >
-            Admin Petugas
-          </button>
-          <button
-            type="button"
-            on:click={() => selectTab('superadmin')}
-            class="relative z-10 py-2.5 text-center text-xs font-bold rounded-xl transition-all duration-200 ds-press {activeTab === 'superadmin' ? 'bg-white text-slate-900 shadow-sm font-extrabold' : 'text-slate-500 hover:text-slate-800 font-medium'}"
-          >
-            Superadmin
-          </button>
+        <!-- Segmented Control (Modular Apple Pill Control - 2 Peran) -->
+        <div class="mt-4">
+          <SegmentedControl
+            options={roleOptions}
+            value={activeTab}
+            size="md"
+            on:change={(e) => handleTabChange(e.detail)}
+          />
         </div>
 
         <!-- Active Role Context Card -->
-        <div class="mt-3 px-3.5 py-2.5 rounded-xl bg-blue-50/70 border border-blue-200/50 flex items-center justify-between text-xs text-slate-700 animate-in fade-in duration-150">
-          <div class="flex items-center gap-2.5">
-            <div class="p-1.5 rounded-lg bg-blue-100/80 text-[#246bfd]">
-              <KeyRound class="w-3.5 h-3.5" />
-            </div>
-            <div>
-              <span class="text-[10px] font-bold uppercase tracking-wider text-blue-700 block">{presets[activeTab].roleLabel}</span>
-              <span class="text-[11px] text-slate-600 line-clamp-1">{presets[activeTab].hint}</span>
+        <GlassCard variant="subtle" padding="sm" rounded="xl" className="mt-3 bg-blue-50/70 border-blue-200/50">
+          <div class="flex items-center justify-between text-xs text-slate-700 animate-in fade-in duration-150">
+            <div class="flex items-center gap-2.5">
+              <div class="p-1.5 rounded-lg bg-blue-100/80 text-[#246bfd] shrink-0">
+                <KeyRound class="w-3.5 h-3.5" />
+              </div>
+              <div class="min-w-0">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-blue-700 block truncate">{presets[activeTab].roleLabel}</span>
+                <span class="text-[11px] text-slate-600 line-clamp-1">{presets[activeTab].hint}</span>
+              </div>
             </div>
           </div>
-        </div>
+        </GlassCard>
 
         <!-- Error Alert -->
         {#if errorMessage}
@@ -170,91 +169,46 @@
         <!-- Main Login Form -->
         <form on:submit|preventDefault={handleLogin} class="mt-4 space-y-3.5">
           <!-- Username Input -->
-          <div>
-            <label for="admin-username" class="block text-xs font-bold text-slate-700 mb-1.5">
-              Nama Pengguna (Username)
-            </label>
-            <div class="relative flex items-center">
-              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                <User class="w-4 h-4" />
-              </div>
-              <input
-                id="admin-username"
-                type="text"
-                bind:value={username}
-                required
-                autocomplete="username"
-                placeholder="Username akun petugas"
-                class="w-full pl-10 pr-4 py-2.5 text-xs sm:text-sm text-slate-800 placeholder-slate-400 bg-slate-50/60 border border-slate-200 rounded-xl focus:outline-none focus:border-[#246bfd] focus:bg-white focus:ring-2 focus:ring-[#246bfd]/10 transition shadow-2xs"
-              />
-            </div>
-          </div>
-
-          <!-- Password Input with Toggle Eye -->
-          <div>
-            <div class="flex items-center justify-between mb-1.5">
-              <label for="admin-password" class="block text-xs font-bold text-slate-700">
-                Kata Sandi (Password)
-              </label>
-              <span class="text-[10px] text-slate-400">Enkripsi SHA-256</span>
-            </div>
-            <div class="relative flex items-center">
-              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                <Lock class="w-4 h-4" />
-              </div>
-              {#if showPassword}
-                <input
-                  id="admin-password"
-                  type="text"
-                  bind:value={password}
-                  required
-                  autocomplete="current-password"
-                  placeholder="••••••••"
-                  class="w-full pl-10 pr-11 py-2.5 text-xs sm:text-sm text-slate-800 placeholder-slate-400 bg-slate-50/60 border border-slate-200 rounded-xl focus:outline-none focus:border-[#246bfd] focus:bg-white focus:ring-2 focus:ring-[#246bfd]/10 transition shadow-2xs font-mono"
-                />
-              {:else}
-                <input
-                  id="admin-password"
-                  type="password"
-                  bind:value={password}
-                  required
-                  autocomplete="current-password"
-                  placeholder="••••••••"
-                  class="w-full pl-10 pr-11 py-2.5 text-xs sm:text-sm text-slate-800 placeholder-slate-400 bg-slate-50/60 border border-slate-200 rounded-xl focus:outline-none focus:border-[#246bfd] focus:bg-white focus:ring-2 focus:ring-[#246bfd]/10 transition shadow-2xs font-mono"
-                />
-              {/if}
-              <button
-                type="button"
-                on:click={() => showPassword = !showPassword}
-                class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 transition focus:outline-none"
-                aria-label={showPassword ? 'Sembunyikan password' : 'Tampilkan password'}
-              >
-                {#if showPassword}
-                  <EyeOff class="w-4 h-4" />
-                {:else}
-                  <Eye class="w-4 h-4" />
-                {/if}
-              </button>
-            </div>
-          </div>
-
-          <!-- Submit Button (Soft Vibrant Modern Blue) -->
-          <button
-            type="submit"
-            disabled={isLoading}
-            class="w-full mt-2 bg-gradient-to-r from-[#246bfd] to-[#1d58d8] hover:from-[#1d58d8] hover:to-[#1746b0] ds-hover-lift ds-press text-white font-bold text-xs uppercase tracking-wider py-3.5 rounded-xl transition shadow-lg shadow-blue-500/25 disabled:opacity-50 flex items-center justify-center gap-2 group cursor-pointer"
+          <Input
+            id="admin-username"
+            name="username"
+            label="Nama Pengguna (Username)"
+            type="text"
+            bind:value={username}
+            required
+            autocomplete="username"
+            placeholder="Username akun petugas"
           >
-            {#if isLoading}
-              <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              <span>Mengautentikasi...</span>
-            {:else}
-              <span>Masuk ke Workspace Komando</span>
-              <ArrowRight class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
-            {/if}
-          </button>
+            <User class="w-4 h-4" slot="iconLeading" />
+          </Input>
+
+          <!-- Password Input -->
+          <Input
+            id="admin-password"
+            name="password"
+            label="Kata Sandi (Password)"
+            type="password"
+            bind:value={password}
+            required
+            autocomplete="current-password"
+            placeholder="••••••••"
+          >
+            <Lock class="w-4 h-4" slot="iconLeading" />
+            <span slot="labelExtra" class="text-[10px] text-slate-400 font-normal">Enkripsi SHA-256</span>
+          </Input>
+
+          <!-- Submit Button (Modular Button with Apple Specular & Gradient) -->
+          <Button
+            type="submit"
+            variant="primary"
+            size="lg"
+            fullWidth
+            loading={isLoading}
+            className="mt-2 text-xs uppercase tracking-wider font-bold py-3.5"
+          >
+            <span>{isLoading ? 'Mengautentikasi...' : 'Masuk ke Workspace Komando'}</span>
+            <ArrowRight class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" slot="iconTrailing" />
+          </Button>
         </form>
       </div>
 

@@ -4,7 +4,7 @@
   import type { Complaint, EmailNotice, Regency, ViolationType } from '$lib/types';
   import { isValidEmail, maskNIK, maskName, maskPhone } from '$lib/utils/masking';
   import FileUploader from '$lib/components/ui/FileUploader.svelte';
-  import StatusBadge from '$lib/components/ui/StatusBadge.svelte';
+  import { Button, CopyButton, GlassCard, StatusBadge } from '$lib/components/ui';
 
   export let initialViolationType: ViolationType = 'GANGGUAN_TIBUM';
 
@@ -213,7 +213,7 @@
   }
 </script>
 
-<div class="ds-glass-strong border border-white/90 rounded-3xl shadow-glass p-6 sm:p-8 md:p-10 max-w-4xl mx-auto ds-specular-top">
+<GlassCard variant="strong" padding="lg" rounded="3xl" className="max-w-4xl mx-auto">
   {#if submitSuccess && createdTicket}
     <!-- SUCCESS RECEIPT / TICKET VIEW -->
     <div class="space-y-6 text-center py-4" role="status" aria-live="polite">
@@ -234,7 +234,7 @@
       </div>
 
       <!-- Resi Card -->
-      <div class="ds-glass border border-white/90 rounded-2xl p-6 text-left max-w-xl mx-auto space-y-4 shadow-glass">
+      <GlassCard variant="default" padding="md" rounded="2xl" className="text-left max-w-xl mx-auto space-y-4">
         <div class="flex flex-wrap justify-between items-start gap-2 border-b border-white/80 pb-3">
           <div>
             <div class="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Kode Resi Pengaduan Resmi</div>
@@ -242,36 +242,14 @@
               <span class="text-xl sm:text-2xl font-mono font-extrabold text-[#F08300] tracking-wide select-all">
                 {createdTicket.ticket_code}
               </span>
-              <button
-                type="button"
-                on:click={() => copyToClipboard(createdTicket?.ticket_code || '')}
-                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition ds-press border {copied ? 'bg-emerald-50 border-emerald-300 text-emerald-700 shadow-xs' : 'bg-white/90 hover:bg-white border-slate-200 text-slate-700 hover:text-slate-900 shadow-xs'}"
-                title="Salin Kode Resi Pengaduan"
-                aria-label="Salin Kode Resi Pengaduan"
-              >
-                {#if copied}
-                  <!-- Checkmark Icon -->
-                  <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span>Tersalin!</span>
-                {:else}
-                  <!-- Copy-Paste Icon -->
-                  <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                  </svg>
-                  <span>Salin Kode</span>
-                {/if}
-              </button>
+              <CopyButton text={createdTicket.ticket_code} label="Salin Kode" size="sm" variant="glass" />
             </div>
-            {#if copied}
-              <div class="text-[11px] text-emerald-700 font-semibold mt-1.5 flex items-center gap-1">
-                <svg class="w-3.5 h-3.5 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span>Kode resi tiket otomatis tersalin ke papan klip (clipboard)!</span>
-              </div>
-            {/if}
+            <div class="text-[11px] text-emerald-700 font-semibold mt-1.5 flex items-center gap-1">
+              <svg class="w-3.5 h-3.5 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>Kode resi tiket otomatis tersalin ke papan klip!</span>
+            </div>
           </div>
           <StatusBadge status={createdTicket.status} size="md" />
         </div>
@@ -331,22 +309,24 @@
         <div class="bg-amber-50 border-l-4 border-[#F08300] p-3 text-[11px] text-slate-700 rounded-r-lg">
           Simpan <strong>Kode Resi Tiket</strong> di atas untuk memantau perkembangan penanganan melalui menu <strong>Lacak Aduan</strong>.
         </div>
-      </div>
+      </GlassCard>
 
       <div class="flex flex-wrap justify-center gap-3 pt-2">
-        <button
+        <Button
           type="button"
+          variant="glass"
+          size="md"
           on:click={resetForm}
-          class="ds-glass hover:bg-white/90 text-slate-800 text-xs font-bold uppercase px-6 py-2.5 rounded-xl border border-white/80 transition ds-press"
         >
-          Kirim Laporan Baru
-        </button>
-        <a
+          <span>Kirim Laporan Baru</span>
+        </Button>
+        <Button
           href={`/lacak?ticket=${encodeURIComponent(createdTicket.ticket_code)}`}
-          class="bg-gradient-to-r from-[#F08300] to-[#e07000] hover:from-[#d97400] hover:to-[#c66500] text-white text-xs font-bold uppercase px-6 py-2.5 rounded-xl transition shadow-glass-gold ds-press"
+          variant="gold"
+          size="md"
         >
-          Lacak Tiket Sekarang &rarr;
-        </a>
+          <span>Lacak Tiket Sekarang &rarr;</span>
+        </Button>
       </div>
     </div>
   {:else}
@@ -580,18 +560,16 @@
 
       <div class="pt-4 border-t border-white/80 flex flex-wrap items-center justify-between gap-3">
         <span class="text-[11px] text-slate-400 font-light">* Wajib diisi secara lengkap untuk keabsahan laporan</span>
-        <button
+        <Button
           type="submit"
-          disabled={isLoading}
-          class="bg-gradient-to-r from-[#F08300] to-[#e07000] hover:from-[#d97400] hover:to-[#c66500] disabled:opacity-50 text-white font-bold text-xs uppercase px-8 py-3.5 rounded-xl transition duration-200 shadow-glass-gold cursor-pointer ds-press"
+          variant="gold"
+          size="lg"
+          loading={isLoading}
+          className="uppercase tracking-wider font-bold px-8 py-3.5"
         >
-          {#if isLoading}
-            Mengirim Laporan...
-          {:else}
-            Terbitkan Laporan &rarr;
-          {/if}
-        </button>
+          <span>{isLoading ? 'Mengirim Laporan...' : 'Terbitkan Laporan \u2192'}</span>
+        </Button>
       </div>
     </form>
   {/if}
-</div>
+</GlassCard>
