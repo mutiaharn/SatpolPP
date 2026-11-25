@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { articlesStore, galleryStore } from '$lib/stores/appState';
   import Lightbox from '$lib/components/ui/Lightbox.svelte';
+  import { Button, GlassCard, Badge } from '$lib/components/ui';
   import { 
     ShieldCheck, 
     ArrowRight, 
@@ -98,20 +99,24 @@
       </p>
 
       <div class="pt-2 flex flex-wrap items-center gap-4">
-        <a
+        <Button
           href="/lapor"
-          class="inline-flex items-center gap-2 bg-gradient-to-r from-[#F08300] to-[#e07000] hover:from-[#d97400] hover:to-[#c66500] text-white font-bold text-xs uppercase px-7 py-3.5 min-h-[44px] rounded-2xl transition duration-200 shadow-glass-gold hover:shadow-xl hover:-translate-y-0.5 transform ds-press ds-specular-top"
+          variant="gold"
+          size="lg"
+          className="uppercase tracking-wider px-7"
         >
           <span>Lapor SIAP TERTIB</span>
           <ArrowRight class="w-4 h-4" />
-        </a>
-        <a 
+        </Button>
+        <Button 
           href="/dokumen" 
-          class="inline-flex items-center gap-2 ds-glass-dark hover:bg-white/15 text-white font-bold text-xs uppercase px-7 py-3.5 min-h-[44px] rounded-2xl border border-white/25 transition duration-200 hover:-translate-y-0.5 transform ds-press"
+          variant="glass"
+          size="lg"
+          className="uppercase tracking-wider px-7 border-white/25 text-white hover:bg-white/15"
         >
           <FileText class="w-4 h-4 text-slate-300" />
           <span>Dokumen Publik</span>
-        </a>
+        </Button>
       </div>
     </div>
   </div>
@@ -160,18 +165,20 @@
       </p>
     </div>
 
-    <a
+    <Button
       href="/berita"
-      class="inline-flex items-center gap-2 text-xs font-bold text-[#F08300] hover:text-[#d97400] uppercase tracking-wider py-2.5 px-4 rounded-xl ds-glass border border-orange-200/80 hover:bg-orange-50/80 transition duration-200 group shrink-0 ds-press"
+      variant="secondary"
+      size="sm"
+      className="uppercase tracking-wider shrink-0 text-[#F08300] hover:text-[#d97400] border-orange-200/80 hover:bg-orange-50/80"
     >
       <span>Lihat Semua Berita</span>
-      <ChevronRight class="w-4 h-4 text-[#F08300] group-hover:translate-x-1 transition-transform" />
-    </a>
+      <ChevronRight class="w-4 h-4 text-[#F08300]" />
+    </Button>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
     {#each $articlesStore.slice(0, 3) as item}
-      <article class="ds-glass-card rounded-2xl overflow-hidden flex flex-col justify-between h-full group">
+      <GlassCard hoverLift padding="none" className="h-full flex flex-col justify-between group overflow-hidden">
         <div>
           <div class="relative h-52 bg-slate-100 overflow-hidden">
             <img
@@ -208,7 +215,7 @@
             <span>2 mnt</span>
           </span>
         </div>
-      </article>
+      </GlassCard>
     {/each}
   </div>
 </section>
@@ -273,19 +280,23 @@
 
       <!-- CTA Buttons (Apple HIG Ergonomics) -->
       <div class="pt-2 flex flex-wrap items-center gap-3.5">
-        <a 
+        <Button 
           href="/profil/visi-misi" 
-          class="inline-flex items-center gap-2 bg-[#070e1c] hover:bg-slate-800 text-white text-xs font-bold uppercase px-6 py-3.5 min-h-[44px] rounded-2xl transition duration-200 shadow-glass-azure hover:-translate-y-0.5 ds-press ds-specular-top"
+          variant="primary"
+          size="lg"
+          className="uppercase tracking-wider px-6"
         >
           <span>Visi &amp; Misi Instansi</span>
           <ArrowRight class="w-4 h-4 text-[#F08300]" />
-        </a>
-        <a 
+        </Button>
+        <Button 
           href="/profil/struktur" 
-          class="inline-flex items-center gap-2 ds-glass hover:bg-white/90 text-slate-700 text-xs font-bold uppercase px-6 py-3.5 min-h-[44px] rounded-2xl border border-white/90 transition duration-200 ds-press"
+          variant="secondary"
+          size="lg"
+          className="uppercase tracking-wider px-6"
         >
           <span>Struktur Kelembagaan</span>
-        </a>
+        </Button>
       </div>
     </div>
   </div>
@@ -307,21 +318,23 @@
       </p>
     </div>
 
-    <a
+    <Button
       href="/dokumen"
-      class="inline-flex items-center gap-2 text-xs font-bold text-[#F08300] hover:text-[#d97400] uppercase tracking-wider py-2.5 px-4 rounded-xl ds-glass border border-orange-200/80 hover:bg-orange-50/80 transition duration-200 group shrink-0 ds-press"
+      variant="secondary"
+      size="sm"
+      className="uppercase tracking-wider shrink-0 text-[#F08300] hover:text-[#d97400] border-orange-200/80 hover:bg-orange-50/80"
     >
       <span>Lihat Arsip Dokumen</span>
-      <ChevronRight class="w-4 h-4 text-[#F08300] group-hover:translate-x-1 transition-transform" />
-    </a>
+      <ChevronRight class="w-4 h-4 text-[#F08300]" />
+    </Button>
   </div>
 
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
     <!-- Renja -->
-    <div class="ds-glass-card rounded-2xl p-6 flex flex-col justify-between h-full border border-white/80 group">
+    <GlassCard hoverLift className="flex flex-col justify-between h-full group">
       <div>
         <div class="flex items-center justify-between mb-3">
-          <span class="text-[10px] font-bold text-[#246bfd] uppercase tracking-wider bg-blue-50/90 px-2.5 py-1 rounded-md border border-blue-100">Perencanaan</span>
+          <Badge variant="blue" size="sm">Perencanaan</Badge>
           <FileText class="w-4 h-4 text-slate-400 group-hover:text-[#246bfd] transition duration-200" />
         </div>
         <h3 class="font-bold text-base text-[#071936] group-hover:text-[#246bfd] transition duration-200">Renja (Rencana Kerja)</h3>
@@ -334,13 +347,13 @@
         </a>
         <span class="text-[11px] text-slate-400 font-mono">PDF Resmi</span>
       </div>
-    </div>
+    </GlassCard>
 
     <!-- Renstra -->
-    <div class="ds-glass-card rounded-2xl p-6 flex flex-col justify-between h-full border border-white/80 group">
+    <GlassCard hoverLift className="flex flex-col justify-between h-full group">
       <div>
         <div class="flex items-center justify-between mb-3">
-          <span class="text-[10px] font-bold text-[#246bfd] uppercase tracking-wider bg-blue-50/90 px-2.5 py-1 rounded-md border border-blue-100">Strategis</span>
+          <Badge variant="blue" size="sm">Strategis</Badge>
           <FileText class="w-4 h-4 text-slate-400 group-hover:text-[#246bfd] transition duration-200" />
         </div>
         <h3 class="font-bold text-base text-[#071936] group-hover:text-[#246bfd] transition duration-200">Renstra (Rencana Strategis)</h3>
@@ -353,13 +366,13 @@
         </a>
         <span class="text-[11px] text-slate-400 font-mono">PDF Resmi</span>
       </div>
-    </div>
+    </GlassCard>
 
     <!-- DPA -->
-    <div class="ds-glass-card rounded-2xl p-6 flex flex-col justify-between h-full border border-white/80 group">
+    <GlassCard hoverLift className="flex flex-col justify-between h-full group">
       <div>
         <div class="flex items-center justify-between mb-3">
-          <span class="text-[10px] font-bold text-[#F08300] uppercase tracking-wider bg-orange-50/90 px-2.5 py-1 rounded-md border border-orange-100">Penganggaran</span>
+          <Badge variant="gold" size="sm">Penganggaran</Badge>
           <FileText class="w-4 h-4 text-slate-400 group-hover:text-[#F08300] transition duration-200" />
         </div>
         <h3 class="font-bold text-base text-[#071936] group-hover:text-[#F08300] transition duration-200">DPA (Pelaksanaan Anggaran)</h3>
@@ -372,13 +385,13 @@
         </a>
         <span class="text-[11px] text-slate-400 font-mono">PDF Resmi</span>
       </div>
-    </div>
+    </GlassCard>
 
     <!-- LAKIP -->
-    <div class="ds-glass-card rounded-2xl p-6 flex flex-col justify-between h-full border border-white/80 group">
+    <GlassCard hoverLift className="flex flex-col justify-between h-full group">
       <div>
         <div class="flex items-center justify-between mb-3">
-          <span class="text-[10px] font-bold text-emerald-600 uppercase tracking-wider bg-emerald-50/90 px-2.5 py-1 rounded-md border border-emerald-100">Kinerja</span>
+          <Badge variant="green" size="sm">Kinerja</Badge>
           <FileText class="w-4 h-4 text-slate-400 group-hover:text-emerald-600 transition duration-200" />
         </div>
         <h3 class="font-bold text-base text-[#071936] group-hover:text-emerald-600 transition duration-200">LAKIP / LKjIP</h3>
@@ -391,13 +404,13 @@
         </a>
         <span class="text-[11px] text-slate-400 font-mono">PDF Resmi</span>
       </div>
-    </div>
+    </GlassCard>
 
     <!-- Laporan Keuangan -->
-    <div class="ds-glass-card rounded-2xl p-6 flex flex-col justify-between h-full border border-white/80 group">
+    <GlassCard hoverLift className="flex flex-col justify-between h-full group">
       <div>
         <div class="flex items-center justify-between mb-3">
-          <span class="text-[10px] font-bold text-purple-600 uppercase tracking-wider bg-purple-50/90 px-2.5 py-1 rounded-md border border-purple-100">Pertanggungjawaban</span>
+          <Badge variant="purple" size="sm">Pertanggungjawaban</Badge>
           <FileText class="w-4 h-4 text-slate-400 group-hover:text-purple-600 transition duration-200" />
         </div>
         <h3 class="font-bold text-base text-[#071936] group-hover:text-purple-600 transition duration-200">Laporan Keuangan</h3>
@@ -410,13 +423,13 @@
         </a>
         <span class="text-[11px] text-slate-400 font-mono">PDF Resmi</span>
       </div>
-    </div>
+    </GlassCard>
 
     <!-- Perda & SOP -->
-    <div class="ds-glass-card rounded-2xl p-6 flex flex-col justify-between h-full border border-white/80 group">
+    <GlassCard hoverLift className="flex flex-col justify-between h-full group">
       <div>
         <div class="flex items-center justify-between mb-3">
-          <span class="text-[10px] font-bold text-[#F08300] uppercase tracking-wider bg-orange-50/90 px-2.5 py-1 rounded-md border border-orange-100">Regulasi</span>
+          <Badge variant="gold" size="sm">Regulasi</Badge>
           <FileText class="w-4 h-4 text-slate-400 group-hover:text-[#F08300] transition duration-200" />
         </div>
         <h3 class="font-bold text-base text-[#071936] group-hover:text-[#F08300] transition duration-200">Perda &amp; SOP Satpol PP</h3>
@@ -429,7 +442,7 @@
         </a>
         <span class="text-[11px] text-slate-400 font-mono">PDF Resmi</span>
       </div>
-    </div>
+    </GlassCard>
   </div>
 </section>
 
@@ -446,13 +459,15 @@
       </h2>
     </div>
 
-    <a
+    <Button
       href="/galeri"
-      class="inline-flex items-center gap-2 text-xs font-bold text-[#F08300] hover:text-[#d97400] uppercase tracking-wider py-2.5 px-4 rounded-xl ds-glass border border-orange-200/80 hover:bg-orange-50/80 transition duration-200 group shrink-0 ds-press"
+      variant="secondary"
+      size="sm"
+      className="uppercase tracking-wider shrink-0 text-[#F08300] hover:text-[#d97400] border-orange-200/80 hover:bg-orange-50/80"
     >
       <span>Lihat Semua Foto</span>
-      <ChevronRight class="w-4 h-4 text-[#F08300] group-hover:translate-x-1 transition-transform" />
-    </a>
+      <ChevronRight class="w-4 h-4 text-[#F08300]" />
+    </Button>
   </div>
 
   <div class="grid grid-cols-2 md:grid-cols-4 gap-4">

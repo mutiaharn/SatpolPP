@@ -1,6 +1,7 @@
 <script lang="ts">
   import { articlesStore } from '$lib/stores/appState';
   import type { Article } from '$lib/types';
+  import { GlassCard, Badge } from '$lib/components/ui';
   import { ChevronRight, Newspaper } from 'lucide-svelte';
 
   let selectedCategory = '';
@@ -132,7 +133,7 @@
   {#if paginatedArticles.length > 0}
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       {#each paginatedArticles as article}
-        <article class="ds-glass-card border border-white/80 rounded-2xl overflow-hidden flex flex-col justify-between h-full group">
+        <GlassCard hoverLift padding="none" className="h-full flex flex-col justify-between group overflow-hidden">
           <div>
             <div class="relative h-48 overflow-hidden bg-slate-100">
               <img 
@@ -142,9 +143,11 @@
                 loading="lazy"
                 onerror="this.src='/uploads/foto_berita/1768182343WhatsApp Image 2026-01-12 at 08.08.43.jpeg'"
               />
-              <span class="absolute top-3 left-3 ds-glass-dark text-[#F08300] font-bold text-[10px] uppercase px-3 py-1 tracking-wider border border-white/20 rounded-lg shadow-xs">
-                {article.category}
-              </span>
+              <div class="absolute top-3 left-3">
+                <Badge variant="gold" size="sm">
+                  {article.category}
+                </Badge>
+              </div>
             </div>
 
             <div class="p-5">
@@ -173,7 +176,7 @@
               Baca Lengkap &rarr;
             </a>
           </div>
-        </article>
+        </GlassCard>
       {/each}
     </div>
 

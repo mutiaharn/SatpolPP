@@ -31,8 +31,24 @@
 
     /* Apple HIG Ergonomics & Motion Physics */
     --ds-ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
-    --ds-ease-spring: cubic-bezier(0.2, 0.9, 0.3, 1);
+    --ds-ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
     --ds-hit-target: 44px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+    .ds-press:active,
+    .ds-hover-lift:active,
+    .ds-glass-card:hover {
+      transform: none !important;
+    }
   }
 
   html {

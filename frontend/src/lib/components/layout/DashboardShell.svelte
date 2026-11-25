@@ -139,7 +139,7 @@
           on:click={() => selectTab(item.id)}
           title={collapsed ? item.label : undefined}
           aria-current={activeTab === item.id ? 'page' : undefined}
-          class="relative w-full flex items-center {collapsed ? 'justify-center px-2' : 'justify-between px-3.5'} py-2.5 rounded-xl text-xs font-bold transition {activeTab === item.id ? 'bg-[#246bfd] text-white shadow-glass-azure' : 'text-slate-300 hover:bg-white/10 hover:text-white'}"
+          class="relative w-full flex items-center {collapsed ? 'justify-center px-2' : 'justify-between px-3.5'} py-2.5 min-h-[40px] rounded-xl text-xs font-bold transition ds-press {activeTab === item.id ? 'bg-[#246bfd] text-white shadow-glass-azure ds-specular-top' : 'text-slate-300 hover:bg-white/10 hover:text-white'}"
         >
           <span class="flex items-center gap-3 min-w-0">
             <svelte:component this={item.icon} class="w-4 h-4 shrink-0" />
@@ -192,7 +192,7 @@
         <a
           href="/"
           title="Lihat Portal Publik"
-          class="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold text-slate-300 bg-white/5 hover:bg-white/10 hover:text-white transition"
+          class="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 min-h-[38px] rounded-xl text-[11px] font-bold text-slate-300 bg-white/5 hover:bg-white/10 hover:text-white transition ds-press"
         >
           <ExternalLink class="w-3.5 h-3.5 shrink-0" />
           {#if !collapsed}<span>Portal</span>{/if}
@@ -201,7 +201,7 @@
           type="button"
           on:click={handleLogout}
           title="Keluar Sesi"
-          class="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold text-red-200 bg-red-950/50 hover:bg-red-700 hover:text-white transition"
+          class="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 min-h-[38px] rounded-xl text-[11px] font-bold text-red-200 bg-red-950/50 hover:bg-red-700 hover:text-white transition ds-press"
         >
           <LogOut class="w-3.5 h-3.5 shrink-0" />
           {#if !collapsed}<span>Keluar</span>{/if}
@@ -219,7 +219,7 @@
     on:close={() => (mobileOpen = false)}
     on:click={handleDialogBackdropClick}
     aria-label="Menu navigasi dashboard"
-    class="m-0 p-0 h-dvh max-h-dvh w-72 max-w-[85vw] bg-[#070e1c] text-slate-200 border-r border-white/10 backdrop:bg-slate-900/60 lg:hidden"
+    class="m-0 p-0 h-dvh max-h-dvh w-72 max-w-[85vw] bg-[#070e1c] text-slate-200 border-r border-white/10 backdrop:bg-slate-900/60 lg:hidden rounded-r-3xl overflow-hidden shadow-2xl"
   >
     <div class="h-full flex flex-col">
       <div class="h-16 px-4 border-b border-white/10 bg-[#0b172a] flex items-center justify-between gap-2 shrink-0">
@@ -236,7 +236,7 @@
           autofocus
           on:click={() => (mobileOpen = false)}
           aria-label="Tutup menu"
-          class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/10"
+          class="p-2 min-w-[40px] min-h-[40px] flex items-center justify-center rounded-xl text-slate-400 hover:text-white hover:bg-white/10 ds-press"
         >
           <X class="w-4 h-4" />
         </button>
@@ -247,7 +247,7 @@
           <button
             type="button"
             on:click={() => selectTab(item.id)}
-            class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition {activeTab === item.id ? 'bg-[#246bfd] text-white shadow-glass-azure' : 'text-slate-300 hover:bg-white/10 hover:text-white'}"
+            class="w-full flex items-center justify-between px-3.5 py-2.5 min-h-[44px] rounded-xl text-xs font-bold transition ds-press {activeTab === item.id ? 'bg-[#246bfd] text-white shadow-glass-azure ds-specular-top' : 'text-slate-300 hover:bg-white/10 hover:text-white'}"
           >
             <span class="flex items-center gap-3 min-w-0">
               <svelte:component this={item.icon} class="w-4 h-4 shrink-0" />
@@ -261,7 +261,7 @@
         {#if quickSwitchHref && quickSwitchLabel}
           <a
             href={quickSwitchHref}
-            class="mt-3 w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold text-[#F08300] bg-white/5 hover:bg-white/10"
+            class="mt-3 w-full flex items-center gap-3 px-3.5 py-2.5 min-h-[44px] rounded-xl text-xs font-bold text-[#F08300] bg-white/5 hover:bg-white/10 ds-press"
           >
             <ExternalLink class="w-4 h-4 shrink-0" />
             <span>{quickSwitchLabel}</span>

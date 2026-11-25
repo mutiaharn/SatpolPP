@@ -1,5 +1,6 @@
 <script lang="ts">
   import { ChevronRight, Phone, Mail, MapPin, Clock, Send, ShieldAlert, CheckCircle2 } from 'lucide-svelte';
+  import { Button, Input } from '$lib/components/ui';
 
   let senderName = '';
   let senderEmail = '';
@@ -127,41 +128,61 @@
 
         <form on:submit|preventDefault={handleSubmit} class="space-y-4">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label for="contact-name" class="block text-xs font-bold uppercase text-slate-800 mb-1.5">Nama Lengkap</label>
-              <input id="contact-name" type="text" bind:value={senderName} required class="w-full ds-glass-input p-2.5 text-xs text-slate-900 focus:outline-none rounded-xl" placeholder="Nama Anda" />
-            </div>
-            <div>
-              <label for="contact-email" class="block text-xs font-bold uppercase text-slate-800 mb-1.5">Email Anda</label>
-              <input id="contact-email" type="email" bind:value={senderEmail} required class="w-full ds-glass-input p-2.5 text-xs text-slate-900 focus:outline-none rounded-xl" placeholder="nama@email.com" />
-            </div>
+            <Input
+              id="contact-name"
+              label="Nama Lengkap"
+              bind:value={senderName}
+              required
+              placeholder="Nama Anda"
+            />
+            <Input
+              id="contact-email"
+              type="email"
+              label="Email Anda"
+              bind:value={senderEmail}
+              required
+              placeholder="nama@email.com"
+            />
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label for="contact-phone" class="block text-xs font-bold uppercase text-slate-800 mb-1.5">Nomor Telepon / WhatsApp</label>
-              <input id="contact-phone" type="tel" bind:value={senderPhone} class="w-full ds-glass-input p-2.5 text-xs text-slate-900 focus:outline-none rounded-xl" placeholder="08xxxxxxxxxx" />
-            </div>
-            <div>
-              <label for="contact-subject" class="block text-xs font-bold uppercase text-slate-800 mb-1.5">Perihal Pesan</label>
-              <input id="contact-subject" type="text" bind:value={subject} placeholder="Contoh: Koordinasi Penertiban Wilayah" class="w-full ds-glass-input p-2.5 text-xs text-slate-900 focus:outline-none rounded-xl" />
-            </div>
+            <Input
+              id="contact-phone"
+              type="tel"
+              label="Nomor Telepon / WhatsApp"
+              bind:value={senderPhone}
+              placeholder="08xxxxxxxxxx"
+            />
+            <Input
+              id="contact-subject"
+              label="Perihal Pesan"
+              bind:value={subject}
+              placeholder="Contoh: Koordinasi Penertiban Wilayah"
+            />
           </div>
 
-          <div>
-            <label for="contact-message" class="block text-xs font-bold uppercase text-slate-800 mb-1.5">Isi Pesan / Keterangan Lengkap</label>
-            <textarea id="contact-message" bind:value={message} rows="4" required class="w-full ds-glass-input p-2.5 text-xs text-slate-900 focus:outline-none rounded-xl" placeholder="Tuliskan keterangan lengkap atau permohonan koordinasi..."></textarea>
-          </div>
+          <Input
+            id="contact-message"
+            multiline
+            rows={4}
+            label="Isi Pesan / Keterangan Lengkap"
+            bind:value={message}
+            required
+            placeholder="Tuliskan keterangan lengkap atau permohonan koordinasi..."
+          />
 
           <div class="flex justify-end pt-2">
-            <button
+            <Button
               type="submit"
+              loading={isSending}
               disabled={isSending}
-              class="inline-flex items-center gap-2 bg-gradient-to-r from-[#F08300] to-[#e07000] hover:from-[#d97400] hover:to-[#c66500] text-white font-bold text-xs uppercase px-6 py-2.5 rounded-xl transition duration-200 shadow-glass-gold disabled:opacity-50 ds-press"
+              variant="gold"
+              size="md"
+              className="uppercase tracking-wider px-6 font-bold"
             >
               <Send class="w-3.5 h-3.5" />
-              <span>{#if isSending}Mengirimkan...{:else}Kirim Pesan Resmi{/if}</span>
-            </button>
+              <span>{isSending ? 'Mengirimkan...' : 'Kirim Pesan Resmi'}</span>
+            </Button>
           </div>
         </form>
       </div>

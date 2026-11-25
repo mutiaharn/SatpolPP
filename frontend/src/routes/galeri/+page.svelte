@@ -2,6 +2,7 @@
   import { galleryStore } from '$lib/stores/appState';
   import type { GalleryItem } from '$lib/types';
   import Lightbox from '$lib/components/ui/Lightbox.svelte';
+  import { Badge } from '$lib/components/ui';
   import { Camera, ChevronRight, Image as ImageIcon, ZoomIn } from 'lucide-svelte';
 
   let selectedCategory = '';
@@ -82,9 +83,11 @@
               class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
               loading="lazy"
             />
-            <span class="absolute top-3 left-3 ds-glass-dark text-[#F08300] font-bold text-[10px] uppercase px-3 py-1 tracking-wider border border-white/20 rounded-lg shadow-xs">
-              {item.category}
-            </span>
+            <div class="absolute top-3 left-3">
+              <Badge variant="gold" size="sm">
+                {item.category}
+              </Badge>
+            </div>
 
             <!-- Zoom overlay icon indicator -->
             <div class="absolute inset-0 bg-[#070e1c]/35 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-xs">

@@ -4,6 +4,7 @@
   import type { PublicDocument } from '$lib/types';
   import DataTable from '$lib/components/ui/DataTable.svelte';
   import Modal from '$lib/components/ui/Modal.svelte';
+  import { Button, Badge } from '$lib/components/ui';
   import { ChevronRight, FileText } from 'lucide-svelte';
 
   let selectedCategory = '';
@@ -119,36 +120,38 @@
         </td>
         <td class="p-4 text-slate-500 font-mono text-xs">{item.doc_number || '-'}</td>
         <td class="p-4">
-          <span class="bg-slate-100 text-slate-700 font-bold text-[10px] uppercase px-2.5 py-1 rounded-lg border border-slate-200">
+          <Badge variant="default" size="sm">
             {item.category}
-          </span>
+          </Badge>
         </td>
         <td class="p-4 text-center text-slate-900 font-semibold">{item.year}</td>
         <td class="p-4 text-right">
           <div class="inline-flex items-center gap-2 justify-end">
             <!-- Modal Detail Trigger -->
-            <button
-              type="button"
+            <Button
+              variant="secondary"
+              size="xs"
+              className="uppercase tracking-wider font-bold"
               on:click={() => openDocDetail(item)}
-              class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] uppercase px-3 py-1.5 rounded-xl transition"
-              title="Pratinjau Rincian"
             >
               Detail
-            </button>
+            </Button>
 
             <!-- Direct Download Button -->
-            <a 
+            <Button 
               href={item.file_url} 
               target="_blank" 
               rel="noreferrer"
               download={item.title}
-              class="bg-[#0b172a] hover:bg-[#1e3a5f] text-white font-bold text-[11px] uppercase px-3 py-1.5 rounded-xl transition inline-flex items-center gap-1 shadow-xs"
+              variant="primary"
+              size="xs"
+              className="uppercase tracking-wider font-bold inline-flex items-center gap-1 shadow-xs"
             >
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
               </svg>
               <span>Unduh</span>
-            </a>
+            </Button>
           </div>
         </td>
       </tr>
@@ -205,29 +208,32 @@
           </div>
         </div>
 
-        <a
+        <Button
           href={selectedDoc.file_url}
           target="_blank"
           rel="noreferrer"
           download={selectedDoc.title}
-          class="bg-[#F08300] hover:bg-[#d97400] text-white font-bold text-xs uppercase px-4 py-2.5 rounded-xl transition inline-flex items-center gap-1.5 shadow-xs"
+          variant="gold"
+          size="md"
+          className="uppercase tracking-wider font-bold inline-flex items-center gap-1.5 shadow-xs"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
           </svg>
           <span>Unduh Berkas</span>
-        </a>
+        </Button>
       </div>
     </div>
   {/if}
 
   <svelte:fragment slot="footer" let:handleClose>
-    <button
-      type="button"
+    <Button
+      variant="secondary"
+      size="sm"
+      className="font-semibold"
       on:click={handleClose}
-      class="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 rounded-xl transition"
     >
       Tutup
-    </button>
+    </Button>
   </svelte:fragment>
 </Modal>
