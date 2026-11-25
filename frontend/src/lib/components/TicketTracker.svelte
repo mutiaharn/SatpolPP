@@ -36,6 +36,35 @@
   }
 
   $: evidenceUrl = complaintData?.evidence_image_url || complaintData?.evidence_photos || '';
+
+  let copied = false;
+  let copyTimeout: ReturnType<typeof setTimeout> | null = null;
+
+  async function copyToClipboard(text: string) {
+    if (!text || typeof window === 'undefined') return;
+    try {
+      if (navigator?.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.style.position = 'fixed';
+        textArea.style.opacity = '0';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+      }
+      copied = true;
+      if (copyTimeout) clearTimeout(copyTimeout);
+      copyTimeout = setTimeout(() => {
+        copied = false;
+      }, 3000);
+    } catch (e) {
+      console.warn('Gagal menyalin ke clipboard:', e);
+    }
+  }
 </script>
 
 <div class="ds-glass-strong border border-white/90 rounded-3xl p-4 sm:p-6 shadow-glass ds-specular-top">
@@ -86,7 +115,28 @@
       <div class="flex flex-wrap items-center justify-between gap-3 border-b border-white/80 pb-4">
         <div>
           <div class="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">Nomor Resi Tiket</div>
-          <div class="text-xl font-bold text-slate-900 font-mono">{complaintData.ticket_code}</div>
+          <div class="flex items-center gap-2 mt-0.5">
+            <span class="text-xl font-bold text-slate-900 font-mono select-all">{complaintData.ticket_code}</span>
+            <button
+              type="button"
+              on:click={() => copyToClipboard(complaintData?.ticket_code || '')}
+              class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold transition ds-press border {copied ? 'bg-emerald-50 border-emerald-300 text-emerald-700 shadow-xs' : 'bg-white/80 hover:bg-white border-slate-200 text-slate-700 hover:text-slate-900 shadow-xs'}"
+              title="Salin Nomor Resi Tiket"
+              aria-label="Salin Nomor Resi Tiket"
+            >
+              {#if copied}
+                <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="text-[11px] font-bold">Tersalin!</span>
+              {:else}
+                <svg class="w-3.5 h-3.5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+                <span class="text-[11px]">Salin</span>
+              {/if}
+            </button>
+          </div>
         </div>
         <StatusBadge status={complaintData.status} size="md" />
       </div>

@@ -307,7 +307,7 @@ export const defaultUsers: User[] = [
     name: 'Petugas Piket Bidang Trantibum',
     username: 'stafftrantibum',
     email: 'trantibum@sulselprov.go.id',
-    role: 'STAFF_SATPOL',
+    role: 'ADMIN_SATPOL',
     bidang: 'Bidang Ketenteraman dan Ketertiban Umum',
     is_active: true
   },
@@ -316,7 +316,7 @@ export const defaultUsers: User[] = [
     name: 'Penyidik PNS Bidang Penegakan Perda',
     username: 'staffperda',
     email: 'penegakanperda@sulselprov.go.id',
-    role: 'STAFF_SATPOL',
+    role: 'ADMIN_SATPOL',
     bidang: 'Bidang Penegakan Peraturan Daerah',
     is_active: true
   }

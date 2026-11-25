@@ -1,4 +1,4 @@
-﻿<script lang="ts">
+<script lang="ts">
   import { onMount } from 'svelte';
   import {
     Users,
@@ -68,7 +68,7 @@
   const tabMeta: Record<SuperTab, { title: string; desc: string }> = {
     users: {
       title: 'Manajemen Pengguna & Hak Akses (RBAC)',
-      desc: 'Kelola akun Superadmin, Kasatpol, dan Staf Bidang termasuk aktivasi dan pengaturan peran.'
+      desc: 'Kelola akun Superadmin Diskominfo dan Admin Petugas Satpol PP termasuk aktivasi dan pengaturan peran.'
     },
     organization: {
       title: 'Manajemen Struktur Organisasi (SOTK)',
@@ -104,7 +104,7 @@
   let formName = '';
   let formUsername = '';
   let formEmail = '';
-  let formRole: UserRole = 'STAFF_SATPOL';
+  let formRole: UserRole = 'ADMIN_SATPOL';
   let formBidang = 'Bidang Ketenteraman dan Ketertiban Umum';
   let formPassword = '';
   let formActive = true;
@@ -119,7 +119,7 @@
     formName = '';
     formUsername = '';
     formEmail = '';
-    formRole = 'STAFF_SATPOL';
+    formRole = 'ADMIN_SATPOL';
     formBidang = $organizationStore[1]?.position_title || 'Bidang Ketenteraman dan Ketertiban Umum';
     formPassword = '';
     formActive = true;
@@ -253,8 +253,12 @@
 
   function roleBadgeStyle(role: UserRole) {
     if (role === 'SUPERADMIN_DISKOMINFO') return 'bg-[#0b172a] text-[#F08300] border-slate-700';
-    if (role === 'ADMIN_SATPOL') return 'bg-orange-50 text-orange-900 border-orange-200';
-    return 'bg-slate-100 text-slate-700 border-slate-200';
+    return 'bg-blue-50 text-blue-900 border-blue-200';
+  }
+
+  function roleLabelDisplay(role: UserRole) {
+    if (role === 'SUPERADMIN_DISKOMINFO') return 'Superadmin';
+    return 'Admin Petugas';
   }
 </script>
 
@@ -363,7 +367,7 @@
         <td class="px-4 py-3.5 align-top font-mono text-xs font-bold text-slate-700">@{item.username}</td>
         <td class="px-4 py-3.5 align-top">
           <span class="inline-block px-2.5 py-1 rounded-lg border text-[10px] font-bold uppercase {roleBadgeStyle(item.role)}">
-            {item.role}
+            {roleLabelDisplay(item.role)}
           </span>
         </td>
         <td class="px-4 py-3.5 align-top text-xs text-slate-700">{item.bidang || '-'}</td>
@@ -617,9 +621,8 @@
       <div>
         <label for="user-role" class="block text-xs font-bold text-slate-900 mb-1">Tingkat Akses (Role)</label>
         <select id="user-role" bind:value={formRole} class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white font-bold">
-          <option value="STAFF_SATPOL">STAFF SATPOL PP (Verifikator &amp; Humas)</option>
-          <option value="ADMIN_SATPOL">ADMIN SATPOL (Pimpinan / Kasatpol)</option>
-          <option value="SUPERADMIN_DISKOMINFO">SUPERADMIN DISKOMINFO</option>
+          <option value="ADMIN_SATPOL">Admin Petugas Satpol PP (Operasional &amp; CMS)</option>
+          <option value="SUPERADMIN_DISKOMINFO">Superadmin Diskominfo-SP (Pengelola Sistem)</option>
         </select>
       </div>
     </div>
