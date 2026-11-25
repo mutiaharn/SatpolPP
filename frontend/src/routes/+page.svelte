@@ -121,16 +121,16 @@
     </div>
   </div>
 
-  <!-- Scroll Down Indicator (Apple HIG Frosted Liquid Glass Capsule) -->
-  <a
-    href="#berita-terbaru"
-    on:click={(e) => { e.preventDefault(); scrollToTarget('berita-terbaru'); }}
-    class="hidden md:inline-flex items-center gap-2.5 absolute bottom-8 left-1/2 -translate-x-1/2 z-30 px-5 py-2.5 rounded-full bg-slate-900/65 hover:bg-slate-900/85 backdrop-blur-xl border border-white/20 hover:border-[#F08300]/50 text-white hover:text-[#F08300] shadow-[0_8px_24px_rgba(0,0,0,0.3)] transition-all duration-200 select-none cursor-pointer ds-press focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F08300] focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+  <!-- Scroll Down Indicator (Apple HIG Frosted Liquid Glass Capsule - Zero Dodge Stable Centering) -->
+  <button
+    type="button"
+    on:click={() => scrollToTarget('berita-terbaru')}
+    class="hidden md:inline-flex items-center gap-2.5 absolute bottom-8 left-0 right-0 mx-auto w-max z-30 px-5 py-2.5 rounded-full bg-slate-900/75 hover:bg-slate-900/90 active:scale-[0.97] backdrop-blur-xl border border-white/20 hover:border-[#F08300]/50 text-white hover:text-[#F08300] shadow-[0_8px_24px_rgba(0,0,0,0.3)] transition-all duration-200 select-none cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F08300] focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 group"
     aria-label="Jelajahi Portal - Gulir ke konten berita"
   >
-    <span class="text-xs font-bold tracking-wider uppercase text-white/95">Jelajahi Portal</span>
-    <ChevronDown class="w-4 h-4 text-[#F08300] animate-bounce shrink-0" />
-  </a>
+    <span class="text-xs font-bold tracking-wider uppercase text-white/95 group-hover:text-[#F08300] transition-colors">Jelajahi Portal</span>
+    <ChevronDown class="w-4 h-4 text-[#F08300] group-hover:translate-y-0.5 transition-transform duration-200 shrink-0" />
+  </button>
 
   <!-- Slide Navigation Indicators (Frosted Glass Dock - Apple HIG Ergonomic Touch Targets) -->
   <div class="absolute bottom-8 right-8 z-30 flex items-center gap-1 ds-glass-dark border border-white/20 p-1.5 rounded-full shadow-lg">
