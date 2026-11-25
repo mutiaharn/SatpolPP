@@ -75,7 +75,7 @@
         {maxlength}
         aria-invalid={error ? 'true' : undefined}
         aria-describedby={describedBy}
-        class="w-full px-3.5 py-2.5 text-sm bg-white/80 border rounded-2xl transition-all duration-150 backdrop-blur-md placeholder:text-slate-400 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/25 focus:border-blue-500 disabled:opacity-50 disabled:bg-slate-50 disabled:cursor-not-allowed resize-y {error
+        class="w-full px-3.5 py-2.5 text-base sm:text-sm bg-white/80 border rounded-2xl transition-all duration-150 backdrop-blur-md placeholder:text-slate-400 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/25 focus:border-blue-500 disabled:opacity-50 disabled:bg-slate-50 disabled:cursor-not-allowed resize-y {error
           ? 'border-rose-400 bg-rose-50/40 text-rose-900 focus:border-rose-500 focus:ring-rose-500/20'
           : 'border-slate-200/90 hover:border-slate-300'} {$$slots.iconLeading ? 'pl-10' : ''}"
         bind:value
@@ -99,7 +99,7 @@
         {autocomplete}
         aria-invalid={error ? 'true' : undefined}
         aria-describedby={describedBy}
-        class="w-full px-3.5 py-2.5 text-sm bg-white/80 border rounded-2xl transition-all duration-150 backdrop-blur-md placeholder:text-slate-400 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/25 focus:border-blue-500 disabled:opacity-50 disabled:bg-slate-50 disabled:cursor-not-allowed {error
+        class="w-full px-3.5 py-2.5 min-h-[44px] text-base sm:text-sm bg-white/80 border rounded-2xl transition-all duration-150 backdrop-blur-md placeholder:text-slate-400 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/25 focus:border-blue-500 disabled:opacity-50 disabled:bg-slate-50 disabled:cursor-not-allowed {error
           ? 'border-rose-400 bg-rose-50/40 text-rose-900 focus:border-rose-500 focus:ring-rose-500/20'
           : 'border-slate-200/90 hover:border-slate-300'} {$$slots.iconLeading ? 'pl-10' : ''} {type === 'password' || $$slots.iconTrailing ? 'pr-10' : ''}"
         value={value}

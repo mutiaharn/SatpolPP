@@ -15,7 +15,7 @@
   const sizeClasses: Record<typeof size, string> = {
     xs: 'w-7 h-7 rounded-lg p-1',
     sm: 'w-8 h-8 rounded-xl p-1.5',
-    md: 'w-9 h-9 rounded-xl p-2',
+    md: 'w-10 h-10 rounded-xl p-2',
     lg: 'w-11 h-11 rounded-2xl p-2.5'
   };
 

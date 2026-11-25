@@ -43,9 +43,9 @@
   });
 
   const sizeClasses: Record<typeof size, string> = {
-    xs: 'px-2 py-1 text-[11px] gap-1 rounded-lg',
-    sm: 'px-2.5 py-1.5 text-xs gap-1.5 rounded-xl',
-    md: 'px-3.5 py-2 text-sm gap-2 rounded-xl'
+    xs: 'px-2 py-1 text-[11px] gap-1 rounded-lg min-h-[28px]',
+    sm: 'px-2.5 py-1.5 text-xs gap-1.5 rounded-xl min-h-[34px]',
+    md: 'px-3.5 py-2 text-sm gap-2 rounded-xl min-h-[40px]'
   };
 
   const variantClasses: Record<typeof variant, string> = {

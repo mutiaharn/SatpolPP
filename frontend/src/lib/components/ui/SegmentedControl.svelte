@@ -30,9 +30,9 @@
   };
 
   const itemSizes: Record<typeof size, string> = {
-    sm: 'py-1 px-2.5 rounded-lg',
-    md: 'py-2 px-3 rounded-xl',
-    lg: 'py-2.5 px-4 rounded-xl'
+    sm: 'py-1 px-2.5 rounded-lg min-h-[32px]',
+    md: 'py-2 px-3 rounded-xl min-h-[40px]',
+    lg: 'py-2.5 px-4 rounded-xl min-h-[44px]'
   };
 </script>
 
