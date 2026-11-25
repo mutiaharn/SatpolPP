@@ -147,11 +147,11 @@
   </div>
 </section>
 
-<!-- 2. Berita Terbaru (Glassmorphic Cards, Squircles & Balanced Heights) -->
-<section id="berita-terbaru" class="scroll-mt-24 pt-12 md:pt-16 pb-16 px-4 max-w-7xl mx-auto">
-  <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+<!-- 2. Berita Terbaru (Glassmorphic Cards, Squircles & Balanced Vertical Centering) -->
+<section id="berita-terbaru" class="scroll-mt-20 md:scroll-mt-24 py-8 md:py-12 px-4 max-w-7xl mx-auto md:min-h-[calc(100vh-96px)] flex flex-col justify-center">
+  <div class="flex flex-col md:flex-row md:items-end justify-between mb-6 md:mb-8 gap-4">
     <div>
-      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full ds-glass text-[#F08300] font-bold text-xs uppercase tracking-widest border border-amber-200/80 mb-2.5">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full ds-glass text-[#F08300] font-bold text-[11px] uppercase tracking-widest border border-amber-200/80 mb-2">
         <Sparkles class="w-3.5 h-3.5 text-[#F08300]" />
         <span>Publikasi &amp; Kegiatan</span>
       </div>
@@ -174,11 +174,11 @@
     </Button>
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-7 items-stretch">
     {#each $articlesStore.slice(0, 3) as item}
       <GlassCard hoverLift padding="none" className="h-full flex flex-col justify-between group overflow-hidden">
         <div>
-          <div class="relative h-52 bg-slate-100 overflow-hidden">
+          <div class="relative h-44 sm:h-48 bg-slate-100 overflow-hidden">
             <img
               src={item.thumbnail}
               alt={item.title}
@@ -193,17 +193,17 @@
             </div>
           </div>
 
-          <div class="p-6 space-y-3">
-            <h3 class="font-bold text-base text-[#071936] leading-snug line-clamp-2 min-h-[2.8rem] group-hover:text-[#F08300] transition duration-200">
+          <div class="p-5 space-y-2">
+            <h3 class="font-bold text-[15px] sm:text-base text-[#071936] leading-snug line-clamp-2 min-h-[2.6rem] group-hover:text-[#F08300] transition duration-200">
               <a href={`/berita/${item.slug}`}>{item.title}</a>
             </h3>
-            <p class="text-xs text-slate-500 leading-relaxed line-clamp-3 min-h-[3.2rem] font-light">
+            <p class="text-xs text-slate-500 leading-relaxed line-clamp-2 min-h-[2.2rem] font-light">
               {item.summary}
             </p>
           </div>
         </div>
 
-        <div class="px-6 pb-6 pt-3 border-t border-slate-100/90 mt-auto flex items-center justify-between">
+        <div class="px-5 py-3 border-t border-slate-100/90 mt-auto flex items-center justify-between">
           <a href={`/berita/${item.slug}`} class="text-xs font-bold text-[#F08300] uppercase tracking-wider hover:underline flex items-center gap-1.5 group-hover:text-[#d97400] transition">
             <span>Baca Selengkapnya</span>
             <ArrowRight class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
