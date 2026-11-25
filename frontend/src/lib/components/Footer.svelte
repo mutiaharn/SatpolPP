@@ -16,31 +16,31 @@
         </div>
       </div>
 
-      <!-- Col 2: Tautan Terkait -->
+      <!-- Col 2: Profil Satpol PP -->
       <div class="space-y-3">
         <div class="text-xs font-bold text-slate-100 uppercase tracking-wider border-b-2 border-[#F08300]/60 pb-1 inline-block">
-          Tautan
+          Profil
         </div>
         <ul class="space-y-2 pt-0.5 text-slate-300">
-          <li><a href="https://sulselprov.go.id/" target="_blank" rel="noreferrer" class="hover:text-[#F08300] transition">Pemerintah Provinsi Sulsel</a></li>
-          <li><a href="/profil/sejarah" class="hover:text-[#F08300] transition">Sejarah Singkat Satpol PP</a></li>
-          <li><a href="/profil/visi-misi" class="hover:text-[#F08300] transition">Visi dan Misi Instansi</a></li>
+          <li><a href="/profil/sejarah" class="hover:text-[#F08300] transition">Sejarah Singkat</a></li>
+          <li><a href="/profil/visi-misi" class="hover:text-[#F08300] transition">Visi &amp; Misi</a></li>
           <li><a href="/profil/struktur" class="hover:text-[#F08300] transition">Struktur Organisasi</a></li>
-          <li><a href="/dokumen" class="hover:text-[#F08300] transition">Transparansi Dokumen Publik</a></li>
+          <li><a href="/profil/tupoksi" class="hover:text-[#F08300] transition">Tugas Pokok &amp; Fungsi</a></li>
+          <li><a href="/profil/pejabat" class="hover:text-[#F08300] transition">Profil Pejabat</a></li>
         </ul>
       </div>
 
-      <!-- Col 3: Layanan & Regulasi -->
+      <!-- Col 3: Bidang Kerja -->
       <div class="space-y-3">
         <div class="text-xs font-bold text-slate-100 uppercase tracking-wider border-b-2 border-[#F08300]/60 pb-1 inline-block">
-          Layanan &amp; Regulasi
+          Bidang
         </div>
         <ul class="space-y-2 pt-0.5 text-slate-300">
-          <li><a href="/lapor" class="hover:text-[#F08300] transition">Aplikasi SIAP TERTIB</a></li>
-          <li><a href="/lacak" class="hover:text-[#F08300] transition">Pelacakan Tiket Aduan</a></li>
-          <li><a href="https://ppidsatpolppsulsel.my.id/" target="_blank" rel="noreferrer" class="hover:text-[#F08300] transition">PPID Satpol PP Sulsel</a></li>
-          <li><a href="/dokumen?category=perda" class="hover:text-[#F08300] transition">Peraturan Daerah (Perda)</a></li>
-          <li><a href="/dokumen?category=sop" class="hover:text-[#F08300] transition">Standar Operasional Prosedur (SOP)</a></li>
+          <li><a href="/bidang/sekretariat" class="hover:text-[#F08300] transition">Sekretariat</a></li>
+          <li><a href="/bidang/perda" class="hover:text-[#F08300] transition">Bidang Penegakan Perda</a></li>
+          <li><a href="/bidang/trantibum" class="hover:text-[#F08300] transition">Bidang Trantibum</a></li>
+          <li><a href="/bidang/binmas" class="hover:text-[#F08300] transition">Bidang Pembinaan Masyarakat</a></li>
+          <li><a href="/bidang/linmas-damkar" class="hover:text-[#F08300] transition">Bidang Linmas &amp; Damkar</a></li>
         </ul>
       </div>
 

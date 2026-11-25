@@ -4,8 +4,6 @@
   import { Button } from '$lib/components/ui';
 
   let mobileMenuOpen = false;
-  let profilOpen = false;
-  let bidangOpen = false;
   let searchOpen = false;
 </script>
 
@@ -39,72 +37,11 @@
         />
       </a>
 
-      <!-- Desktop Navigation Menu Links -->
-      <nav class="hidden lg:flex items-center gap-1 xl:gap-2 text-[12px] xl:text-[13px] font-bold text-slate-700 uppercase tracking-wider shrink-0">
-        <a href="/" class="px-3.5 py-2 rounded-xl min-h-[38px] flex items-center hover:bg-slate-900/5 hover:text-[#F08300] transition duration-200 ds-press">Beranda</a>
-
-        <!-- Dropdown Profil -->
-        <div 
-          class="relative group"
-          role="menu"
-          tabindex="0"
-          on:mouseenter={() => profilOpen = true}
-          on:mouseleave={() => profilOpen = false}
-        >
-          <button 
-            type="button"
-            on:click={() => { profilOpen = !profilOpen; bidangOpen = false; }}
-            class="flex items-center gap-1 px-3.5 py-2 rounded-xl min-h-[38px] hover:bg-slate-900/5 hover:text-[#F08300] transition duration-200 uppercase focus:outline-none ds-press" 
-            aria-haspopup="true" 
-            aria-expanded={profilOpen}
-          >
-            <span>Profil</span>
-            <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-          </button>
-          {#if profilOpen}
-            <div class="absolute top-full left-0 w-64 ds-glass-strong border border-white/90 shadow-2xl rounded-2xl p-1.5 z-50 text-xs normal-case animate-in fade-in zoom-in-95 duration-150">
-              <a href="/profil/sejarah" on:click={() => profilOpen = false} class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Sejarah Singkat</a>
-              <a href="/profil/visi-misi" on:click={() => profilOpen = false} class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Visi &amp; Misi</a>
-              <a href="/profil/struktur" on:click={() => profilOpen = false} class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Struktur Organisasi</a>
-              <a href="/profil/tupoksi" on:click={() => profilOpen = false} class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Tugas Pokok &amp; Fungsi</a>
-              <a href="/profil/pejabat" on:click={() => profilOpen = false} class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Profil Pejabat</a>
-            </div>
-          {/if}
-        </div>
-
-        <!-- Dropdown Bidang -->
-        <div 
-          class="relative group"
-          role="menu"
-          tabindex="0"
-          on:mouseenter={() => bidangOpen = true}
-          on:mouseleave={() => bidangOpen = false}
-        >
-          <button 
-            type="button"
-            on:click={() => { bidangOpen = !bidangOpen; profilOpen = false; }}
-            class="flex items-center gap-1 px-3.5 py-2 rounded-xl min-h-[38px] hover:bg-slate-900/5 hover:text-[#F08300] transition duration-200 uppercase focus:outline-none ds-press" 
-            aria-haspopup="true" 
-            aria-expanded={bidangOpen}
-          >
-            <span>Bidang</span>
-            <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-          </button>
-          {#if bidangOpen}
-            <div class="absolute top-full left-0 w-64 ds-glass-strong border border-white/90 shadow-2xl rounded-2xl p-1.5 z-50 text-xs normal-case animate-in fade-in zoom-in-95 duration-150">
-              <a href="/bidang/sekretariat" on:click={() => bidangOpen = false} class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Sekretariat</a>
-              <a href="/bidang/perda" on:click={() => bidangOpen = false} class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Bidang Penegakan Perda</a>
-              <a href="/bidang/trantibum" on:click={() => bidangOpen = false} class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Bidang Trantibum</a>
-              <a href="/bidang/binmas" on:click={() => bidangOpen = false} class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Bidang Pembinaan Masyarakat</a>
-              <a href="/bidang/linmas-damkar" on:click={() => bidangOpen = false} class="flex items-center px-3.5 py-2.5 rounded-xl min-h-[40px] hover:bg-slate-900/5 hover:text-[#F08300] font-semibold text-slate-800 transition">Bidang Linmas &amp; Damkar</a>
-            </div>
-          {/if}
-        </div>
-
-        <a href="/berita" class="px-3.5 py-2 rounded-xl min-h-[38px] flex items-center hover:bg-slate-900/5 hover:text-[#F08300] transition duration-200 ds-press">Berita</a>
-        <a href="/dokumen" class="px-3.5 py-2 rounded-xl min-h-[38px] flex items-center hover:bg-slate-900/5 hover:text-[#F08300] transition duration-200 ds-press">Dokumen</a>
-        <a href="/lacak" class="px-3.5 py-2 rounded-xl min-h-[38px] flex items-center hover:bg-slate-900/5 hover:text-[#F08300] transition duration-200 whitespace-nowrap ds-press">Lacak Aduan</a>
-        <a href="/kontak" class="px-3.5 py-2 rounded-xl min-h-[38px] flex items-center hover:bg-slate-900/5 hover:text-[#F08300] transition duration-200 ds-press">Kontak</a>
+      <!-- Desktop Navigation Menu Links (Minimalist Apple HIG Layout) -->
+      <nav class="hidden lg:flex items-center gap-1.5 xl:gap-2.5 text-[12px] xl:text-[13px] font-bold text-slate-700 uppercase tracking-wider shrink-0">
+        <a href="/" class="px-4 py-2 rounded-xl min-h-[38px] flex items-center hover:bg-slate-900/5 hover:text-[#F08300] transition duration-200 ds-press">Beranda</a>
+        <a href="/lacak" class="px-4 py-2 rounded-xl min-h-[38px] flex items-center hover:bg-slate-900/5 hover:text-[#F08300] transition duration-200 whitespace-nowrap ds-press">Lacak Aduan</a>
+        <a href="/kontak" class="px-4 py-2 rounded-xl min-h-[38px] flex items-center hover:bg-slate-900/5 hover:text-[#F08300] transition duration-200 ds-press">Kontak</a>
       </nav>
 
       <!-- Search Engine Trigger & CTA Button -->
@@ -187,46 +124,52 @@
         </button>
       </div>
 
-      <!-- Mobile Navigation Links (Full Screen Scrollable) -->
-      <div class="px-6 py-6 space-y-6 flex-1 overflow-y-auto">
+      <!-- Mobile Navigation Links (Minimalist Clean Drawer) -->
+      <div class="px-6 py-6 space-y-4 flex-1 overflow-y-auto">
         <a 
           href="/" 
-          class="block text-lg font-bold uppercase tracking-wider text-white hover:text-[#F08300] py-1 transition"
+          class="block text-lg font-bold uppercase tracking-wider text-white hover:text-[#F08300] py-2 transition border-b border-white/10"
           on:click={() => mobileMenuOpen = false}
         >
           Beranda
         </a>
+        <a 
+          href="/lacak" 
+          class="block text-lg font-bold uppercase tracking-wider text-white hover:text-[#F08300] py-2 transition border-b border-white/10"
+          on:click={() => mobileMenuOpen = false}
+        >
+          Lacak Tiket Aduan
+        </a>
+        <a 
+          href="/kontak" 
+          class="block text-lg font-bold uppercase tracking-wider text-white hover:text-[#F08300] py-2 transition border-b border-white/10"
+          on:click={() => mobileMenuOpen = false}
+        >
+          Kontak Resmi
+        </a>
 
-        <!-- Profil Group -->
-        <div class="ds-glass-dark border border-white/10 rounded-2xl p-4 space-y-2.5">
-          <div class="text-xs text-[#F08300] font-bold uppercase tracking-widest mb-1">Profil Satpol PP</div>
-          <div class="space-y-2 text-sm text-slate-300">
-            <a href="/profil/sejarah" class="block hover:text-white transition py-1" on:click={() => mobileMenuOpen = false}>Sejarah Singkat</a>
-            <a href="/profil/visi-misi" class="block hover:text-white transition py-1" on:click={() => mobileMenuOpen = false}>Visi &amp; Misi</a>
-            <a href="/profil/struktur" class="block hover:text-white transition py-1" on:click={() => mobileMenuOpen = false}>Struktur Organisasi</a>
-            <a href="/profil/tupoksi" class="block hover:text-white transition py-1" on:click={() => mobileMenuOpen = false}>Tugas Pokok &amp; Fungsi</a>
-            <a href="/profil/pejabat" class="block hover:text-white transition py-1" on:click={() => mobileMenuOpen = false}>Profil Pejabat</a>
+        <!-- Profil & Bidang Quick Access (Symmetric Frosted Cards) -->
+        <div class="pt-2 grid grid-cols-2 gap-2.5 text-xs">
+          <div class="ds-glass-dark border border-white/10 rounded-xl p-3 space-y-1.5">
+            <span class="text-[#F08300] font-bold uppercase tracking-wider text-[11px] block">Profil</span>
+            <div class="space-y-1 text-slate-300">
+              <a href="/profil/sejarah" class="block hover:text-white transition py-0.5" on:click={() => mobileMenuOpen = false}>Sejarah</a>
+              <a href="/profil/visi-misi" class="block hover:text-white transition py-0.5" on:click={() => mobileMenuOpen = false}>Visi &amp; Misi</a>
+              <a href="/profil/struktur" class="block hover:text-white transition py-0.5" on:click={() => mobileMenuOpen = false}>Struktur</a>
+              <a href="/profil/tupoksi" class="block hover:text-white transition py-0.5" on:click={() => mobileMenuOpen = false}>Tupoksi</a>
+              <a href="/profil/pejabat" class="block hover:text-white transition py-0.5" on:click={() => mobileMenuOpen = false}>Pejabat</a>
+            </div>
           </div>
-        </div>
-
-        <!-- Bidang Group -->
-        <div class="ds-glass-dark border border-white/10 rounded-2xl p-4 space-y-2.5">
-          <div class="text-xs text-[#F08300] font-bold uppercase tracking-widest mb-1">Bidang Kerja</div>
-          <div class="space-y-2 text-sm text-slate-300">
-            <a href="/bidang/sekretariat" class="block hover:text-white transition py-1" on:click={() => mobileMenuOpen = false}>Sekretariat</a>
-            <a href="/bidang/perda" class="block hover:text-white transition py-1" on:click={() => mobileMenuOpen = false}>Bidang Penegakan Perda</a>
-            <a href="/bidang/trantibum" class="block hover:text-white transition py-1" on:click={() => mobileMenuOpen = false}>Bidang Trantibum</a>
-            <a href="/bidang/binmas" class="block hover:text-white transition py-1" on:click={() => mobileMenuOpen = false}>Bidang Pembinaan Masyarakat</a>
-            <a href="/bidang/linmas-damkar" class="block hover:text-white transition py-1" on:click={() => mobileMenuOpen = false}>Bidang Linmas &amp; Damkar</a>
+          <div class="ds-glass-dark border border-white/10 rounded-xl p-3 space-y-1.5">
+            <span class="text-[#F08300] font-bold uppercase tracking-wider text-[11px] block">Bidang</span>
+            <div class="space-y-1 text-slate-300">
+              <a href="/bidang/sekretariat" class="block hover:text-white transition py-0.5" on:click={() => mobileMenuOpen = false}>Sekretariat</a>
+              <a href="/bidang/perda" class="block hover:text-white transition py-0.5" on:click={() => mobileMenuOpen = false}>Perda</a>
+              <a href="/bidang/trantibum" class="block hover:text-white transition py-0.5" on:click={() => mobileMenuOpen = false}>Trantibum</a>
+              <a href="/bidang/binmas" class="block hover:text-white transition py-0.5" on:click={() => mobileMenuOpen = false}>Binmas</a>
+              <a href="/bidang/linmas-damkar" class="block hover:text-white transition py-0.5" on:click={() => mobileMenuOpen = false}>Linmas</a>
+            </div>
           </div>
-        </div>
-
-        <!-- Menu Lainnya -->
-        <div class="ds-glass-dark border border-white/10 rounded-2xl p-4 space-y-2.5 text-sm font-semibold text-slate-200">
-          <a href="/berita" class="block hover:text-[#F08300] transition py-1" on:click={() => mobileMenuOpen = false}>Berita Publikasi</a>
-          <a href="/dokumen" class="block hover:text-[#F08300] transition py-1" on:click={() => mobileMenuOpen = false}>Dokumen Publik</a>
-          <a href="/lacak" class="block hover:text-[#F08300] transition py-1" on:click={() => mobileMenuOpen = false}>Lacak Tiket Aduan</a>
-          <a href="/kontak" class="block hover:text-[#F08300] transition py-1" on:click={() => mobileMenuOpen = false}>Kontak Resmi</a>
         </div>
       </div>
 
