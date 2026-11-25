@@ -50,13 +50,13 @@
 
   const variantClasses: Record<typeof variant, string> = {
     primary:
-      'bg-gradient-to-r from-[#246bfd] to-[#1d4ed8] text-white shadow-sm border border-white/20 hover:brightness-105',
+      'bg-gradient-to-r from-[#f08300] to-[#d97400] text-white shadow-sm border border-amber-400/30 hover:brightness-105',
     glass:
       'bg-white/80 text-slate-700 border border-slate-200/90 shadow-sm hover:bg-white hover:text-slate-900 backdrop-blur-md',
     ghost:
       'text-slate-500 hover:text-slate-900 hover:bg-slate-100/80 border border-transparent',
     soft:
-      'bg-blue-50/80 text-blue-700 border border-blue-200/60 hover:bg-blue-100'
+      'bg-amber-500/10 text-[#d97400] border border-amber-500/20 hover:bg-amber-500/15'
   };
 </script>
 

@@ -21,7 +21,7 @@
 
   const variantClasses: Record<typeof variant, string> = {
     primary:
-      'bg-gradient-to-r from-[#246bfd] to-[#1d4ed8] text-white shadow-sm shadow-blue-500/25 border border-white/20 hover:brightness-105 active:brightness-95',
+      'bg-gradient-to-r from-[#f08300] to-[#d97400] text-white shadow-sm shadow-amber-500/25 border border-amber-400/30 hover:brightness-105 active:brightness-95',
     secondary:
       'bg-white/85 text-slate-700 border border-slate-200/90 shadow-sm hover:bg-white hover:text-slate-900 hover:border-slate-300',
     glass:

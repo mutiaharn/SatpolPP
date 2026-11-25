@@ -202,10 +202,10 @@
                 type="button"
                 on:click={() => navigate(item.href)}
                 on:mouseenter={() => selectedIndex = idx}
-                class="w-full text-left px-3.5 py-2.5 rounded-xl flex items-start gap-3 transition-colors duration-150 {selectedIndex === idx ? 'bg-white/80 text-[#071936] ring-1 ring-[#246bfd]/30 shadow-xs' : 'hover:bg-white/50 text-slate-700'}"
+                class="w-full text-left px-3.5 py-2.5 rounded-xl flex items-start gap-3 transition-colors duration-150 {selectedIndex === idx ? 'bg-white/80 text-[#071936] ring-1 ring-[#F08300]/30 shadow-xs' : 'hover:bg-white/50 text-slate-700'}"
               >
                 <!-- Icon by Type -->
-                <div class="mt-0.5 p-2 rounded-lg shrink-0 {item.type === 'berita' ? 'bg-blue-50 text-[#246bfd]' : item.type === 'dokumen' ? 'bg-amber-50 text-[#f08300]' : item.type === 'layanan' ? 'bg-emerald-50 text-emerald-600' : 'bg-purple-50 text-purple-600'}">
+                <div class="mt-0.5 p-2 rounded-lg shrink-0 {item.type === 'berita' || item.type === 'dokumen' ? 'bg-amber-50 text-[#F08300]' : 'bg-slate-100 text-slate-700'}">
                   {#if item.type === 'berita'}
                     <Newspaper class="w-4 h-4" />
                   {:else if item.type === 'dokumen'}
@@ -220,7 +220,7 @@
                 <!-- Info -->
                 <div class="flex-1 min-w-0">
                   <div class="flex items-center gap-2">
-                    <span class="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-md {item.type === 'berita' ? 'bg-blue-100/60 text-blue-700' : item.type === 'dokumen' ? 'bg-amber-100/60 text-amber-800' : 'bg-slate-200/70 text-slate-700'}">
+                    <span class="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-md {item.type === 'berita' || item.type === 'dokumen' ? 'bg-amber-100/60 text-[#d97400]' : 'bg-slate-200/70 text-slate-700'}">
                       {item.category}
                     </span>
                     <h4 class="text-xs sm:text-sm font-semibold truncate {selectedIndex === idx ? 'text-[#071936] font-bold' : 'text-slate-800'}">
@@ -232,7 +232,7 @@
                   </p>
                 </div>
 
-                <div class="self-center pl-2 shrink-0 opacity-0 group-hover:opacity-100 transition {selectedIndex === idx ? 'opacity-100 text-[#246bfd]' : 'text-slate-300'}">
+                <div class="self-center pl-2 shrink-0 opacity-0 group-hover:opacity-100 transition {selectedIndex === idx ? 'opacity-100 text-[#F08300]' : 'text-slate-300'}">
                   <CornerDownLeft class="w-3.5 h-3.5" />
                 </div>
               </button>

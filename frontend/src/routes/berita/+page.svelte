@@ -68,7 +68,7 @@
 
 <!-- Sovereign Slim Hero Banner -->
 <div class="bg-gradient-to-b from-[#070e1c] via-[#0b172a] to-[#0f223d] text-white py-6 sm:py-7 md:py-8 px-4 relative overflow-hidden ds-specular-dark border-b border-white/10">
-  <div class="absolute top-0 right-10 w-72 h-72 rounded-full bg-[#246bfd]/8 blur-3xl pointer-events-none"></div>
+  <div class="absolute top-0 right-10 w-72 h-72 rounded-full bg-[#F08300]/5 blur-3xl pointer-events-none"></div>
   <div class="absolute bottom-0 left-10 w-56 h-56 rounded-full bg-[#F08300]/8 blur-3xl pointer-events-none"></div>
 
   <div class="max-w-6xl mx-auto relative z-10">
@@ -157,7 +157,7 @@
                 <span class="truncate">{article.author_name}</span>
               </div>
 
-              <h2 class="text-sm font-bold text-[#071936] line-clamp-2 min-h-[2.5rem] leading-snug group-hover:text-[#246bfd] transition duration-200">
+              <h2 class="text-sm font-bold text-[#071936] line-clamp-2 min-h-[2.5rem] leading-snug group-hover:text-[#F08300] transition duration-200">
                 <a href={`/berita/${article.slug}`}>{article.title}</a>
               </h2>
 
@@ -171,7 +171,7 @@
             <span class="text-[11px] text-slate-400 font-mono">{article.view_count} pembaca</span>
             <a 
               href={`/berita/${article.slug}`} 
-              class="text-xs font-bold uppercase text-[#246bfd] group-hover:text-[#1d4ed8] flex items-center gap-1 transition"
+              class="text-xs font-bold uppercase text-[#F08300] group-hover:text-[#d97400] flex items-center gap-1 transition"
             >
               Baca Lengkap &rarr;
             </a>

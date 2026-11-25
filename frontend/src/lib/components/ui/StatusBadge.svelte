@@ -2,11 +2,11 @@
   import type { ComplaintStatus } from '$lib/types';
 
   export const STATUS_META: Record<ComplaintStatus, { label: string; className: string }> = {
-    MENUNGGU_VERIFIKASI: { label: 'Menunggu Verifikasi', className: 'bg-amber-50 text-amber-800 border-amber-200' },
-    DISPOSISI_BIDANG: { label: 'Disposisi Bidang', className: 'bg-[#f5ede4] text-[#3d261a] border-[#e8dbc9]' },
-    PENINDAKAN_LAPANGAN: { label: 'Penindakan Lapangan', className: 'bg-orange-50 text-[#b45f00] border-orange-200' },
-    SELESAI: { label: 'Selesai', className: 'bg-emerald-50 text-emerald-800 border-emerald-200' },
-    DITOLAK: { label: 'Ditolak', className: 'bg-rose-50 text-rose-800 border-rose-200' }
+    MENUNGGU_VERIFIKASI: { label: 'Menunggu Verifikasi', className: 'bg-amber-500/10 text-[#d97400] border-amber-500/25' },
+    DISPOSISI_BIDANG: { label: 'Disposisi Bidang', className: 'bg-slate-100 text-slate-800 border-slate-200' },
+    PENINDAKAN_LAPANGAN: { label: 'Penindakan Lapangan', className: 'bg-amber-500/15 text-[#b45f00] border-amber-500/30' },
+    SELESAI: { label: 'Selesai', className: 'bg-slate-900 text-white border-slate-800' },
+    DITOLAK: { label: 'Ditolak', className: 'bg-slate-100 text-slate-700 border-slate-300' }
   };
 
   export function statusLabel(status: string): string {

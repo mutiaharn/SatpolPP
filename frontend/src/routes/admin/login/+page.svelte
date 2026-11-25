@@ -111,7 +111,7 @@
             href="/"
             variant="glass"
             size="sm"
-            className="text-slate-600 hover:text-[#246bfd]"
+            className="text-slate-600 hover:text-[#F08300]"
           >
             <ArrowLeft class="w-3.5 h-3.5" slot="iconLeading" />
             <span>Beranda</span>
@@ -144,14 +144,14 @@
         </div>
 
         <!-- Active Role Context Card -->
-        <GlassCard variant="subtle" padding="sm" rounded="xl" className="mt-3 bg-blue-50/70 border-blue-200/50">
+        <GlassCard variant="subtle" padding="sm" rounded="xl" className="mt-3 bg-amber-500/10 border-amber-500/20">
           <div class="flex items-center justify-between text-xs text-slate-700 animate-in fade-in duration-150">
             <div class="flex items-center gap-2.5">
-              <div class="p-1.5 rounded-lg bg-blue-100/80 text-[#246bfd] shrink-0">
+              <div class="p-1.5 rounded-lg bg-amber-500/15 text-[#F08300] shrink-0">
                 <KeyRound class="w-3.5 h-3.5" />
               </div>
               <div class="min-w-0">
-                <span class="text-[10px] font-bold uppercase tracking-wider text-blue-700 block truncate">{presets[activeTab].roleLabel}</span>
+                <span class="text-[10px] font-bold uppercase tracking-wider text-[#d97400] block truncate">{presets[activeTab].roleLabel}</span>
                 <span class="text-[11px] text-slate-600 line-clamp-1">{presets[activeTab].hint}</span>
               </div>
             </div>
@@ -215,7 +215,7 @@
       <!-- Bottom Footnote & Security Badging -->
       <div class="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-400">
         <div class="flex items-center gap-1.5">
-          <ShieldCheck class="w-4 h-4 text-emerald-600" />
+          <ShieldCheck class="w-4 h-4 text-[#F08300]" />
           <span>Jaringan Intra Pemerintah Prov. Sulsel</span>
         </div>
         <span class="font-mono text-slate-400">v2.4 Sovereign OS</span>
@@ -224,24 +224,24 @@
   </div>
 
   <!-- =========================================================================
-       RIGHT PANEL: SOFT SKY-AZURE GRADIENT WITH HARMONIOUS AMBIENT LIGHTING
-       (Soft, calming atmosphere replacing dark blue, zero distracting text/cards)
+       RIGHT PANEL: SERENE AMBIENT ATMOSPHERE WITH OBSIDIAN/AMBER LIGHTING
+       (Soft, calming atmosphere, zero distracting text/cards)
        ========================================================================= -->
-  <div class="flex-1 hidden lg:block relative h-full overflow-hidden bg-gradient-to-br from-[#d9ebf5] via-[#e8f3f8] to-[#cbe5f2]">
+  <div class="flex-1 hidden lg:block relative h-full overflow-hidden bg-slate-900">
     <!-- Background Architectural Banner Image with Soft Natural Blend -->
     <img
       src="/uploads/foto_banner/1747198131welcome.png"
       alt="Latar Belakang Markas Satpol PP Sulsel"
-      class="w-full h-full object-cover object-center filter brightness-[1.03] contrast-[0.98] opacity-80 mix-blend-multiply"
+      class="w-full h-full object-cover object-center filter brightness-[0.75] contrast-[1.05] opacity-65"
     />
 
-    <!-- Gentle Soft Pastel Gradient Overlays -->
-    <div class="absolute inset-0 bg-gradient-to-r from-white/95 via-[#e2f1f8]/70 to-[#cde7f4]/40"></div>
-    <div class="absolute inset-0 bg-gradient-to-t from-[#c5e3f2]/90 via-transparent to-white/60"></div>
+    <!-- Gentle Soft Dark & Warm Gradient Overlays -->
+    <div class="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-900/50 to-transparent"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-slate-900/40"></div>
 
-    <!-- Soft Cloud-like Light Glow Orbs -->
-    <div class="absolute -top-24 -right-24 w-[550px] h-[550px] rounded-full bg-white/70 blur-[130px] pointer-events-none"></div>
-    <div class="absolute bottom-10 right-10 w-[450px] h-[450px] rounded-full bg-[#bde0f5]/50 blur-[110px] pointer-events-none"></div>
+    <!-- Soft Ambient Light Glow Orbs -->
+    <div class="absolute -top-24 -right-24 w-[500px] h-[500px] rounded-full bg-[#F08300]/10 blur-[120px] pointer-events-none"></div>
+    <div class="absolute bottom-10 right-10 w-[400px] h-[400px] rounded-full bg-white/5 blur-[100px] pointer-events-none"></div>
   </div>
 
 </div>

@@ -13,7 +13,7 @@
 <!-- Sovereign Glass Tracking Console (Full Viewport, Zero Scroll) -->
 <div class="flex-1 flex flex-col justify-center items-center px-4 py-8 sm:py-12 bg-gradient-to-b from-[#070e1c] via-[#0b172a] to-[#0f223d] text-white relative overflow-hidden ds-specular-dark">
   <!-- Ambient Orbs -->
-  <div class="absolute top-0 right-10 w-96 h-96 rounded-full bg-[#246bfd]/10 blur-3xl pointer-events-none"></div>
+  <div class="absolute top-0 right-10 w-96 h-96 rounded-full bg-[#F08300]/5 blur-3xl pointer-events-none"></div>
   <div class="absolute bottom-0 left-10 w-72 h-72 rounded-full bg-[#F08300]/10 blur-3xl pointer-events-none"></div>
 
   <div class="max-w-2xl w-full mx-auto relative z-10 text-center space-y-4 my-auto">
@@ -27,8 +27,8 @@
     </div>
 
     <!-- Capsule Badge -->
-    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/15 text-[#246bfd] font-bold text-[11px] uppercase tracking-wider border border-blue-500/30">
-      <Search class="w-3.5 h-3.5 text-[#246bfd]" />
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/15 text-[#F08300] font-bold text-[11px] uppercase tracking-wider border border-amber-500/30">
+      <Search class="w-3.5 h-3.5 text-[#F08300]" />
       <span>Transparansi Penanganan Aduan</span>
     </div>
 

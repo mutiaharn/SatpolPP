@@ -35,7 +35,7 @@
 
 <!-- Sovereign Slim Hero Banner -->
 <div class="bg-gradient-to-b from-[#070e1c] via-[#0b172a] to-[#0f223d] text-white py-6 sm:py-7 md:py-8 px-4 relative overflow-hidden ds-specular-dark border-b border-white/10">
-  <div class="absolute top-0 right-10 w-72 h-72 rounded-full bg-[#246bfd]/8 blur-3xl pointer-events-none"></div>
+  <div class="absolute top-0 right-10 w-72 h-72 rounded-full bg-[#F08300]/5 blur-3xl pointer-events-none"></div>
   <div class="absolute bottom-0 left-10 w-56 h-56 rounded-full bg-[#F08300]/8 blur-3xl pointer-events-none"></div>
 
   <div class="max-w-6xl mx-auto relative z-10">
@@ -68,8 +68,8 @@
       </div>
 
       <div class="ds-glass border border-white/90 p-6 shadow-glass space-y-4 rounded-3xl ds-specular-top">
-        <div class="flex items-center gap-2 text-[#246bfd] font-bold text-xs uppercase tracking-wider">
-          <Phone class="w-4 h-4 text-[#246bfd]" />
+        <div class="flex items-center gap-2 text-[#F08300] font-bold text-xs uppercase tracking-wider">
+          <Phone class="w-4 h-4 text-[#F08300]" />
           <span>Telepon &amp; Surel Resmi</span>
         </div>
         <div class="space-y-3 text-xs">

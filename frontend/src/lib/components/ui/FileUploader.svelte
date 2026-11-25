@@ -164,12 +164,12 @@
       on:click={triggerBrowse}
       class={`w-full border-2 border-dashed rounded-2xl p-6 sm:p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-all duration-200 select-none ${
         isDragging
-          ? 'border-[#246bfd] bg-blue-50/50 scale-[1.01] shadow-inner'
-          : 'border-slate-300 hover:border-[#246bfd] bg-slate-50/70 hover:bg-blue-50/20'
+          ? 'border-[#F08300] bg-amber-500/10 scale-[1.01] shadow-inner'
+          : 'border-slate-300 hover:border-[#F08300] bg-slate-50/70 hover:bg-amber-500/5'
       }`}
     >
       <div class={`w-12 h-12 rounded-2xl flex items-center justify-center mb-3 transition ${
-        isDragging ? 'bg-[#246bfd] text-white scale-110 shadow-glass-azure' : 'bg-slate-100 text-slate-500'
+        isDragging ? 'bg-[#F08300] text-white scale-110 shadow-glass-gold' : 'bg-slate-100 text-slate-500'
       }`}>
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
@@ -177,7 +177,7 @@
       </div>
 
       <div class="text-xs font-semibold text-slate-900 mb-1">
-        <span class="text-[#246bfd] underline">Klik untuk mengunggah</span> atau drag &amp; drop file ke sini
+        <span class="text-[#F08300] underline">Klik untuk mengunggah</span> atau drag &amp; drop file ke sini
       </div>
       <p class="text-[11px] text-slate-500 max-w-sm font-light">
         {description}

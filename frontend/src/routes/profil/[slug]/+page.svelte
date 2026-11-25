@@ -128,7 +128,7 @@
 
 <!-- Sovereign Slim Hero Banner -->
 <div class="bg-gradient-to-b from-[#070e1c] via-[#0b172a] to-[#0f223d] text-white py-6 sm:py-7 md:py-8 px-4 relative overflow-hidden ds-specular-dark border-b border-white/10">
-  <div class="absolute top-0 right-10 w-72 h-72 rounded-full bg-[#246bfd]/8 blur-3xl pointer-events-none"></div>
+  <div class="absolute top-0 right-10 w-72 h-72 rounded-full bg-[#F08300]/5 blur-3xl pointer-events-none"></div>
   <div class="absolute bottom-0 left-10 w-56 h-56 rounded-full bg-[#F08300]/8 blur-3xl pointer-events-none"></div>
 
   <div class="max-w-6xl mx-auto relative z-10">
@@ -211,9 +211,9 @@
           <!-- Pimpinan Tertinggi / Level 1 (Simpul Utama Struktur Organisasi) -->
           <div class="space-y-3">
             {#each rootNodes as root}
-              <div class="ds-glass border border-slate-200/80 p-5 sm:p-6 rounded-2xl shadow-glass hover:border-[#246bfd] transition relative overflow-hidden group">
-                <!-- Subtle light blue gradient splash in card corner -->
-                <div class="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-sky-400/12 blur-2xl pointer-events-none"></div>
+              <div class="ds-glass border border-slate-200/80 p-5 sm:p-6 rounded-2xl shadow-glass hover:border-[#F08300] transition relative overflow-hidden group">
+                <!-- Subtle amber gradient splash in card corner -->
+                <div class="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-amber-400/10 blur-2xl pointer-events-none"></div>
 
                 <div class="relative z-10">
                   <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
@@ -227,12 +227,12 @@
                         </span>
                       {/if}
                     </div>
-                    <span class="text-[10px] font-bold text-blue-600 bg-blue-50/90 px-2.5 py-0.5 rounded-full border border-blue-200/70">
+                    <span class="text-[10px] font-bold text-[#d97400] bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-500/25">
                       Pimpinan Perangkat Daerah
                     </span>
                   </div>
 
-                  <h3 class="font-bold text-base sm:text-lg text-slate-900 group-hover:text-blue-600 transition-colors">
+                  <h3 class="font-bold text-base sm:text-lg text-slate-900 group-hover:text-[#F08300] transition-colors">
                     {root.position_title}
                   </h3>
                   <div class="text-xs font-bold text-[#F08300] mt-0.5">{root.official_name}</div>
@@ -249,17 +249,17 @@
 
           <!-- Tree Hierarchy Connector -->
           <div class="flex flex-col items-center justify-center py-1" aria-hidden="true">
-            <div class="w-0.5 h-3.5 bg-gradient-to-b from-[#246bfd]/50 to-[#246bfd]/20"></div>
-            <div class="px-3 py-1 rounded-full bg-blue-50/90 border border-blue-200/60 text-[10px] font-semibold text-blue-700 tracking-wider uppercase shadow-xs">
+            <div class="w-0.5 h-3.5 bg-gradient-to-b from-[#F08300]/50 to-[#F08300]/20"></div>
+            <div class="px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/25 text-[10px] font-semibold text-[#d97400] tracking-wider uppercase shadow-xs">
               Unit Kerja & Bidang Operasional
             </div>
-            <div class="w-0.5 h-3.5 bg-gradient-to-b from-[#246bfd]/20 to-[#246bfd]/50"></div>
+            <div class="w-0.5 h-3.5 bg-gradient-to-b from-[#F08300]/20 to-[#F08300]/50"></div>
           </div>
 
           <!-- Unit Bidang & Sub Bagian / Level >= 2 -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             {#each unitNodes as unit}
-              <div class="ds-glass border border-slate-200/80 p-5 rounded-2xl flex flex-col justify-between space-y-3 hover:border-[#246bfd] hover:shadow-glass-hover transition">
+              <div class="ds-glass border border-slate-200/80 p-5 rounded-2xl flex flex-col justify-between space-y-3 hover:border-[#F08300] hover:shadow-glass-hover transition">
                 <div>
                   <div class="flex items-center justify-between gap-2 mb-2">
                     <span class="px-2.5 py-0.5 rounded-lg bg-[#0b172a] text-[#F08300] font-mono text-[10px] font-bold">
@@ -327,7 +327,7 @@
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             {#each unitNodes as unit}
-              <div class="ds-glass border border-slate-200/80 p-5 rounded-2xl shadow-xs flex gap-4 items-start hover:border-[#246bfd] transition">
+              <div class="ds-glass border border-slate-200/80 p-5 rounded-2xl shadow-xs flex gap-4 items-start hover:border-[#F08300] transition">
                 {#if unit.photo_url}
                   <img
                     src={unit.photo_url}

@@ -139,7 +139,7 @@
           on:click={() => selectTab(item.id)}
           title={collapsed ? item.label : undefined}
           aria-current={activeTab === item.id ? 'page' : undefined}
-          class="relative w-full flex items-center {collapsed ? 'justify-center px-2' : 'justify-between px-3.5'} py-2.5 min-h-[40px] rounded-xl text-xs font-bold transition ds-press {activeTab === item.id ? 'bg-[#246bfd] text-white shadow-glass-azure ds-specular-top' : 'text-slate-300 hover:bg-white/10 hover:text-white'}"
+          class="relative w-full flex items-center {collapsed ? 'justify-center px-2' : 'justify-between px-3.5'} py-2.5 min-h-[40px] rounded-xl text-xs font-bold transition ds-press {activeTab === item.id ? 'bg-[#F08300] text-white shadow-glass-gold' : 'text-slate-300 hover:bg-white/10 hover:text-white'}"
         >
           <span class="flex items-center gap-3 min-w-0">
             <svelte:component this={item.icon} class="w-4 h-4 shrink-0" />
@@ -247,7 +247,7 @@
           <button
             type="button"
             on:click={() => selectTab(item.id)}
-            class="w-full flex items-center justify-between px-3.5 py-2.5 min-h-[44px] rounded-xl text-xs font-bold transition ds-press {activeTab === item.id ? 'bg-[#246bfd] text-white shadow-glass-azure ds-specular-top' : 'text-slate-300 hover:bg-white/10 hover:text-white'}"
+            class="w-full flex items-center justify-between px-3.5 py-2.5 min-h-[44px] rounded-xl text-xs font-bold transition ds-press {activeTab === item.id ? 'bg-[#F08300] text-white shadow-glass-gold' : 'text-slate-300 hover:bg-white/10 hover:text-white'}"
           >
             <span class="flex items-center gap-3 min-w-0">
               <svelte:component this={item.icon} class="w-4 h-4 shrink-0" />

@@ -32,7 +32,7 @@
 
 <!-- Sovereign Slim Hero Banner -->
 <div class="bg-gradient-to-b from-[#070e1c] via-[#0b172a] to-[#0f223d] text-white py-6 sm:py-7 md:py-8 px-4 relative overflow-hidden ds-specular-dark border-b border-white/10">
-  <div class="absolute top-0 right-10 w-72 h-72 rounded-full bg-[#246bfd]/8 blur-3xl pointer-events-none"></div>
+  <div class="absolute top-0 right-10 w-72 h-72 rounded-full bg-[#F08300]/5 blur-3xl pointer-events-none"></div>
   <div class="absolute bottom-0 left-10 w-56 h-56 rounded-full bg-[#F08300]/8 blur-3xl pointer-events-none"></div>
 
   <div class="max-w-6xl mx-auto relative z-10">
@@ -73,7 +73,7 @@
       {#each filteredItems as item, idx}
         <button 
           type="button"
-          class="ds-glass-card border border-white/80 rounded-2xl overflow-hidden group text-left focus:outline-none focus:ring-2 focus:ring-[#246bfd] shadow-glass flex flex-col justify-between ds-press"
+          class="ds-glass-card border border-white/80 rounded-2xl overflow-hidden group text-left focus:outline-none focus:ring-2 focus:ring-[#F08300] shadow-glass flex flex-col justify-between ds-press"
           on:click={() => openLightbox(idx)}
         >
           <div class="relative h-56 bg-slate-100 overflow-hidden w-full">

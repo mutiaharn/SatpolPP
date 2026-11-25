@@ -101,7 +101,7 @@
 
 <!-- Sovereign Slim Hero Banner -->
 <div class="bg-gradient-to-b from-[#070e1c] via-[#0b172a] to-[#0f223d] text-white py-6 sm:py-7 md:py-8 px-4 relative overflow-hidden ds-specular-dark border-b border-white/10">
-  <div class="absolute top-0 right-10 w-72 h-72 rounded-full bg-[#246bfd]/8 blur-3xl pointer-events-none"></div>
+  <div class="absolute top-0 right-10 w-72 h-72 rounded-full bg-[#F08300]/5 blur-3xl pointer-events-none"></div>
   <div class="absolute bottom-0 left-10 w-56 h-56 rounded-full bg-[#F08300]/8 blur-3xl pointer-events-none"></div>
 
   <div class="max-w-6xl mx-auto relative z-10">
@@ -192,7 +192,7 @@
         </h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           {#each current.sections as sec}
-            <div class="ds-glass border border-slate-200/80 p-5 rounded-2xl hover:border-[#246bfd] transition shadow-xs">
+            <div class="ds-glass border border-slate-200/80 p-5 rounded-2xl hover:border-[#F08300] transition shadow-xs">
               <div class="font-bold text-xs text-slate-900 uppercase">
                 {sec.name}
               </div>

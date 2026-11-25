@@ -9,7 +9,7 @@
 
 <!-- Sovereign Slim Hero Banner -->
 <div class="bg-gradient-to-b from-[#070e1c] via-[#0b172a] to-[#0f223d] text-white py-6 sm:py-7 md:py-8 px-4 relative overflow-hidden ds-specular-dark border-b border-white/10">
-  <div class="absolute top-0 right-10 w-72 h-72 rounded-full bg-[#246bfd]/8 blur-3xl pointer-events-none"></div>
+  <div class="absolute top-0 right-10 w-72 h-72 rounded-full bg-[#F08300]/5 blur-3xl pointer-events-none"></div>
   <div class="absolute bottom-0 left-10 w-56 h-56 rounded-full bg-[#F08300]/8 blur-3xl pointer-events-none"></div>
 
   <div class="max-w-6xl mx-auto relative z-10">
@@ -34,10 +34,10 @@
   <div class="ds-glass rounded-3xl p-6 border border-white/90 shadow-glass ds-specular-top">
     <div class="text-xs font-bold text-[#071936] uppercase tracking-wider mb-4 flex items-center justify-between">
       <span>Alur &amp; Prosedur Penanganan Laporan:</span>
-      <span class="text-[10px] font-mono text-emerald-600 font-semibold bg-emerald-50/90 px-3 py-1 rounded-full border border-emerald-200/80">SOP Resmi</span>
+      <span class="text-[10px] font-mono text-[#d97400] font-semibold bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/25">SOP Resmi</span>
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
-      <div class="border-l-3 border-[#246bfd] pl-3 py-2 ds-glass-subtle rounded-r-xl border border-white/60">
+      <div class="border-l-3 border-[#F08300] pl-3 py-2 ds-glass-subtle rounded-r-xl border border-white/60">
         <div class="font-bold text-[#071936]">1. Verifikasi</div>
         <div class="text-[11px] text-slate-500 mt-0.5 font-light">Pemeriksaan bukti foto &amp; validitas aduan warga.</div>
       </div>

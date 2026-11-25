@@ -8,9 +8,9 @@
   :root {
     --satpol-canvas: #f8fafc;
     --satpol-surface: #ffffff;
-    --satpol-navy: #070e1c;
+    --satpol-navy: #0b132a;
     --satpol-accent: #f08300;
-    --satpol-azure: #246bfd;
+    --satpol-slate: #64748b;
 
     /* Apple HIG Liquid Glass & Specular Vibrancy Tokens */
     --ds-glass-bg: rgba(255, 255, 255, 0.72);
@@ -27,7 +27,7 @@
     --ds-shadow-glass: 0 4px 24px -2px rgba(15, 23, 42, 0.06), 0 1px 4px rgba(15, 23, 42, 0.03);
     --ds-shadow-glass-strong: 0 16px 44px -8px rgba(15, 23, 42, 0.10), 0 4px 12px rgba(15, 23, 42, 0.03);
     --ds-shadow-glass-gold: 0 10px 30px -4px rgba(240, 131, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.65);
-    --ds-shadow-glass-azure: 0 10px 30px -4px rgba(36, 107, 253, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.65);
+    --ds-shadow-glass-azure: 0 10px 30px -4px rgba(240, 131, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.65);
 
     /* Apple HIG Ergonomics & Motion Physics */
     --ds-ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
@@ -63,10 +63,8 @@
   body {
     background-color: #f8fafc;
     background-image: 
-      radial-gradient(ellipse 90% 60% at 15% -5%, rgba(36, 107, 253, 0.07), transparent 60%),
-      radial-gradient(ellipse 80% 55% at 85% 25%, rgba(240, 131, 0, 0.06), transparent 60%),
-      radial-gradient(ellipse 70% 50% at 10% 70%, rgba(56, 189, 248, 0.05), transparent 60%),
-      radial-gradient(ellipse 75% 55% at 90% 95%, rgba(240, 131, 0, 0.05), transparent 60%);
+      radial-gradient(ellipse 90% 60% at 85% 10%, rgba(240, 131, 0, 0.05), transparent 60%),
+      radial-gradient(ellipse 75% 55% at 15% 85%, rgba(240, 131, 0, 0.04), transparent 60%);
     background-attachment: fixed;
     color: #0f172a;
     min-height: 100vh;
@@ -76,7 +74,7 @@
   /* Apple HIG Focus Ring */
   :focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #246bfd;
+    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #f08300;
   }
 
   /* Native top-layer <dialog> scroll containment */
@@ -150,19 +148,11 @@
 }
 
 /* Accent Luminous Glass (Praja Amber / Gold) */
-.ds-glass-gold {
+.ds-glass-gold,
+.ds-glass-azure {
   background: linear-gradient(135deg, rgba(240, 131, 0, 0.14) 0%, rgba(255, 255, 255, 0.72) 100%);
   border: 1px solid rgba(240, 131, 0, 0.35);
   box-shadow: var(--ds-shadow-glass-gold), var(--ds-glass-highlight);
-  -webkit-backdrop-filter: blur(16px) saturate(170%);
-  backdrop-filter: blur(16px) saturate(170%);
-}
-
-/* Accent Luminous Glass (Sovereign Azure) */
-.ds-glass-azure {
-  background: linear-gradient(135deg, rgba(36, 107, 253, 0.12) 0%, rgba(255, 255, 255, 0.72) 100%);
-  border: 1px solid rgba(36, 107, 253, 0.32);
-  box-shadow: var(--ds-shadow-glass-azure), var(--ds-glass-highlight);
   -webkit-backdrop-filter: blur(16px) saturate(170%);
   backdrop-filter: blur(16px) saturate(170%);
 }
@@ -187,8 +177,8 @@
 }
 .ds-glass-input:focus {
   background: rgba(255, 255, 255, 0.95);
-  border-color: #246bfd;
-  box-shadow: 0 0 0 3px rgba(36, 107, 253, 0.18), inset 0 1px 2px rgba(15, 23, 42, 0.02);
+  border-color: #f08300;
+  box-shadow: 0 0 0 3px rgba(240, 131, 0, 0.20), inset 0 1px 2px rgba(15, 23, 42, 0.02);
 }
 
 /* Glassmorphic Interactive Cards with Apple Smooth Transitions */

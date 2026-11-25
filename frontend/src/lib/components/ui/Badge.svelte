@@ -11,22 +11,22 @@
 
   const variantClasses: Record<typeof variant, string> = {
     neutral: 'bg-slate-100 text-slate-700 border-slate-200/80',
-    primary: 'bg-blue-50 text-blue-700 border-blue-200/80',
-    success: 'bg-emerald-50 text-emerald-700 border-emerald-200/80',
-    warning: 'bg-amber-50 text-amber-800 border-amber-200/80',
-    danger: 'bg-rose-50 text-rose-700 border-rose-200/80',
-    gold: 'bg-orange-50 text-[#b45f00] border-orange-200/80',
-    indigo: 'bg-indigo-50 text-indigo-700 border-indigo-200/80'
+    primary: 'bg-amber-500/10 text-[#d97400] border-amber-500/25',
+    success: 'bg-slate-900 text-white border-slate-800',
+    warning: 'bg-amber-500/10 text-[#d97400] border-amber-500/25',
+    danger: 'bg-slate-100 text-slate-800 border-slate-300',
+    gold: 'bg-amber-500/10 text-[#d97400] border-amber-500/25',
+    indigo: 'bg-slate-100 text-slate-700 border-slate-200/80'
   };
 
   const dotClasses: Record<typeof variant, string> = {
     neutral: 'bg-slate-400',
-    primary: 'bg-blue-500',
-    success: 'bg-emerald-500',
-    warning: 'bg-amber-500',
-    danger: 'bg-rose-500',
+    primary: 'bg-[#f08300]',
+    success: 'bg-white',
+    warning: 'bg-[#f08300]',
+    danger: 'bg-slate-600',
     gold: 'bg-[#f08300]',
-    indigo: 'bg-indigo-500'
+    indigo: 'bg-slate-400'
   };
 </script>
 

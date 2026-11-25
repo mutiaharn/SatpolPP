@@ -11,6 +11,7 @@
     Sparkles, 
     Clock, 
     ChevronRight,
+    ChevronDown,
     Users,
     Shield,
     FileCheck2
@@ -78,7 +79,6 @@
   {/each}
 
   <!-- Ambient Light Orbs underneath Hero -->
-  <div class="absolute top-1/4 -left-20 w-96 h-96 rounded-full bg-[#246bfd]/18 blur-3xl -z-0 pointer-events-none transform-gpu"></div>
   <div class="absolute bottom-1/4 -right-20 w-96 h-96 rounded-full bg-[#f08300]/15 blur-3xl -z-0 pointer-events-none transform-gpu"></div>
 
   <div class="max-w-7xl mx-auto px-4 py-16 md:py-24 relative z-20 w-full">
@@ -121,17 +121,15 @@
     </div>
   </div>
 
-  <!-- Scroll Down Indicator -->
+  <!-- Scroll Down Indicator (Apple HIG Frosted Liquid Glass Capsule) -->
   <a
     href="#berita-terbaru"
     on:click={(e) => { e.preventDefault(); scrollToTarget('berita-terbaru'); }}
-    class="hidden md:flex absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex-col items-center gap-1.5 text-slate-400 hover:text-[#F08300] transition group focus:outline-none cursor-pointer ds-press"
-    aria-label="Gulir ke konten berita"
+    class="hidden md:inline-flex items-center gap-2.5 absolute bottom-8 left-1/2 -translate-x-1/2 z-30 px-5 py-2.5 rounded-full bg-slate-900/65 hover:bg-slate-900/85 backdrop-blur-xl border border-white/20 hover:border-[#F08300]/50 text-white hover:text-[#F08300] shadow-[0_8px_24px_rgba(0,0,0,0.3)] transition-all duration-200 select-none cursor-pointer ds-press focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F08300] focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+    aria-label="Jelajahi Portal - Gulir ke konten berita"
   >
-    <span class="text-[10px] font-bold uppercase tracking-widest text-[#F08300]">Jelajahi Portal</span>
-    <svg class="w-5 h-5 animate-bounce text-[#F08300]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-    </svg>
+    <span class="text-xs font-bold tracking-wider uppercase text-white/95">Jelajahi Portal</span>
+    <ChevronDown class="w-4 h-4 text-[#F08300] animate-bounce shrink-0" />
   </a>
 
   <!-- Slide Navigation Indicators (Frosted Glass Dock - Apple HIG Ergonomic Touch Targets) -->
@@ -153,8 +151,8 @@
 <section id="berita-terbaru" class="scroll-mt-24 pt-12 md:pt-16 pb-16 px-4 max-w-7xl mx-auto">
   <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
     <div>
-      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full ds-glass text-[#246bfd] font-bold text-xs uppercase tracking-widest border border-blue-200/80 mb-2.5">
-        <Sparkles class="w-3.5 h-3.5 text-[#246bfd]" />
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full ds-glass text-[#F08300] font-bold text-xs uppercase tracking-widest border border-amber-200/80 mb-2.5">
+        <Sparkles class="w-3.5 h-3.5 text-[#F08300]" />
         <span>Publikasi &amp; Kegiatan</span>
       </div>
       <h2 class="text-2xl md:text-3xl font-extrabold text-[#071936] tracking-tight">
@@ -196,7 +194,7 @@
           </div>
 
           <div class="p-6 space-y-3">
-            <h3 class="font-bold text-base text-[#071936] leading-snug line-clamp-2 min-h-[2.8rem] group-hover:text-[#246bfd] transition duration-200">
+            <h3 class="font-bold text-base text-[#071936] leading-snug line-clamp-2 min-h-[2.8rem] group-hover:text-[#F08300] transition duration-200">
               <a href={`/berita/${item.slug}`}>{item.title}</a>
             </h3>
             <p class="text-xs text-slate-500 leading-relaxed line-clamp-3 min-h-[3.2rem] font-light">
@@ -206,7 +204,7 @@
         </div>
 
         <div class="px-6 pb-6 pt-3 border-t border-slate-100/90 mt-auto flex items-center justify-between">
-          <a href={`/berita/${item.slug}`} class="text-xs font-bold text-[#246bfd] uppercase tracking-wider hover:underline flex items-center gap-1.5 group-hover:text-[#1d4ed8] transition">
+          <a href={`/berita/${item.slug}`} class="text-xs font-bold text-[#F08300] uppercase tracking-wider hover:underline flex items-center gap-1.5 group-hover:text-[#d97400] transition">
             <span>Baca Selengkapnya</span>
             <ArrowRight class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
           </a>
@@ -223,15 +221,14 @@
 <!-- 3. Sambutan & Amanat Pimpinan (Seamless Stage) -->
 <section class="py-16 md:py-24 px-4 max-w-7xl mx-auto relative">
   <!-- Ambient Halo Behind Sambutan Section -->
-  <div class="absolute top-1/2 -left-20 -translate-y-1/2 w-[520px] h-[520px] rounded-full bg-[#246bfd]/12 blur-3xl pointer-events-none transform-gpu"></div>
-  <div class="absolute bottom-0 right-0 w-[480px] h-[480px] rounded-full bg-[#F08300]/12 blur-3xl pointer-events-none transform-gpu"></div>
+  <div class="absolute bottom-0 right-0 w-[480px] h-[480px] rounded-full bg-[#F08300]/8 blur-3xl pointer-events-none transform-gpu"></div>
 
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center relative z-10">
     <!-- Pimpinan Cutout Frame -->
     <div class="lg:col-span-5 flex justify-center items-end relative">
       <div class="relative flex flex-col items-center group w-full max-w-md">
         <!-- Subtle Frosted Halo Arch -->
-        <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[280px] sm:w-[340px] h-[440px] sm:h-[520px] rounded-t-full bg-gradient-to-t from-blue-500/12 via-amber-500/12 to-transparent border-t border-x border-white/70 -z-10 shadow-lg backdrop-blur-md"></div>
+        <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[280px] sm:w-[340px] h-[440px] sm:h-[520px] rounded-t-full bg-gradient-to-t from-slate-900/10 via-amber-500/10 to-transparent border-t border-x border-white/70 -z-10 shadow-lg backdrop-blur-md"></div>
 
         <div class="relative z-10 transition-transform duration-500 ease-out group-hover:-translate-y-1 group-hover:scale-[1.01]">
           <img
@@ -334,14 +331,14 @@
     <GlassCard hoverLift className="flex flex-col justify-between h-full group">
       <div>
         <div class="flex items-center justify-between mb-3">
-          <Badge variant="blue" size="sm">Perencanaan</Badge>
-          <FileText class="w-4 h-4 text-slate-400 group-hover:text-[#246bfd] transition duration-200" />
+          <Badge variant="gold" size="sm">Perencanaan</Badge>
+          <FileText class="w-4 h-4 text-slate-400 group-hover:text-[#F08300] transition duration-200" />
         </div>
-        <h3 class="font-bold text-base text-[#071936] group-hover:text-[#246bfd] transition duration-200">Renja (Rencana Kerja)</h3>
+        <h3 class="font-bold text-base text-[#071936] group-hover:text-[#F08300] transition duration-200">Renja (Rencana Kerja)</h3>
         <p class="text-xs text-slate-500 mt-2 line-clamp-2 font-light">Dokumen perencanaan tahunan program dan target kegiatan Satpol PP Prov. Sulsel.</p>
       </div>
       <div class="mt-5 pt-3.5 border-t border-slate-100/90 flex items-center justify-between">
-        <a href="/dokumen?category=renja" class="text-xs font-bold text-[#246bfd] uppercase tracking-wider flex items-center gap-1 group-hover:text-[#1d4ed8] py-1.5 px-2.5 -ml-2.5 rounded-lg hover:bg-blue-50/70 transition ds-press">
+        <a href="/dokumen?category=renja" class="text-xs font-bold text-[#F08300] uppercase tracking-wider flex items-center gap-1 group-hover:text-[#d97400] py-1.5 px-2.5 -ml-2.5 rounded-lg hover:bg-orange-50/70 transition ds-press">
           <span>Akses Dokumen</span>
           <ArrowRight class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
         </a>
@@ -353,14 +350,14 @@
     <GlassCard hoverLift className="flex flex-col justify-between h-full group">
       <div>
         <div class="flex items-center justify-between mb-3">
-          <Badge variant="blue" size="sm">Strategis</Badge>
-          <FileText class="w-4 h-4 text-slate-400 group-hover:text-[#246bfd] transition duration-200" />
+          <Badge variant="neutral" size="sm">Strategis</Badge>
+          <FileText class="w-4 h-4 text-slate-400 group-hover:text-[#F08300] transition duration-200" />
         </div>
-        <h3 class="font-bold text-base text-[#071936] group-hover:text-[#246bfd] transition duration-200">Renstra (Rencana Strategis)</h3>
+        <h3 class="font-bold text-base text-[#071936] group-hover:text-[#F08300] transition duration-200">Renstra (Rencana Strategis)</h3>
         <p class="text-xs text-slate-500 mt-2 line-clamp-2 font-light">Rencana strategis jangka menengah pencapaian visi, misi, dan sasaran instansi.</p>
       </div>
       <div class="mt-5 pt-3.5 border-t border-slate-100/90 flex items-center justify-between">
-        <a href="/dokumen?category=renstra" class="text-xs font-bold text-[#246bfd] uppercase tracking-wider flex items-center gap-1 group-hover:text-[#1d4ed8] py-1.5 px-2.5 -ml-2.5 rounded-lg hover:bg-blue-50/70 transition ds-press">
+        <a href="/dokumen?category=renstra" class="text-xs font-bold text-[#F08300] uppercase tracking-wider flex items-center gap-1 group-hover:text-[#d97400] py-1.5 px-2.5 -ml-2.5 rounded-lg hover:bg-orange-50/70 transition ds-press">
           <span>Akses Dokumen</span>
           <ArrowRight class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
         </a>
@@ -391,14 +388,14 @@
     <GlassCard hoverLift className="flex flex-col justify-between h-full group">
       <div>
         <div class="flex items-center justify-between mb-3">
-          <Badge variant="green" size="sm">Kinerja</Badge>
-          <FileText class="w-4 h-4 text-slate-400 group-hover:text-emerald-600 transition duration-200" />
+          <Badge variant="neutral" size="sm">Kinerja</Badge>
+          <FileText class="w-4 h-4 text-slate-400 group-hover:text-[#F08300] transition duration-200" />
         </div>
-        <h3 class="font-bold text-base text-[#071936] group-hover:text-emerald-600 transition duration-200">LAKIP / LKjIP</h3>
+        <h3 class="font-bold text-base text-[#071936] group-hover:text-[#F08300] transition duration-200">LAKIP / LKjIP</h3>
         <p class="text-xs text-slate-500 mt-2 line-clamp-2 font-light">Laporan akuntabilitas kinerja instansi pemerintah tahunan.</p>
       </div>
       <div class="mt-5 pt-3.5 border-t border-slate-100/90 flex items-center justify-between">
-        <a href="/dokumen?category=lakip" class="text-xs font-bold text-emerald-600 uppercase tracking-wider flex items-center gap-1 group-hover:text-emerald-700 py-1.5 px-2.5 -ml-2.5 rounded-lg hover:bg-emerald-50/70 transition ds-press">
+        <a href="/dokumen?category=lakip" class="text-xs font-bold text-[#F08300] uppercase tracking-wider flex items-center gap-1 group-hover:text-[#d97400] py-1.5 px-2.5 -ml-2.5 rounded-lg hover:bg-orange-50/70 transition ds-press">
           <span>Akses Dokumen</span>
           <ArrowRight class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
         </a>
@@ -410,14 +407,14 @@
     <GlassCard hoverLift className="flex flex-col justify-between h-full group">
       <div>
         <div class="flex items-center justify-between mb-3">
-          <Badge variant="purple" size="sm">Pertanggungjawaban</Badge>
-          <FileText class="w-4 h-4 text-slate-400 group-hover:text-purple-600 transition duration-200" />
+          <Badge variant="neutral" size="sm">Pertanggungjawaban</Badge>
+          <FileText class="w-4 h-4 text-slate-400 group-hover:text-[#F08300] transition duration-200" />
         </div>
-        <h3 class="font-bold text-base text-[#071936] group-hover:text-purple-600 transition duration-200">Laporan Keuangan</h3>
+        <h3 class="font-bold text-base text-[#071936] group-hover:text-[#F08300] transition duration-200">Laporan Keuangan</h3>
         <p class="text-xs text-slate-500 mt-2 line-clamp-2 font-light">Laporan pertanggungjawaban realisasi keuangan dan aset tahunan.</p>
       </div>
       <div class="mt-5 pt-3.5 border-t border-slate-100/90 flex items-center justify-between">
-        <a href="/dokumen?category=keuangan" class="text-xs font-bold text-purple-600 uppercase tracking-wider flex items-center gap-1 group-hover:text-purple-700 py-1.5 px-2.5 -ml-2.5 rounded-lg hover:bg-purple-50/70 transition ds-press">
+        <a href="/dokumen?category=keuangan" class="text-xs font-bold text-[#F08300] uppercase tracking-wider flex items-center gap-1 group-hover:text-[#d97400] py-1.5 px-2.5 -ml-2.5 rounded-lg hover:bg-orange-50/70 transition ds-press">
           <span>Akses Dokumen</span>
           <ArrowRight class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
         </a>
@@ -450,8 +447,8 @@
 <section id="galeri-kegiatan" class="pt-8 pb-16 px-4 max-w-7xl mx-auto">
   <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
     <div>
-      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full ds-glass text-[#246bfd] font-bold text-xs uppercase tracking-widest border border-blue-200/80 mb-2.5">
-        <Users class="w-3.5 h-3.5 text-[#246bfd]" />
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full ds-glass text-[#F08300] font-bold text-xs uppercase tracking-widest border border-amber-200/80 mb-2.5">
+        <Users class="w-3.5 h-3.5 text-[#F08300]" />
         <span>Dokumentasi Lapangan</span>
       </div>
       <h2 class="text-2xl md:text-3xl font-extrabold text-[#071936] tracking-tight">
