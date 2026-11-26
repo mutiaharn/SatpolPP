@@ -73,10 +73,10 @@
   <!-- Desktop Sidebar (Sticky, Non-Scrolling with Page, Collapsible) -->
   <aside
     aria-label="Navigasi Dashboard"
-    class="hidden lg:flex lg:sticky lg:top-0 lg:h-screen shrink-0 ds-glass-dark text-slate-200 border-r border-white/10 flex-col transition-all duration-300 select-none z-30 ds-specular-dark {collapsed ? 'w-20' : 'w-72'}"
+    class="hidden lg:flex lg:sticky lg:top-0 lg:h-screen shrink-0 bg-[#070e1c] text-slate-200 border-r border-white/10 flex-col transition-all duration-300 select-none z-30 {collapsed ? 'w-20' : 'w-72'}"
   >
     <!-- Sidebar Brand & Toggle -->
-    <div class="h-16 px-4 border-b border-white/10 flex items-center {collapsed ? 'justify-center' : 'justify-between'} gap-2 shrink-0 bg-white/5 backdrop-blur-md">
+    <div class="h-16 px-4 border-b border-white/10 flex items-center {collapsed ? 'justify-center' : 'justify-between'} gap-2 shrink-0 bg-[#070e1c]">
       {#if !collapsed}
         <Logo
           variant="white"
@@ -121,7 +121,7 @@
     {/if}
 
     <!-- Navigation Links -->
-    <nav class="flex-1 min-h-0 overflow-y-auto px-3 py-4 space-y-1.5">
+    <nav class="flex-1 min-h-0 overflow-y-auto px-3 py-4 space-y-1.5 bg-[#070e1c]">
       {#each navItems as item, idx}
         {#if item.section && !collapsed && (idx === 0 || navItems[idx - 1].section !== item.section)}
           <div class="px-3 pt-3 pb-1 text-[10px] font-bold uppercase tracking-widest text-slate-400">
@@ -134,7 +134,7 @@
           on:click={() => selectTab(item.id)}
           title={collapsed ? item.label : undefined}
           aria-current={activeTab === item.id ? 'page' : undefined}
-          class="relative w-full flex items-center {collapsed ? 'justify-center px-2' : 'justify-between px-3.5'} py-2.5 min-h-[40px] rounded-xl text-xs font-bold transition ds-press {activeTab === item.id ? 'bg-[#F08300] text-white shadow-glass-gold' : 'text-slate-300 hover:bg-white/10 hover:text-white'}"
+          class="relative w-full flex items-center {collapsed ? 'justify-center px-2' : 'justify-between px-3.5'} py-2.5 min-h-[40px] rounded-xl text-xs font-bold transition ds-press {activeTab === item.id ? 'bg-[#F08300] text-white shadow-glass-gold' : 'text-slate-300 hover:bg-white/5 hover:text-white'}"
         >
           <span class="flex items-center gap-3 min-w-0">
             <svelte:component this={item.icon} class="w-4 h-4 shrink-0" />
@@ -144,11 +144,11 @@
           </span>
 
           {#if !collapsed && item.badge !== undefined && item.badge !== null && item.badge !== '' && item.badge !== 0}
-            <span class="ml-2 px-2 py-0.5 text-[10px] font-black rounded-lg shrink-0 {activeTab === item.id ? 'bg-white/20 text-white' : 'bg-[#F08300]/20 text-[#F08300]'}">
+            <span class="ml-2 px-2 py-0.5 text-[10px] font-black rounded-lg shrink-0 {activeTab === item.id ? 'bg-white/20 text-white' : 'bg-white/10 text-slate-300'}">
               {item.badge}
             </span>
           {:else if collapsed && item.badge !== undefined && item.badge !== 0 && item.badge !== ''}
-            <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#F08300]" aria-hidden="true"></span>
+            <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full {activeTab === item.id ? 'bg-white' : 'bg-slate-400'}" aria-hidden="true"></span>
           {/if}
         </button>
       {/each}
@@ -158,7 +158,7 @@
           <a
             href={quickSwitchHref}
             title={collapsed ? quickSwitchLabel : undefined}
-            class="w-full flex items-center {collapsed ? 'justify-center px-2' : 'gap-3 px-3.5'} py-2.5 rounded-xl text-xs font-bold text-[#F08300] bg-white/5 hover:bg-white/10 transition"
+            class="w-full flex items-center {collapsed ? 'justify-center px-2' : 'gap-3 px-3.5'} py-2.5 rounded-xl text-xs font-bold text-slate-300 hover:text-white hover:bg-white/5 transition"
           >
             <ExternalLink class="w-4 h-4 shrink-0" />
             {#if !collapsed}
@@ -170,7 +170,7 @@
     </nav>
 
     <!-- User Footer -->
-    <div class="p-3 border-t border-white/10 bg-[#0b172a]/90 shrink-0 space-y-2">
+    <div class="p-3 border-t border-white/10 bg-[#070e1c] shrink-0 space-y-2">
       {#if user && !collapsed}
         <div class="flex items-center gap-2.5 px-2 py-1.5 rounded-xl bg-white/5">
           <div class="w-8 h-8 rounded-xl bg-[#F08300] text-white font-black text-xs flex items-center justify-center shrink-0">
@@ -217,7 +217,7 @@
     class="m-0 p-0 h-dvh max-h-dvh w-72 max-w-[85vw] bg-[#070e1c] text-slate-200 border-r border-white/10 backdrop:bg-slate-900/60 lg:hidden rounded-r-3xl overflow-hidden shadow-2xl"
   >
     <div class="h-full flex flex-col">
-      <div class="h-16 px-4 border-b border-white/10 bg-[#0b172a] flex items-center justify-between gap-2 shrink-0">
+      <div class="h-16 px-4 border-b border-white/10 bg-[#070e1c] flex items-center justify-between gap-2 shrink-0">
         <Logo
           variant="white"
           size="sm"
@@ -236,26 +236,26 @@
         </button>
       </div>
 
-      <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-1.5">
+      <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-1.5 bg-[#070e1c]">
         {#each navItems as item}
           <button
             type="button"
             on:click={() => selectTab(item.id)}
-            class="w-full flex items-center justify-between px-3.5 py-2.5 min-h-[44px] rounded-xl text-xs font-bold transition ds-press {activeTab === item.id ? 'bg-[#F08300] text-white shadow-glass-gold' : 'text-slate-300 hover:bg-white/10 hover:text-white'}"
+            class="w-full flex items-center justify-between px-3.5 py-2.5 min-h-[44px] rounded-xl text-xs font-bold transition ds-press {activeTab === item.id ? 'bg-[#F08300] text-white shadow-glass-gold' : 'text-slate-300 hover:bg-white/5 hover:text-white'}"
           >
             <span class="flex items-center gap-3 min-w-0">
               <svelte:component this={item.icon} class="w-4 h-4 shrink-0" />
               <span class="truncate">{item.label}</span>
             </span>
             {#if item.badge !== undefined && item.badge !== 0 && item.badge !== ''}
-              <span class="px-2 py-0.5 text-[10px] font-black rounded-lg bg-white/10 text-[#F08300]">{item.badge}</span>
+              <span class="px-2 py-0.5 text-[10px] font-black rounded-lg {activeTab === item.id ? 'bg-white/20 text-white' : 'bg-white/10 text-slate-300'}">{item.badge}</span>
             {/if}
           </button>
         {/each}
         {#if quickSwitchHref && quickSwitchLabel}
           <a
             href={quickSwitchHref}
-            class="mt-3 w-full flex items-center gap-3 px-3.5 py-2.5 min-h-[44px] rounded-xl text-xs font-bold text-[#F08300] bg-white/5 hover:bg-white/10 ds-press"
+            class="mt-3 w-full flex items-center gap-3 px-3.5 py-2.5 min-h-[44px] rounded-xl text-xs font-bold text-slate-300 hover:text-white hover:bg-white/5 ds-press"
           >
             <ExternalLink class="w-4 h-4 shrink-0" />
             <span>{quickSwitchLabel}</span>
@@ -263,7 +263,7 @@
         {/if}
       </nav>
 
-      <div class="p-3 border-t border-white/10 bg-[#0b172a] space-y-2 shrink-0">
+      <div class="p-3 border-t border-white/10 bg-[#070e1c] space-y-2 shrink-0">
         {#if user}
           <div class="px-3 py-2 rounded-xl bg-white/5 text-xs">
             <div class="font-bold text-white truncate">{user.name || user.username}</div>
