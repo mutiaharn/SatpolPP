@@ -77,16 +77,12 @@
     <!-- Sidebar Brand & Toggle -->
     <div class="h-16 px-4 border-b border-white/10 flex items-center {collapsed ? 'justify-center' : 'justify-between'} gap-2 shrink-0 bg-white/5 backdrop-blur-md">
       {#if !collapsed}
-        <a href="/" class="flex items-center gap-3 min-w-0 group" title="Ke Beranda Publik">
+        <a href="/" class="flex items-center group py-0.5" title="{portalLabel}{portalTag ? ' (' + portalTag + ')' : ''} — Ke Beranda Publik">
           <img
             src="/uploads/foto_website/1686928245logo_white.png"
             alt="Logo Satpol PP Sulsel"
-            class="h-10 w-auto max-w-[140px] object-contain shrink-0 rounded-xl bg-white/10 p-1 group-hover:bg-white/15 transition"
+            class="h-10 w-auto object-contain shrink-0 rounded-xl bg-white/10 p-1 group-hover:bg-white/15 transition"
           />
-          <div class="min-w-0">
-            <div class="text-xs font-black tracking-wide text-white truncate">{portalLabel}</div>
-            <div class="text-[10px] font-bold uppercase tracking-widest text-[#F08300] truncate">{portalTag}</div>
-          </div>
         </a>
       {:else}
         <a href="/" class="flex items-center justify-center" title="{portalLabel} — Ke Beranda">
@@ -223,13 +219,9 @@
   >
     <div class="h-full flex flex-col">
       <div class="h-16 px-4 border-b border-white/10 bg-[#0b172a] flex items-center justify-between gap-2 shrink-0">
-        <div class="flex items-center gap-3 min-w-0">
-          <img src="/uploads/foto_website/1686928245logo_white.png" alt="Logo Satpol PP Sulsel" class="w-9 h-9 object-contain rounded-xl bg-white/10 p-1 shrink-0" />
-          <div class="min-w-0">
-            <div class="text-xs font-black text-white truncate">{portalLabel}</div>
-            <div class="text-[10px] font-bold uppercase tracking-widest text-[#F08300] truncate">{portalTag}</div>
-          </div>
-        </div>
+        <a href="/" class="flex items-center group" title="{portalLabel} — Ke Beranda Publik">
+          <img src="/uploads/foto_website/1686928245logo_white.png" alt="Logo Satpol PP Sulsel" class="h-9 w-auto object-contain rounded-xl bg-white/10 p-1 group-hover:bg-white/15 transition shrink-0" />
+        </a>
         <!-- svelte-ignore a11y-autofocus -->
         <button
           type="button"
