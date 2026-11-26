@@ -22,26 +22,3 @@ func GenerateTicketCode() string {
 	
 	return fmt.Sprintf("TRB-%s-%s", datePart, string(b))
 }
-
-// MaskReporterIdentity masks confidential citizen info for anonymous reports
-func MaskReporterIdentity(name, nik, phone string) (maskedName, maskedNIK, maskedPhone string) {
-	if len(name) > 2 {
-		maskedName = string(name[0]) + "***" + string(name[len(name)-1])
-	} else {
-		maskedName = "Warga (Anonim)"
-	}
-
-	if len(nik) >= 16 {
-		maskedNIK = nik[:4] + "********" + nik[12:]
-	} else {
-		maskedNIK = "****************"
-	}
-
-	if len(phone) >= 8 {
-		maskedPhone = phone[:3] + "*****" + phone[len(phone)-3:]
-	} else {
-		maskedPhone = "**********"
-	}
-
-	return
-}

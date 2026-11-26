@@ -11,7 +11,6 @@ const (
 	RoleSuperadmin Role = "SUPERADMIN_DISKOMINFO" // Developer / IT Diskominfo
 	RoleAdmin      Role = "ADMIN_SATPOL"          // Kasat / Pimpinan
 	RoleStaff      Role = "STAFF_SATPOL"          // Staff Pengelola Informasi / Regu Patroli
-	RolePublic     Role = "PUBLIC"                // Warga Masyarakat
 )
 
 // User represents an administrative user
