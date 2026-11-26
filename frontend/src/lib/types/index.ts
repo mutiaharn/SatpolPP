@@ -1,4 +1,4 @@
-export type UserRole = 'SUPERADMIN_DISKOMINFO' | 'ADMIN_SATPOL' | 'STAFF_SATPOL' | 'PUBLIC';
+export type UserRole = 'SUPERADMIN_DISKOMINFO' | 'ADMIN_SATPOL' | 'STAFF_SATPOL';
 
 export interface User {
   id: number;
