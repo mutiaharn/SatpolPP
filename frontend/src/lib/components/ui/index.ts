@@ -9,3 +9,4 @@ export { default as Badge } from './Badge.svelte';
 export { default as Modal } from './Modal.svelte';
 export { default as StatusBadge } from './StatusBadge.svelte';
 export { default as ScrollToTop } from './ScrollToTop.svelte';
+export { default as Logo } from './Logo.svelte';

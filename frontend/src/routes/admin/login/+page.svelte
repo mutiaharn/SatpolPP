@@ -2,7 +2,7 @@
   import { goto } from '$app/navigation';
   import { loginAdmin } from '$lib/api/client';
   import { saveSession } from '$lib/utils/auth';
-  import { Button, Input, SegmentedControl, GlassCard } from '$lib/components/ui';
+  import { Button, Input, SegmentedControl, GlassCard, Logo } from '$lib/components/ui';
   import { 
     ShieldCheck, 
     Lock, 
@@ -99,13 +99,7 @@
       <!-- Top Bar: Logo & Navigation Back -->
       <div>
         <div class="flex items-center justify-between gap-4 pb-4 border-b border-slate-100">
-          <a href="/" class="flex items-center gap-3 group" title="Kembali ke Beranda Publik">
-            <img
-              src="/uploads/foto_website/1686928245logo_black.png"
-              alt="Logo Satpol PP Sulsel"
-              class="h-10 sm:h-11 w-auto object-contain transition group-hover:scale-105"
-            />
-          </a>
+          <Logo variant="black" size="md" href="/" alt="Kembali ke Beranda Publik" />
 
           <Button
             href="/"

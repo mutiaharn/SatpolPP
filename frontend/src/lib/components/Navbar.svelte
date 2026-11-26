@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Search } from 'lucide-svelte';
   import CommandPalette from '$lib/components/ui/CommandPalette.svelte';
-  import { Button } from '$lib/components/ui';
+  import { Button, Logo } from '$lib/components/ui';
 
   let mobileMenuOpen = false;
   let searchOpen = false;
@@ -27,14 +27,8 @@
   <!-- Main Navigation Bar -->
   <div>
     <div class="max-w-7xl mx-auto px-4 py-2.5 flex items-center justify-between gap-4">
-      <!-- Official Logo -->
-      <a href="/" class="flex items-center group py-0.5 ds-press" title="Beranda Satpol PP Sulsel">
-        <img 
-          src="/uploads/foto_website/1686928245logo_black.png" 
-          alt="Logo Satpol PP Prov. Sulsel" 
-          class="h-10 sm:h-11 w-auto object-contain transition duration-200 group-hover:scale-[1.02]" 
-        />
-      </a>
+      <!-- Official Logo (Atomic Primitive) -->
+      <Logo variant="black" size="md" href="/" alt="Beranda Satpol PP Sulsel" />
 
       <!-- Desktop Navigation Menu Links (Minimalist Apple HIG Layout) -->
       <nav class="hidden lg:flex items-center gap-1.5 xl:gap-2.5 text-[12px] xl:text-[13px] font-bold text-slate-700 uppercase tracking-wider shrink-0">
@@ -104,13 +98,13 @@
     >
       <!-- Mobile Bar Top with Close Button -->
       <div class="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-white/5 backdrop-blur-xl">
-        <a href="/" on:click={() => mobileMenuOpen = false} class="ds-press">
-          <img 
-            src="/uploads/foto_website/1686928245logo_white.png" 
-            alt="Logo Satpol PP" 
-            class="h-10 w-auto object-contain" 
-          />
-        </a>
+        <Logo
+          variant="white"
+          size="md"
+          href="/"
+          alt="Logo Satpol PP"
+          on:click={() => mobileMenuOpen = false}
+        />
         <button 
           type="button" 
           class="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition focus:outline-none ds-press"

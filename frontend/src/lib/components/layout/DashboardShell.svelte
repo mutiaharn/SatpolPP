@@ -3,6 +3,7 @@
   import { goto } from '$app/navigation';
   import { PanelLeftClose, PanelLeftOpen, Menu, X, LogOut, ExternalLink } from 'lucide-svelte';
   import { clearSession } from '$lib/utils/auth';
+  import { Logo } from '$lib/components/ui';
 
   export interface DashboardNavItem {
     id: string;
@@ -77,21 +78,19 @@
     <!-- Sidebar Brand & Toggle -->
     <div class="h-16 px-4 border-b border-white/10 flex items-center {collapsed ? 'justify-center' : 'justify-between'} gap-2 shrink-0 bg-white/5 backdrop-blur-md">
       {#if !collapsed}
-        <a href="/" class="flex items-center group py-0.5" title="{portalLabel}{portalTag ? ' (' + portalTag + ')' : ''} — Ke Beranda Publik">
-          <img
-            src="/uploads/foto_website/1686928245logo_white.png"
-            alt="Logo Satpol PP Sulsel"
-            class="h-10 w-auto object-contain shrink-0 rounded-xl bg-white/10 p-1 group-hover:bg-white/15 transition"
-          />
-        </a>
+        <Logo
+          variant="white"
+          size="md"
+          href="/"
+          alt="{portalLabel}{portalTag ? ' (' + portalTag + ')' : ''} — Ke Beranda Publik"
+        />
       {:else}
-        <a href="/" class="flex items-center justify-center" title="{portalLabel} — Ke Beranda">
-          <img
-            src="/uploads/foto_website/1686928245logo_white.png"
-            alt="Logo Satpol PP Sulsel"
-            class="w-10 h-10 object-contain rounded-xl bg-white/10 p-1 hover:bg-white/15 transition"
-          />
-        </a>
+        <Logo
+          variant="white"
+          size="sm"
+          href="/"
+          alt="{portalLabel} — Ke Beranda"
+        />
       {/if}
 
       {#if !collapsed}
@@ -219,9 +218,12 @@
   >
     <div class="h-full flex flex-col">
       <div class="h-16 px-4 border-b border-white/10 bg-[#0b172a] flex items-center justify-between gap-2 shrink-0">
-        <a href="/" class="flex items-center group" title="{portalLabel} — Ke Beranda Publik">
-          <img src="/uploads/foto_website/1686928245logo_white.png" alt="Logo Satpol PP Sulsel" class="h-9 w-auto object-contain rounded-xl bg-white/10 p-1 group-hover:bg-white/15 transition shrink-0" />
-        </a>
+        <Logo
+          variant="white"
+          size="sm"
+          href="/"
+          alt="{portalLabel}{portalTag ? ' (' + portalTag + ')' : ''} — Ke Beranda Publik"
+        />
         <!-- svelte-ignore a11y-autofocus -->
         <button
           type="button"

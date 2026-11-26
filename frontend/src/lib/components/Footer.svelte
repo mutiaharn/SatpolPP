@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { Logo } from '$lib/components/ui';
+
   export let compact = false;
 </script>
 
@@ -7,7 +9,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-10 pb-8 grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-8">
       <!-- Col 1: Instansi & Logo -->
       <div class="space-y-3.5">
-        <img src="/uploads/foto_website/1686928245logo_white.png" alt="Logo Satpol PP Sulsel" class="h-10 sm:h-11 w-auto object-contain" />
+        <Logo variant="white" size="md" alt="Logo Satpol PP Sulsel" />
         <p class="leading-relaxed text-slate-400 text-[11.5px] line-clamp-3 font-light">
           Satuan Polisi Pamong Praja Provinsi Sulawesi Selatan bertugas menyelenggarakan urusan pemerintahan daerah di bidang ketenteraman, ketertiban umum, dan pelindungan masyarakat.
         </p>
