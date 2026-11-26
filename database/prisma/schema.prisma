@@ -1,0 +1,230 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  SUPERADMIN_DISKOMINFO
+  ADMIN_SATPOL
+  STAFF_SATPOL
+}
+
+enum ComplaintStatus {
+  MENUNGGU_VERIFIKASI
+  DISPOSISI_BIDANG
+  PENINDAKAN_LAPANGAN
+  SELESAI
+  DITOLAK
+}
+
+enum OutboxStatus {
+  PENDING
+  SENT
+  FAILED
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(100)
+  email     String   @unique @db.VarChar(100)
+  username  String   @unique @db.VarChar(50)
+  password  String   @db.VarChar(255) // Argon2id / Bcrypt hash
+  role      Role     @default(STAFF_SATPOL)
+  bidang    String   @default("") @db.VarChar(100)
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  articles   Article[]
+  complaints Complaint[]
+  auditLogs  AuditLog[]
+
+  @@map("users")
+}
+
+model Regency {
+  id   String @id @db.VarChar(10)
+  name String @db.VarChar(100)
+
+  complaints Complaint[]
+
+  @@map("regencies")
+}
+
+model Article {
+  id          Int      @id @default(autoincrement())
+  title       String   @db.VarChar(255)
+  slug        String   @unique @db.VarChar(255)
+  summary     String   @default("") @db.Text
+  content     String   @db.Text
+  thumbnail   String   @default("") @db.VarChar(500)
+  category    String   @db.VarChar(50)
+  authorId    Int      @map("author_id")
+  viewCount   Int      @default(0) @map("view_count")
+  isPublished Boolean  @default(true) @map("is_published")
+  publishedAt DateTime @default(now()) @map("published_at") @db.Timestamptz(3)
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  author User @relation(fields: [authorId], references: [id], onDelete: Restrict)
+
+  @@index([category])
+  @@index([isPublished, publishedAt(sort: Desc)])
+  @@map("articles")
+}
+
+model PublicDocument {
+  id            Int      @id @default(autoincrement())
+  title         String   @db.VarChar(255)
+  docNumber     String   @default("") @map("doc_number") @db.VarChar(100)
+  category      String   @db.VarChar(50)
+  year          Int
+  fileUrl       String   @map("file_url") @db.VarChar(500)
+  fileSize      String   @default("") @map("file_size") @db.VarChar(20)
+  downloadCount Int      @default(0) @map("download_count")
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt     DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@index([category])
+  @@index([year])
+  @@map("public_documents")
+}
+
+model Gallery {
+  id          Int      @id @default(autoincrement())
+  title       String   @db.VarChar(255)
+  description String   @default("") @db.Text
+  imageUrl    String   @map("image_url") @db.VarChar(500)
+  eventDate   DateTime @default(now()) @map("event_date") @db.Timestamptz(3)
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@index([eventDate(sort: Desc)])
+  @@map("galleries")
+}
+
+model Complaint {
+  id                Int             @id @default(autoincrement())
+  ticketCode        String          @unique @map("ticket_code") @db.VarChar(30)
+  isAnonymous       Boolean         @default(false) @map("is_anonymous")
+  // PII terenkripsi AES-256-GCM saat disimpan di DB; hanya dibuka via endpoint teraudit
+  reporterNikEnc    String          @default("") @map("reporter_nik_enc") @db.VarChar(255)
+  reporterNikMasked String          @default("") @map("reporter_nik_masked") @db.VarChar(30)
+  reporterName      String          @default("") @map("reporter_name") @db.VarChar(100)
+  reporterPhoneEnc  String          @default("") @map("reporter_phone_enc") @db.VarChar(255)
+  reporterEmail     String          @default("") @map("reporter_email") @db.VarChar(100)
+  violationType     String          @map("violation_type") @db.VarChar(100)
+  regencyId         String          @map("regency_id") @db.VarChar(10)
+  districtName      String          @default("") @map("district_name") @db.VarChar(100)
+  villageName       String          @default("") @map("village_name") @db.VarChar(100)
+  addressDetail     String          @map("address_detail") @db.Text
+  latitude          Float           @default(0)
+  longitude         Float           @default(0)
+  description       String          @db.Text
+  incidentDate      DateTime        @default(now()) @map("incident_date") @db.Timestamptz(3)
+  // Array key S3 RustFS (bucket private siaptertib-evidence)
+  evidencePhotos    Json            @default("[]") @map("evidence_photos")
+  status            ComplaintStatus @default(MENUNGGU_VERIFIKASI)
+  disposedTo        String          @default("") @map("disposed_to") @db.VarChar(100)
+  actionNotes       String          @default("") @map("action_notes") @db.Text
+  actionProof       String          @default("") @map("action_proof") @db.VarChar(500)
+  // Riwayat transisi status & catatan petugas untuk halaman /lacak
+  timeline          Json            @default("[]")
+  officerId         Int?            @map("officer_id")
+  completedAt       DateTime?       @map("completed_at") @db.Timestamptz(3)
+  createdAt         DateTime        @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt         DateTime        @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  regency Regency @relation(fields: [regencyId], references: [id], onDelete: Restrict)
+  officer User?   @relation(fields: [officerId], references: [id], onDelete: SetNull)
+
+  outboxEmails EmailOutbox[]
+
+  @@index([status])
+  @@index([violationType])
+  @@index([regencyId])
+  @@index([createdAt(sort: Desc)])
+  @@map("complaints")
+}
+
+model SiteSetting {
+  id        Int      @id @default(autoincrement())
+  key       String   @unique @db.VarChar(100)
+  value     String   @default("") @db.Text
+  group     String   @default("general") @db.VarChar(50)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@map("site_settings")
+}
+
+model AuditLog {
+  id            Int      @id @default(autoincrement())
+  userId        Int      @map("user_id")
+  // Snapshot username saat kejadian untuk keutuhan forensik
+  actorUsername String   @default("") @map("actor_username") @db.VarChar(50)
+  action        String   @db.VarChar(100)
+  resource      String   @default("") @db.VarChar(100)
+  details       String   @default("") @db.Text
+  ipAddress     String   @default("") @map("ip_address") @db.VarChar(45)
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@index([userId])
+  @@index([createdAt(sort: Desc)])
+  @@map("audit_logs")
+}
+
+model OrganizationNode {
+  id            Int      @id @default(autoincrement())
+  orgCode       String   @unique @map("org_code") @db.VarChar(30)
+  parentCode    String?  @map("parent_code") @db.VarChar(30)
+  positionTitle String   @map("position_title") @db.VarChar(150)
+  officialName  String   @map("official_name") @db.VarChar(150)
+  nip           String   @default("") @db.VarChar(40)
+  rank          String   @default("") @db.VarChar(50)
+  description   String   @default("") @db.Text
+  subUnits      Json     @default("[]") @map("sub_units")
+  photoUrl      String   @default("") @map("photo_url") @db.VarChar(500)
+  level         Int      @default(2)
+  sortOrder     Int      @default(1) @map("sort_order")
+  updatedAt     DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@index([parentCode])
+  @@index([level, sortOrder])
+  @@map("organization_nodes")
+}
+
+model RevokedToken {
+  id        Int      @id @default(autoincrement())
+  tokenHash String   @unique @map("token_hash") @db.VarChar(64)
+  expiresAt DateTime @map("expires_at") @db.Timestamptz(3)
+  revokedAt DateTime @default(now()) @map("revoked_at") @db.Timestamptz(3)
+
+  @@index([expiresAt])
+  @@map("revoked_tokens")
+}
+
+model EmailOutbox {
+  id          Int          @id @default(autoincrement())
+  complaintId Int?         @map("complaint_id")
+  toEmail     String       @map("to_email") @db.VarChar(150)
+  subject     String       @db.VarChar(255)
+  bodyText    String       @map("body_text") @db.Text
+  bodyHtml    String       @default("") @map("body_html") @db.Text
+  status      OutboxStatus @default(PENDING)
+  attempts    Int          @default(0)
+  lastError   String       @default("") @map("last_error") @db.Text
+  nextRetryAt DateTime     @default(now()) @map("next_retry_at") @db.Timestamptz(3)
+  sentAt      DateTime?    @map("sent_at") @db.Timestamptz(3)
+  createdAt   DateTime     @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  complaint Complaint? @relation(fields: [complaintId], references: [id], onDelete: SetNull)
+
+  @@index([status, nextRetryAt])
+  @@map("email_outbox")
+}
