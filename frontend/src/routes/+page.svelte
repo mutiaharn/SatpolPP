@@ -218,69 +218,7 @@
   </div>
 </section>
 
-<!-- 3. SIAP TERTIB: editorial call-to-action -->
-<section id="siap-tertib" class="relative isolate overflow-hidden px-4 py-10 md:py-14">
-  <div class="absolute inset-0 bg-gradient-to-b from-[#eef1f4]/90 via-transparent to-[#eef1f4]/70 pointer-events-none"></div>
-  <div class="relative max-w-7xl mx-auto overflow-hidden rounded-[2rem] bg-[#070e1c] text-white shadow-[0_28px_80px_rgba(7,14,28,0.20)]">
-    <div class="absolute -right-20 -top-28 h-80 w-80 rounded-full border border-white/10"></div>
-    <div class="absolute -right-5 -top-12 h-52 w-52 rounded-full border border-[#F08300]/25"></div>
-    <div class="absolute -bottom-28 left-1/3 h-72 w-72 rounded-full bg-slate-400/10 blur-3xl pointer-events-none"></div>
-    <div class="absolute right-8 bottom-0 hidden select-none text-[7rem] font-black leading-none tracking-tighter text-white/[0.035] lg:block">SIAP</div>
-
-    <div class="relative grid grid-cols-1 lg:grid-cols-12 gap-9 lg:gap-12 px-7 py-9 sm:px-10 md:px-14 md:py-14">
-      <div class="lg:col-span-7 max-w-2xl">
-        <div class="inline-flex items-center gap-2 text-[#F6B15C] text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em]">
-          <span class="h-px w-8 bg-[#F08300]"></span>
-          <span>Ruang Pengaduan Masyarakat</span>
-        </div>
-        <h2 class="mt-5 text-3xl sm:text-4xl md:text-5xl font-extrabold leading-[1.08] tracking-tight">
-          Ada gangguan ketertiban di sekitar Anda?
-        </h2>
-        <p class="mt-5 max-w-xl text-sm md:text-base leading-relaxed text-slate-300">
-          Sampaikan laporan melalui SIAP TERTIB. Simpan kode tiket Anda dan pantau proses tindak lanjutnya secara mandiri.
-        </p>
-        <div class="mt-8 flex flex-wrap items-center gap-3">
-          <a href="/lapor" class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#F08300] to-[#d97400] px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-white shadow-[0_10px_28px_rgba(240,131,0,0.25)] transition hover:-translate-y-0.5 hover:shadow-xl ds-press">
-            Buat Laporan
-            <ArrowRight class="h-4 w-4" />
-          </a>
-          <a href="/lacak" class="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/[0.06] px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-white transition hover:bg-white/[0.12] ds-press">
-            Lacak Tiket
-            <ChevronRight class="h-4 w-4 text-[#F6B15C]" />
-          </a>
-        </div>
-      </div>
-
-      <div class="lg:col-span-5 flex flex-col justify-center gap-5 border-t border-white/15 pt-7 lg:border-l lg:border-t-0 lg:pl-10 lg:pt-0">
-        <div class="flex items-start gap-4">
-          <span class="font-mono text-xl font-bold text-[#F6B15C]">01</span>
-          <div>
-            <h3 class="text-sm font-bold text-white">Kirim laporan</h3>
-            <p class="mt-1 text-xs leading-relaxed text-slate-400">Jelaskan kejadian dan lengkapi informasi lokasi.</p>
-          </div>
-        </div>
-        <div class="ml-2 h-5 w-px bg-gradient-to-b from-[#F08300]/70 to-white/10"></div>
-        <div class="flex items-start gap-4">
-          <span class="font-mono text-xl font-bold text-[#F6B15C]">02</span>
-          <div>
-            <h3 class="text-sm font-bold text-white">Simpan kode tiket</h3>
-            <p class="mt-1 text-xs leading-relaxed text-slate-400">Gunakan kode tiket untuk membuka kembali laporan.</p>
-          </div>
-        </div>
-        <div class="ml-2 h-5 w-px bg-gradient-to-b from-[#F08300]/70 to-white/10"></div>
-        <div class="flex items-start gap-4">
-          <span class="font-mono text-xl font-bold text-[#F6B15C]">03</span>
-          <div>
-            <h3 class="text-sm font-bold text-white">Pantau tindak lanjut</h3>
-            <p class="mt-1 text-xs leading-relaxed text-slate-400">Periksa perkembangan penanganan melalui halaman pelacakan.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 4. Sambutan & Amanat Pimpinan (Leadership Feature Stage) -->
+<!-- 3. Sambutan & Amanat Pimpinan (Leadership Feature Stage) -->
 <section class="relative overflow-hidden py-16 md:py-24 px-4">
   <!-- Ambient Halo Behind Sambutan Section -->
   <div class="absolute top-1/2 -left-20 -translate-y-1/2 w-[520px] h-[520px] rounded-full bg-slate-300/35 blur-3xl pointer-events-none transform-gpu"></div>
