@@ -11,6 +11,9 @@
     --satpol-navy: #0b132a;
     --satpol-accent: #f08300;
     --satpol-slate: #64748b;
+    --satpol-azure: #246bfd;
+    --satpol-soft-gray: #eef1f4;
+    --satpol-soft-gray-border: #dce2e8;
 
     /* Apple HIG Liquid Glass & Specular Vibrancy Tokens */
     --ds-glass-bg: rgba(255, 255, 255, 0.72);
@@ -254,9 +257,9 @@
 /* Ambient Canvas Glow & Underneath Mesh Blobs */
 .ds-ambient-glow {
   background-image: 
-    radial-gradient(1100px 600px at 5% -5%, rgba(36, 107, 253, 0.09), transparent 60%),
+    radial-gradient(1100px 600px at 5% -5%, rgba(148, 163, 184, 0.16), transparent 60%),
     radial-gradient(900px 520px at 95% 5%, rgba(240, 131, 0, 0.08), transparent 55%),
-    radial-gradient(850px 500px at 50% 50%, rgba(14, 165, 233, 0.05), transparent 65%);
+    radial-gradient(850px 500px at 50% 50%, rgba(203, 213, 225, 0.30), transparent 65%);
 }
 
 /* Fallback for System Settings: Reduced Transparency */

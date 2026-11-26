@@ -218,17 +218,80 @@
   </div>
 </section>
 
-<!-- 3. Sambutan & Amanat Pimpinan (Seamless Stage) -->
-<section class="py-16 md:py-24 px-4 max-w-7xl mx-auto relative">
-  <!-- Ambient Halo Behind Sambutan Section -->
-  <div class="absolute bottom-0 right-0 w-[480px] h-[480px] rounded-full bg-[#F08300]/8 blur-3xl pointer-events-none transform-gpu"></div>
+<!-- 3. SIAP TERTIB: editorial call-to-action -->
+<section id="siap-tertib" class="relative isolate overflow-hidden px-4 py-10 md:py-14">
+  <div class="absolute inset-0 bg-gradient-to-b from-[#eef1f4]/90 via-transparent to-[#eef1f4]/70 pointer-events-none"></div>
+  <div class="relative max-w-7xl mx-auto overflow-hidden rounded-[2rem] bg-[#070e1c] text-white shadow-[0_28px_80px_rgba(7,14,28,0.20)]">
+    <div class="absolute -right-20 -top-28 h-80 w-80 rounded-full border border-white/10"></div>
+    <div class="absolute -right-5 -top-12 h-52 w-52 rounded-full border border-[#F08300]/25"></div>
+    <div class="absolute -bottom-28 left-1/3 h-72 w-72 rounded-full bg-slate-400/10 blur-3xl pointer-events-none"></div>
+    <div class="absolute right-8 bottom-0 hidden select-none text-[7rem] font-black leading-none tracking-tighter text-white/[0.035] lg:block">SIAP</div>
 
-  <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center relative z-10">
+    <div class="relative grid grid-cols-1 lg:grid-cols-12 gap-9 lg:gap-12 px-7 py-9 sm:px-10 md:px-14 md:py-14">
+      <div class="lg:col-span-7 max-w-2xl">
+        <div class="inline-flex items-center gap-2 text-[#F6B15C] text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em]">
+          <span class="h-px w-8 bg-[#F08300]"></span>
+          <span>Ruang Pengaduan Masyarakat</span>
+        </div>
+        <h2 class="mt-5 text-3xl sm:text-4xl md:text-5xl font-extrabold leading-[1.08] tracking-tight">
+          Ada gangguan ketertiban di sekitar Anda?
+        </h2>
+        <p class="mt-5 max-w-xl text-sm md:text-base leading-relaxed text-slate-300">
+          Sampaikan laporan melalui SIAP TERTIB. Simpan kode tiket Anda dan pantau proses tindak lanjutnya secara mandiri.
+        </p>
+        <div class="mt-8 flex flex-wrap items-center gap-3">
+          <a href="/lapor" class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#F08300] to-[#d97400] px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-white shadow-[0_10px_28px_rgba(240,131,0,0.25)] transition hover:-translate-y-0.5 hover:shadow-xl ds-press">
+            Buat Laporan
+            <ArrowRight class="h-4 w-4" />
+          </a>
+          <a href="/lacak" class="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/[0.06] px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-white transition hover:bg-white/[0.12] ds-press">
+            Lacak Tiket
+            <ChevronRight class="h-4 w-4 text-[#F6B15C]" />
+          </a>
+        </div>
+      </div>
+
+      <div class="lg:col-span-5 flex flex-col justify-center gap-5 border-t border-white/15 pt-7 lg:border-l lg:border-t-0 lg:pl-10 lg:pt-0">
+        <div class="flex items-start gap-4">
+          <span class="font-mono text-xl font-bold text-[#F6B15C]">01</span>
+          <div>
+            <h3 class="text-sm font-bold text-white">Kirim laporan</h3>
+            <p class="mt-1 text-xs leading-relaxed text-slate-400">Jelaskan kejadian dan lengkapi informasi lokasi.</p>
+          </div>
+        </div>
+        <div class="ml-2 h-5 w-px bg-gradient-to-b from-[#F08300]/70 to-white/10"></div>
+        <div class="flex items-start gap-4">
+          <span class="font-mono text-xl font-bold text-[#F6B15C]">02</span>
+          <div>
+            <h3 class="text-sm font-bold text-white">Simpan kode tiket</h3>
+            <p class="mt-1 text-xs leading-relaxed text-slate-400">Gunakan kode tiket untuk membuka kembali laporan.</p>
+          </div>
+        </div>
+        <div class="ml-2 h-5 w-px bg-gradient-to-b from-[#F08300]/70 to-white/10"></div>
+        <div class="flex items-start gap-4">
+          <span class="font-mono text-xl font-bold text-[#F6B15C]">03</span>
+          <div>
+            <h3 class="text-sm font-bold text-white">Pantau tindak lanjut</h3>
+            <p class="mt-1 text-xs leading-relaxed text-slate-400">Periksa perkembangan penanganan melalui halaman pelacakan.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. Sambutan & Amanat Pimpinan (Leadership Feature Stage) -->
+<section class="relative overflow-hidden py-16 md:py-24 px-4">
+  <!-- Ambient Halo Behind Sambutan Section -->
+  <div class="absolute top-1/2 -left-20 -translate-y-1/2 w-[520px] h-[520px] rounded-full bg-slate-300/35 blur-3xl pointer-events-none transform-gpu"></div>
+  <div class="absolute bottom-0 right-0 w-[480px] h-[480px] rounded-full bg-[#F08300]/12 blur-3xl pointer-events-none transform-gpu"></div>
+
+  <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10 rounded-[2rem] overflow-hidden bg-[#070e1c] px-5 py-10 sm:px-8 md:px-12 md:py-14 shadow-[0_28px_80px_rgba(7,14,28,0.18)] border border-white/10">
     <!-- Pimpinan Cutout Frame -->
     <div class="lg:col-span-5 flex justify-center items-end relative">
       <div class="relative flex flex-col items-center group w-full max-w-md">
         <!-- Subtle Frosted Halo Arch -->
-        <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[280px] sm:w-[340px] h-[440px] sm:h-[520px] rounded-t-full bg-gradient-to-t from-slate-900/10 via-amber-500/10 to-transparent border-t border-x border-white/70 -z-10 shadow-lg backdrop-blur-md"></div>
+        <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[280px] sm:w-[340px] h-[440px] sm:h-[520px] rounded-t-full bg-gradient-to-t from-slate-400/25 via-[#F08300]/12 to-transparent border-t border-x border-white/20 -z-10 shadow-lg backdrop-blur-md"></div>
 
         <div class="relative z-10 transition-transform duration-500 ease-out group-hover:-translate-y-1 group-hover:scale-[1.01]">
           <img
@@ -262,44 +325,40 @@
       <!-- Grand Focal Point Quote -->
       <div class="relative">
         <span class="text-6xl sm:text-7xl font-serif text-[#F08300]/25 select-none leading-none absolute -top-8 -left-3 pointer-events-none">&ldquo;</span>
-        <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#071936] tracking-tight leading-tight relative z-10">
+        <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-[2.75rem] font-extrabold text-white tracking-tight leading-[1.12] relative z-10">
           Menegakkan Perda Secara Humanis, Persuasif, dan Berkeadilan.
         </h2>
       </div>
 
-      <p class="text-sm md:text-base text-slate-600 leading-relaxed font-light">
+      <p class="text-sm md:text-base text-slate-300 leading-relaxed font-light">
         Bagi kami, ketenteraman masyarakat bukan sekadar kepatuhan pada teks aturan, melainkan hadirnya rasa aman, tertib, dan terlindungi di setiap sudut Sulawesi Selatan.
       </p>
 
-      <p class="text-sm md:text-base text-slate-600 leading-relaxed font-light">
+      <p class="text-sm md:text-base text-slate-300 leading-relaxed font-light">
         Aparatur Satpol PP hadir di tengah warga bukan untuk ditakuti, melainkan untuk mengayomi, mengedukasi, dan menegakkan wibawa daerah dengan ketulusan hati serta integritas yang teguh.
       </p>
 
       <!-- CTA Buttons (Apple HIG Ergonomics) -->
       <div class="pt-2 flex flex-wrap items-center gap-3.5">
-        <Button 
+        <a 
           href="/profil/visi-misi" 
-          variant="primary"
-          size="lg"
-          className="uppercase tracking-wider px-6"
+          class="inline-flex items-center gap-2 bg-gradient-to-r from-[#F08300] to-[#d97400] hover:from-[#d97400] hover:to-[#c66500] text-white text-xs font-bold uppercase px-6 py-3.5 rounded-xl transition duration-200 shadow-[0_10px_28px_rgba(240,131,0,0.22)] hover:-translate-y-0.5 ds-press"
         >
           <span>Visi &amp; Misi Instansi</span>
-          <ArrowRight class="w-4 h-4 text-[#F08300]" />
-        </Button>
-        <Button 
+          <ArrowRight class="w-4 h-4 text-white/90" />
+        </a>
+        <a 
           href="/profil/struktur" 
-          variant="secondary"
-          size="lg"
-          className="uppercase tracking-wider px-6"
+          class="inline-flex items-center gap-2 bg-white/[0.06] hover:bg-white/[0.12] text-white text-xs font-bold uppercase px-6 py-3.5 rounded-xl border border-white/20 transition duration-200 ds-press"
         >
           <span>Struktur Kelembagaan</span>
-        </Button>
+        </a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- 4. Dokumen Publik (Sovereign Glass Cards) -->
+<!-- 5. Dokumen Publik (Sovereign Glass Cards) -->
 <section id="dokumen-publik" class="py-16 md:py-20 px-4 max-w-7xl mx-auto">
   <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
     <div>
