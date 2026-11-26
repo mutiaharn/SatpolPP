@@ -218,18 +218,17 @@
   </div>
 </section>
 
-<!-- 3. Sambutan & Amanat Pimpinan (Leadership Feature Stage) -->
-<section class="relative overflow-hidden py-16 md:py-24 px-4">
+<!-- 3. Sambutan & Amanat Pimpinan (Seamless Stage) -->
+<section class="py-16 md:py-24 px-4 max-w-7xl mx-auto relative">
   <!-- Ambient Halo Behind Sambutan Section -->
-  <div class="absolute top-1/2 -left-20 -translate-y-1/2 w-[520px] h-[520px] rounded-full bg-slate-300/35 blur-3xl pointer-events-none transform-gpu"></div>
-  <div class="absolute bottom-0 right-0 w-[480px] h-[480px] rounded-full bg-[#F08300]/12 blur-3xl pointer-events-none transform-gpu"></div>
+  <div class="absolute bottom-0 right-0 w-[480px] h-[480px] rounded-full bg-[#F08300]/8 blur-3xl pointer-events-none transform-gpu"></div>
 
-  <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10 rounded-[2rem] overflow-hidden bg-[#070e1c] px-5 py-10 sm:px-8 md:px-12 md:py-14 shadow-[0_28px_80px_rgba(7,14,28,0.18)] border border-white/10">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center relative z-10">
     <!-- Pimpinan Cutout Frame -->
     <div class="lg:col-span-5 flex justify-center items-end relative">
       <div class="relative flex flex-col items-center group w-full max-w-md">
         <!-- Subtle Frosted Halo Arch -->
-        <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[280px] sm:w-[340px] h-[440px] sm:h-[520px] rounded-t-full bg-gradient-to-t from-slate-400/25 via-[#F08300]/12 to-transparent border-t border-x border-white/20 -z-10 shadow-lg backdrop-blur-md"></div>
+        <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[280px] sm:w-[340px] h-[440px] sm:h-[520px] rounded-t-full bg-gradient-to-t from-slate-900/10 via-amber-500/10 to-transparent border-t border-x border-white/70 -z-10 shadow-lg backdrop-blur-md"></div>
 
         <div class="relative z-10 transition-transform duration-500 ease-out group-hover:-translate-y-1 group-hover:scale-[1.01]">
           <img
@@ -263,34 +262,38 @@
       <!-- Grand Focal Point Quote -->
       <div class="relative">
         <span class="text-6xl sm:text-7xl font-serif text-[#F08300]/25 select-none leading-none absolute -top-8 -left-3 pointer-events-none">&ldquo;</span>
-        <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-[2.75rem] font-extrabold text-white tracking-tight leading-[1.12] relative z-10">
+        <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-[2.75rem] font-extrabold text-[#071936] tracking-tight leading-tight relative z-10">
           Menegakkan Perda Secara Humanis, Persuasif, dan Berkeadilan.
         </h2>
       </div>
 
-      <p class="text-sm md:text-base text-slate-300 leading-relaxed font-light">
+      <p class="text-sm md:text-base text-slate-600 leading-relaxed font-light">
         Bagi kami, ketenteraman masyarakat bukan sekadar kepatuhan pada teks aturan, melainkan hadirnya rasa aman, tertib, dan terlindungi di setiap sudut Sulawesi Selatan.
       </p>
 
-      <p class="text-sm md:text-base text-slate-300 leading-relaxed font-light">
+      <p class="text-sm md:text-base text-slate-600 leading-relaxed font-light">
         Aparatur Satpol PP hadir di tengah warga bukan untuk ditakuti, melainkan untuk mengayomi, mengedukasi, dan menegakkan wibawa daerah dengan ketulusan hati serta integritas yang teguh.
       </p>
 
       <!-- CTA Buttons (Apple HIG Ergonomics) -->
       <div class="pt-2 flex flex-wrap items-center gap-3.5">
-        <a 
+        <Button 
           href="/profil/visi-misi" 
-          class="inline-flex items-center gap-2 bg-gradient-to-r from-[#F08300] to-[#d97400] hover:from-[#d97400] hover:to-[#c66500] text-white text-xs font-bold uppercase px-6 py-3.5 rounded-xl transition duration-200 shadow-[0_10px_28px_rgba(240,131,0,0.22)] hover:-translate-y-0.5 ds-press"
+          variant="primary"
+          size="lg"
+          className="uppercase tracking-wider px-6"
         >
           <span>Visi &amp; Misi Instansi</span>
-          <ArrowRight class="w-4 h-4 text-white/90" />
-        </a>
-        <a 
+          <ArrowRight class="w-4 h-4 text-[#F08300]" />
+        </Button>
+        <Button 
           href="/profil/struktur" 
-          class="inline-flex items-center gap-2 bg-white/[0.06] hover:bg-white/[0.12] text-white text-xs font-bold uppercase px-6 py-3.5 rounded-xl border border-white/20 transition duration-200 ds-press"
+          variant="secondary"
+          size="lg"
+          className="uppercase tracking-wider px-6"
         >
           <span>Struktur Kelembagaan</span>
-        </a>
+        </Button>
       </div>
     </div>
   </div>
