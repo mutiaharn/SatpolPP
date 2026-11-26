@@ -1,0 +1,74 @@
+{
+  "roles": {
+    "SUPERADMIN_DISKOMINFO": "Superadmin Diskominfo",
+    "ADMIN_SATPOL": "Admin Satpol PP",
+    "STAFF_SATPOL": "Staff Operasional"
+  },
+  "complaint_statuses": {
+    "MENUNGGU_VERIFIKASI": "Menunggu Verifikasi",
+    "DISPOSISI_BIDANG": "Disposisi Bidang",
+    "PENINDAKAN_LAPANGAN": "Penindakan Lapangan",
+    "SELESAI": "Selesai",
+    "DITOLAK": "Ditolak"
+  },
+  "violation_options": [
+    {
+      "id": "GANGGUAN_TIBUM",
+      "label": "Gangguan Ketenteraman & Ketertiban Umum",
+      "desc": "Kebisingan berlebih, tawuran warga, balap liar, kerumunan tanpa izin, atau aktivitas meresahkan di ruang publik."
+    },
+    {
+      "id": "PELANGGARAN_PERDA",
+      "label": "Pelanggaran Peraturan Daerah (Perda)",
+      "desc": "Bangunan liar di sempadan sungai/jalan, tempat usaha tanpa izin resmi, reklame ilegal, perusakan fasilitas umum."
+    },
+    {
+      "id": "PENGAMBILDALIHAN_ASET",
+      "label": "Penyerobotan / Penguasaan Aset Pemprov",
+      "desc": "Lahan, gedung, atau fasilitas milik Pemprov Sulsel yang dipagari, dihuni sepihak, atau dialihfungsikan tanpa hak."
+    },
+    {
+      "id": "PERLINDUNGAN_MASYARAKAT",
+      "label": "Layanan Linmas & Bencana Sosial",
+      "desc": "Permohonan bantuan pengamanan pemukiman, evakuasi darurat ketertiban, dan mediasi konflik lingkungan."
+    }
+  ],
+  "regencies": [
+    { "id": "7301", "name": "Kota Makassar" },
+    { "id": "7302", "name": "Kota Parepare" },
+    { "id": "7303", "name": "Kota Palopo" },
+    { "id": "7304", "name": "Kabupaten Gowa" },
+    { "id": "7305", "name": "Kabupaten Maros" },
+    { "id": "7306", "name": "Kabupaten Pangkajene dan Kepulauan" },
+    { "id": "7307", "name": "Kabupaten Barru" },
+    { "id": "7308", "name": "Kabupaten Bone" },
+    { "id": "7309", "name": "Kabupaten Soppeng" },
+    { "id": "7310", "name": "Kabupaten Wajo" },
+    { "id": "7311", "name": "Kabupaten Sinjai" },
+    { "id": "7312", "name": "Kabupaten Bulukumba" },
+    { "id": "7313", "name": "Kabupaten Bantaeng" },
+    { "id": "7314", "name": "Kabupaten Jeneponto" },
+    { "id": "7315", "name": "Kabupaten Takalar" },
+    { "id": "7316", "name": "Kabupaten Kepulauan Selayar" },
+    { "id": "7317", "name": "Kabupaten Enrekang" },
+    { "id": "7318", "name": "Kabupaten Pinrang" },
+    { "id": "7319", "name": "Kabupaten Sidenreng Rappang" },
+    { "id": "7320", "name": "Kabupaten Tana Toraja" },
+    { "id": "7321", "name": "Kabupaten Toraja Utara" },
+    { "id": "7322", "name": "Kabupaten Luwu" },
+    { "id": "7323", "name": "Kabupaten Luwu Utara" },
+    { "id": "7324", "name": "Kabupaten Luwu Timur" }
+  ],
+  "upload_limits": {
+    "max_image_size_bytes": 5242880,
+    "max_doc_size_bytes": 20971520,
+    "allowed_image_mimes": ["image/jpeg", "image/png", "image/webp"],
+    "allowed_doc_mimes": [
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "application/vnd.ms-excel",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    ]
+  }
+}
